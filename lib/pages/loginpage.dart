@@ -18,10 +18,9 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: Card(
           elevation: 20,
-          child: Container(
+          child: SizedBox(
             height: height / 1.8,
             width: width / 1.8,
-            color: Colors.blue,
             child: Row(
               children: [
                 Expanded(
@@ -135,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ],
                                         width: 340,
                                         height: 48,
-                                        borderRadius: 2,
+                                        borderRadius: 13,
                                         child: Center(
                                           child: Text(
                                             "Login",

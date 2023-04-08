@@ -229,29 +229,25 @@ class _BranchPageState extends State<DesignationPage> {
                             ),
                             actions: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.red),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.grey[300],
                                       ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                       child: const Text(
                                         "Cancel",
-                                        style: TextStyle(fontSize: 17),
+                                        style:
+                                            TextStyle(color: Colors.blueGrey),
                                       )),
-                                  ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.green),
-                                      ),
-                                      onPressed: () {
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  InkWell(
+                                      onTap: () {
                                         if (namecontroller.text.isEmpty ||
                                             namecontroller.text.isEmpty) {
                                           EasyLoading.showError(
@@ -270,9 +266,24 @@ class _BranchPageState extends State<DesignationPage> {
                                           Navigator.pop(context);
                                         }
                                       },
-                                      child: const Text(
-                                        "Add",
-                                        style: TextStyle(fontSize: 17),
+                                      child: Material(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13),
+                                        ),
+                                        elevation: 15,
+                                        child: const CardWidget(
+                                            color: Colors.green,
+                                            width: 70,
+                                            height: 30,
+                                            borderRadius: 5,
+                                            child: Center(
+                                              child: Text(
+                                                'Add',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            )),
                                       )),
                                 ],
                               )
@@ -295,7 +306,7 @@ class _BranchPageState extends State<DesignationPage> {
                       ],
                       width: 120,
                       height: 40,
-                      borderRadius: 2,
+                      borderRadius: 13,
                       child: Center(
                         child: Text(
                           'Add Designation',

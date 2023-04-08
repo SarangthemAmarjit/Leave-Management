@@ -635,9 +635,8 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.grey,
-                                        side: const BorderSide(
-                                            color: Colors.red)),
+                                      backgroundColor: Colors.grey[300],
+                                    ),
                                     onPressed: () {
                                       Navigator.pop(context);
                                       setState(() {
@@ -649,13 +648,14 @@ class _HomePageState extends State<HomePage> {
                                         _position = null;
                                       });
                                     },
-                                    child: const Text("CANCEL")),
+                                    child: const Text(
+                                      "Cancel",
+                                      style: TextStyle(color: Colors.blueGrey),
+                                    )),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green),
-                                      onPressed: () async {
+                                  child: InkWell(
+                                      onTap: () async {
                                         EasyLoading.show(status: 'Adding..');
                                         if (_namefieldcontroller.text.isEmpty ||
                                                 empcode.text.isEmpty ||
@@ -734,7 +734,25 @@ class _HomePageState extends State<HomePage> {
                                           Navigator.of(context).pop();
                                         }
                                       },
-                                      child: const Text("ADD")),
+                                      child: Material(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13),
+                                        ),
+                                        elevation: 15,
+                                        child: const CardWidget(
+                                            color: Colors.green,
+                                            width: 70,
+                                            height: 30,
+                                            borderRadius: 5,
+                                            child: Center(
+                                              child: Text(
+                                                'Add',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            )),
+                                      )),
                                 )
                               ],
                             ),
@@ -982,7 +1000,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                     width: 120,
                     height: 40,
-                    borderRadius: 2,
+                    borderRadius: 13,
                     child: Center(
                       child: Text(
                         'Add Employee',
@@ -1001,7 +1019,6 @@ class _HomePageState extends State<HomePage> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: DataTable(
-                columnSpacing: MediaQuery.of(context).size.width > 900 ? 50 : 2,
                 dividerThickness: 2,
                 headingRowColor:
                     MaterialStateProperty.all(Colors.grey.withOpacity(0.2)),

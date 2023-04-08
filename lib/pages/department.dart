@@ -98,29 +98,26 @@ class _DepartmentPageState extends State<DepartmentPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(Colors.red),
-                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey,
+                                      side:
+                                          const BorderSide(color: Colors.red)),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: const Text(
-                                    "Cancel",
-                                    style: TextStyle(fontSize: 17),
-                                  )),
-                              ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(Colors.green),
-                                  ),
-                                  onPressed: () {
-                                    if (namecontroller.text.isEmpty) {
+                                  child: const Text("CANCEL")),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    if (namecontroller.text.isEmpty ||
+                                        namecontroller.text.isEmpty) {
                                       EasyLoading.showError(
                                           'Name field is empty');
                                     } else {
                                       allbranch.add({
-                                        "slno.": "3",
+                                        "slno.": 3,
                                         "branchname": namecontroller.text,
                                         "is_active": isactive == true
                                             ? "Active"
@@ -132,9 +129,23 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                       Navigator.pop(context);
                                     }
                                   },
-                                  child: const Text(
-                                    "Update",
-                                    style: TextStyle(fontSize: 17),
+                                  child: Material(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(13),
+                                    ),
+                                    elevation: 15,
+                                    child: const CardWidget(
+                                        color: Colors.green,
+                                        width: 70,
+                                        height: 30,
+                                        borderRadius: 5,
+                                        child: Center(
+                                          child: Text(
+                                            'Add',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )),
                                   )),
                             ],
                           )
@@ -229,29 +240,25 @@ class _DepartmentPageState extends State<DepartmentPage> {
                             ),
                             actions: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.red),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.grey[300],
                                       ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                       child: const Text(
                                         "Cancel",
-                                        style: TextStyle(fontSize: 17),
+                                        style:
+                                            TextStyle(color: Colors.blueGrey),
                                       )),
-                                  ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.green),
-                                      ),
-                                      onPressed: () {
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  InkWell(
+                                      onTap: () {
                                         if (namecontroller.text.isEmpty ||
                                             namecontroller.text.isEmpty) {
                                           EasyLoading.showError(
@@ -270,9 +277,24 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                           Navigator.pop(context);
                                         }
                                       },
-                                      child: const Text(
-                                        "Add",
-                                        style: TextStyle(fontSize: 17),
+                                      child: Material(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13),
+                                        ),
+                                        elevation: 15,
+                                        child: const CardWidget(
+                                            color: Colors.green,
+                                            width: 70,
+                                            height: 30,
+                                            borderRadius: 5,
+                                            child: Center(
+                                              child: Text(
+                                                'Add',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            )),
                                       )),
                                 ],
                               )
@@ -295,7 +317,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                       ],
                       width: 120,
                       height: 40,
-                      borderRadius: 2,
+                      borderRadius: 13,
                       child: Center(
                         child: Text(
                           'Add Department',

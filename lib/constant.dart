@@ -43,7 +43,7 @@ class CardWidget extends StatelessWidget {
                   ? Border.all(color: Colors.red)
                   : null
               : null,
-          borderRadius: BorderRadius.circular(13),
+          borderRadius: BorderRadius.circular(borderRadius),
           gradient: gradient == null
               ? null
               : LinearGradient(
