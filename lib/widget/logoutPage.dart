@@ -89,7 +89,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  SidebarXExampleApp()),
+                                                  SidebarPage()),
                                         );
                                       },
                                       child: Card(

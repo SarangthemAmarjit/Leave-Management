@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/pages/sidebar.dart';
 
+@RoutePage()
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -119,8 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              SidebarXExampleApp()),
+                                          builder: (context) => SidebarPage()),
                                     );
                                   },
                                   child: Center(

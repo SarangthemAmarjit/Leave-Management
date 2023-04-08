@@ -9,8 +9,8 @@ import 'package:sidebarx/sidebarx.dart';
 
 import '../constant/constant.dart';
 
-class SidebarXExampleApp extends StatelessWidget {
-  SidebarXExampleApp({Key? key}) : super(key: key);
+class SidebarPage extends StatelessWidget {
+  SidebarPage({Key? key}) : super(key: key);
 
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _key = GlobalKey<ScaffoldState>();
