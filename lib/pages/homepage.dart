@@ -625,9 +625,8 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.grey,
-                                        side: const BorderSide(
-                                            color: Colors.red)),
+                                      backgroundColor: Colors.grey[300],
+                                    ),
                                     onPressed: () {
                                       Navigator.pop(context);
                                       setState(() {
@@ -639,7 +638,10 @@ class _HomePageState extends State<HomePage> {
                                         _position = null;
                                       });
                                     },
-                                    child: const Text("CANCEL")),
+                                    child: const Text(
+                                      "Cancel",
+                                      style: TextStyle(color: Colors.blueGrey),
+                                    )),
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: InkWell(

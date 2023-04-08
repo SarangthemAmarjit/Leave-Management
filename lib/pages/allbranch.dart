@@ -233,13 +233,16 @@ class _BranchPageState extends State<BranchPage> {
                                 children: [
                                   ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.grey,
-                                          side: const BorderSide(
-                                              color: Colors.red)),
+                                        backgroundColor: Colors.grey[300],
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: const Text("CANCEL")),
+                                      child: const Text(
+                                        "Cancel",
+                                        style:
+                                            TextStyle(color: Colors.blueGrey),
+                                      )),
                                   const SizedBox(
                                     width: 10,
                                   ),
