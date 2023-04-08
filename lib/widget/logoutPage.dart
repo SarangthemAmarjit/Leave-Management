@@ -73,7 +73,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                 height: 120,
                               ),
                               const Text(
-                                "Confirm session Log_Out",
+                                "Logout?",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18),
                               ),
