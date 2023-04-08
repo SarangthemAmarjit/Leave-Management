@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leavemanagementadmin/constant.dart';
+import 'package:leavemanagementadmin/pages/loginpage.dart';
 import 'package:leavemanagementadmin/pages/sidebar.dart';
 
 class LogOutPage extends StatefulWidget {
@@ -79,19 +80,19 @@ class _LogOutPageState extends State<LogOutPage> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SidebarXExampleApp()),
-                                  );
-                                },
-                                child: Center(
-                                  child: Row(
-                                    children: [
-                                      Card(
+                              Center(
+                                child: Row(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SidebarXExampleApp()),
+                                        );
+                                      },
+                                      child: Card(
                                         elevation: 6,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -127,7 +128,17 @@ class _LogOutPageState extends State<LogOutPage> {
                                               ),
                                             )),
                                       ),
-                                      Card(
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const LoginPage()),
+                                        );
+                                      },
+                                      child: Card(
                                         elevation: 10,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -162,8 +173,8 @@ class _LogOutPageState extends State<LogOutPage> {
                                               ),
                                             )),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               )
                             ],
