@@ -50,7 +50,7 @@ class SidebarXExampleApp extends StatelessWidget {
                       icon: const Icon(Icons.menu),
                     ),
                   )
-                : null,
+                : AppBar(),
             drawer: ExampleSidebarX(controller: _controller),
             body: Row(
               children: [
