@@ -562,6 +562,8 @@ class _HomePageState extends State<HomePage> {
   int index = 1;
   @override
   Widget build(BuildContext context) {
+    String size = MediaQuery.of(context).size.width.toString();
+    print("Size : $size");
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       // appBar: AppBar(
@@ -597,15 +599,23 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(
           height: 50,
         ),
-        const Padding(
-          padding: EdgeInsets.only(left: 100),
-          child: Text(
+        Padding(
+          padding: MediaQuery.of(context).size.width > 1040
+              ? const EdgeInsets.only(
+                  left: 100,
+                )
+              : const EdgeInsets.only(
+                  left: 10,
+                ),
+          child: const Text(
             'Employee ',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 100, top: 15),
+          padding: MediaQuery.of(context).size.width > 1040
+              ? const EdgeInsets.only(left: 100, top: 15)
+              : const EdgeInsets.only(left: 10, top: 15),
           child: InkWell(
               onTap: () {
                 _namefieldcontroller.clear();
@@ -985,12 +995,13 @@ class _HomePageState extends State<HomePage> {
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: MediaQuery.of(context).size.width > 500
+            padding: MediaQuery.of(context).size.width > 1040
                 ? const EdgeInsets.only(left: 100, right: 100, top: 20)
                 : const EdgeInsets.only(left: 10, right: 10, top: 20),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: DataTable(
+                columnSpacing: MediaQuery.of(context).size.width > 900 ? 50 : 2,
                 dividerThickness: 2,
                 headingRowColor:
                     MaterialStateProperty.all(Colors.grey.withOpacity(0.2)),
@@ -1004,7 +1015,9 @@ class _HomePageState extends State<HomePage> {
                           spreadRadius: 3,
                           offset: const Offset(0, 3))
                     ]),
-                headingTextStyle: const TextStyle(fontWeight: FontWeight.bold),
+                headingTextStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
                 rows: <DataRow>[
                   for (int i = 0; i < displayedDataCell.length; i += 5)
                     DataRow(cells: [

@@ -159,9 +159,15 @@ class _DepartmentPageState extends State<DepartmentPage> {
         const SizedBox(
           height: 50,
         ),
-        const Padding(
-          padding: EdgeInsets.only(left: 100),
-          child: Align(
+        Padding(
+          padding: MediaQuery.of(context).size.width > 1040
+              ? const EdgeInsets.only(
+                  left: 100,
+                )
+              : const EdgeInsets.only(
+                  left: 10,
+                ),
+          child: const Align(
             alignment: Alignment.centerLeft,
             child: Text(
               "Department",
@@ -170,7 +176,9 @@ class _DepartmentPageState extends State<DepartmentPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 100, top: 15),
+          padding: MediaQuery.of(context).size.width > 1040
+              ? const EdgeInsets.only(left: 100, top: 15)
+              : const EdgeInsets.only(left: 10, top: 15),
           child: Align(
             alignment: Alignment.centerLeft,
             child: InkWell(
@@ -189,7 +197,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                               style: TextStyle(fontSize: 18),
                             ),
                             content: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.3,
+                              height: MediaQuery.of(context).size.height * 0.2,
                               child: Column(
                                 children: [
                                   TextFormField(
@@ -300,7 +308,9 @@ class _DepartmentPageState extends State<DepartmentPage> {
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 100, right: 100, top: 20),
+            padding: MediaQuery.of(context).size.width > 1040
+                ? const EdgeInsets.only(left: 100, right: 100, top: 20)
+                : const EdgeInsets.only(left: 10, right: 10, top: 20),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: DataTable(
@@ -338,8 +348,10 @@ class _DepartmentPageState extends State<DepartmentPage> {
                     ),
                   ),
                   DataColumn(
-                    label: Text(
-                      'Department Name',
+                    label: Flexible(
+                      child: Text(
+                        'Department Name',
+                      ),
                     ),
                   ),
                   DataColumn(

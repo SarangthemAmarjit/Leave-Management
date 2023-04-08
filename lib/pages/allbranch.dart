@@ -160,7 +160,7 @@ class _BranchPageState extends State<BranchPage> {
           height: 50,
         ),
         Padding(
-          padding: MediaQuery.of(context).size.width > 800
+          padding: MediaQuery.of(context).size.width > 1040
               ? const EdgeInsets.only(
                   left: 100,
                 )
@@ -176,7 +176,7 @@ class _BranchPageState extends State<BranchPage> {
           ),
         ),
         Padding(
-          padding: MediaQuery.of(context).size.width > 800
+          padding: MediaQuery.of(context).size.width > 1040
               ? const EdgeInsets.only(left: 100, top: 15)
               : const EdgeInsets.only(left: 10, top: 15),
           child: Align(
@@ -308,7 +308,7 @@ class _BranchPageState extends State<BranchPage> {
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: MediaQuery.of(context).size.width > 800
+            padding: MediaQuery.of(context).size.width > 1040
                 ? const EdgeInsets.only(left: 100, right: 100, top: 20)
                 : const EdgeInsets.only(left: 10, right: 10, top: 20),
             child: SizedBox(
@@ -348,8 +348,10 @@ class _BranchPageState extends State<BranchPage> {
                     ),
                   ),
                   DataColumn(
-                    label: Text(
-                      'Branch Name',
+                    label: Flexible(
+                      child: Text(
+                        'Branch Name',
+                      ),
                     ),
                   ),
                   DataColumn(
