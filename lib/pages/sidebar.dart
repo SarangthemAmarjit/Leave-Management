@@ -7,6 +7,8 @@ import 'package:leavemanagementadmin/pages/homepage.dart';
 import 'package:leavemanagementadmin/widget/logoutPage.dart';
 import 'package:sidebarx/sidebarx.dart';
 
+import '../constant/constant.dart';
+
 class SidebarXExampleApp extends StatelessWidget {
   SidebarXExampleApp({Key? key}) : super(key: key);
 
@@ -104,8 +106,8 @@ class ExampleSidebarX extends StatelessWidget {
           border: Border.all(
             color: actionColor.withOpacity(0.37),
           ),
-          gradient: const LinearGradient(
-            colors: [accentCanvasColor, canvasColor],
+          gradient: LinearGradient(
+            colors: [accentCanvasColor, accentCanvasColorLight],
           ),
           boxShadow: [
             BoxShadow(
@@ -248,11 +250,3 @@ String _getTitleByIndex(int index) {
       return 'Not found page';
   }
 }
-
-const primaryColor = Colors.yellow;
-const canvasColor = Colors.white;
-const scaffoldBackgroundColor = Color.fromARGB(255, 233, 231, 231);
-const accentCanvasColor = Colors.redAccent;
-const white = Colors.redAccent;
-final actionColor = const Color(0xFF5F5FA7).withOpacity(0.6);
-final divider = Divider(color: white.withOpacity(0.3), height: 1);
