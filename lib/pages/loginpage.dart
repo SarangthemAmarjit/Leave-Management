@@ -30,11 +30,8 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const SizedBox(
-                              height: 120,
-                            ),
                             SizedBox(
                                 height: 90,
                                 child: Image.asset(
@@ -59,95 +56,97 @@ class _LoginPageState extends State<LoginPage> {
                 Expanded(
                     flex: 1,
                     child: Container(
-                      color: Colors.white,
+                      color: const Color.fromARGB(255, 196, 28, 28),
                       child: Column(children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                          child: Form(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Container(
                               child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 120,
-                              ),
-                              const Text(
-                                "Login",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              const SizedBox(
-                                height: 16,
-                              ),
-                              TextFormField(
-                                autovalidateMode: AutovalidateMode.always,
-                                autofillHints: const [AutofillHints.email],
-                                //not for form, this will make the input suggest that the field wants email as input
-                                decoration: const InputDecoration(
-                                    fillColor: Colors.amber,
-                                    prefixIcon:
-                                        Icon(Icons.account_circle_outlined),
-                                    border: OutlineInputBorder(),
-                                    labelText: "Email/UserName ",
-                                    hintText: "example@gmail.com"),
-
-                                cursorColor: Colors.red,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
-                                autovalidateMode: AutovalidateMode.always,
-                                autofillHints: const [AutofillHints.email],
-                                //not for form, this will make the input suggest that the field wants email as input
-                                decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.lock_outline_rounded),
-                                    border: OutlineInputBorder(),
-                                    labelText: "Password : ",
-                                    hintText: " type your password here"),
-
-                                cursorColor: Colors.red,
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            SidebarXExampleApp()),
-                                  );
-                                },
-                                child: Center(
-                                  child: Card(
-                                    elevation: 10,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                      //set border radius more than 50% of height and width to make circle
-                                    ),
-                                    child: const CardWidget(
-                                        gradient: [
-                                          Color.fromARGB(255, 211, 32, 39),
-                                          Color.fromARGB(255, 164, 92, 95)
-                                        ],
-                                        width: 340,
-                                        height: 48,
-                                        borderRadius: 13,
-                                        child: Center(
-                                          child: Text(
-                                            "Login",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ),
-                                        )),
+                                children: [
+                                  const Text(
+                                    "Login",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
                                   ),
-                                ),
-                              )
-                            ],
-                          )),
+                                  const SizedBox(
+                                    height: 16,
+                                  ),
+                                  TextFormField(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    autofillHints: const [AutofillHints.email],
+                                    //not for form, this will make the input suggest that the field wants email as input
+                                    decoration: const InputDecoration(
+                                        fillColor: Colors.amber,
+                                        prefixIcon:
+                                            Icon(Icons.account_circle_outlined),
+                                        border: OutlineInputBorder(),
+                                        labelText: "Email/UserName ",
+                                        hintText: "example@gmail.com"),
+
+                                    cursorColor: Colors.red,
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  TextFormField(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    autofillHints: const [AutofillHints.email],
+                                    //not for form, this will make the input suggest that the field wants email as input
+                                    decoration: const InputDecoration(
+                                        prefixIcon:
+                                            Icon(Icons.lock_outline_rounded),
+                                        border: OutlineInputBorder(),
+                                        labelText: "Password : ",
+                                        hintText: " type your password here"),
+
+                                    cursorColor: Colors.red,
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SidebarXExampleApp()),
+                                      );
+                                    },
+                                    child: Center(
+                                      child: Card(
+                                        elevation: 10,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          //set border radius more than 50% of height and width to make circle
+                                        ),
+                                        child: const CardWidget(
+                                            gradient: [
+                                              Color.fromARGB(255, 211, 32, 39),
+                                              Color.fromARGB(255, 164, 92, 95)
+                                            ],
+                                            width: 340,
+                                            height: 48,
+                                            borderRadius: 13,
+                                            child: Center(
+                                              child: Text(
+                                                "Login",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              ),
+                                            )),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ]),
                     ))
