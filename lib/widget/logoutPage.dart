@@ -106,7 +106,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                             ],
                                             width: 120,
                                             height: 42,
-                                            borderRadius: 2,
+                                            borderRadius: 13,
                                             child: Center(
                                               child: Row(
                                                 mainAxisAlignment:
@@ -141,7 +141,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                             ],
                                             width: 120,
                                             height: 42,
-                                            borderRadius: 2,
+                                            borderRadius: 13,
                                             child: Center(
                                               child: Row(
                                                 mainAxisAlignment:
