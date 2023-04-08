@@ -1,0 +1,181 @@
+import 'package:flutter/material.dart';
+import 'package:leavemanagementadmin/constant.dart';
+import 'package:leavemanagementadmin/pages/sidebar.dart';
+
+class LogOutPage extends StatefulWidget {
+  const LogOutPage({super.key});
+
+  @override
+  State<LogOutPage> createState() => _LogOutPageState();
+}
+
+class _LogOutPageState extends State<LogOutPage> {
+  @override
+  Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: Center(
+        child: Card(
+          elevation: 20,
+          child: Container(
+            height: height / 1.8,
+            width: width / 1.8,
+            color: Colors.blue,
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.grey[50],
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 120,
+                            ),
+                            SizedBox(
+                                height: 90,
+                                child: Image.asset(
+                                    "assets/images/G-png-only.png")),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                "Leave Management System",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w400),
+                              ),
+                            ),
+                            const Text(
+                              "Admin Panel",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                          child: Form(
+                              child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                height: 120,
+                              ),
+                              const Text(
+                                "Confirm session Log_Out",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SidebarXExampleApp()),
+                                  );
+                                },
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      Card(
+                                        elevation: 6,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          //set border radius more than 50% of height and width to make circle
+                                        ),
+                                        child: CardWidget(
+                                            gradient: const [
+                                              Color.fromARGB(
+                                                  255, 219, 217, 217),
+                                              Color.fromARGB(255, 246, 244, 244)
+                                            ],
+                                            width: 120,
+                                            height: 42,
+                                            borderRadius: 2,
+                                            child: Center(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: const [
+                                                  Icon(
+                                                    Icons.cancel,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  Text(
+                                                    "Not now",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.grey),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                      ),
+                                      Card(
+                                        elevation: 10,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          //set border radius more than 50% of height and width to make circle
+                                        ),
+                                        child: CardWidget(
+                                            gradient: const [
+                                              Color.fromARGB(255, 211, 32, 39),
+                                              Color.fromARGB(255, 164, 92, 95)
+                                            ],
+                                            width: 120,
+                                            height: 42,
+                                            borderRadius: 2,
+                                            child: Center(
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: const [
+                                                  Icon(
+                                                    Icons.check_circle_rounded,
+                                                    color: Colors.white,
+                                                  ),
+                                                  Text(
+                                                    "Confirm",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            ],
+                          )),
+                        ),
+                      ]),
+                    ))
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
