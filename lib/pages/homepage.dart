@@ -1019,6 +1019,8 @@ class _HomePageState extends State<HomePage> {
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: DataTable(
+                columnSpacing:
+                    MediaQuery.of(context).size.width > 900 ? 50 : 10,
                 dividerThickness: 2,
                 headingRowColor:
                     MaterialStateProperty.all(Colors.grey.withOpacity(0.2)),
