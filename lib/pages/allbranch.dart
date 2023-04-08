@@ -63,7 +63,7 @@ class _BranchPageState extends State<BranchPage> {
                           style: TextStyle(fontSize: 18),
                         ),
                         content: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.3,
+                          height: MediaQuery.of(context).size.height * 0.2,
                           child: Column(
                             children: [
                               TextFormField(
@@ -159,10 +159,16 @@ class _BranchPageState extends State<BranchPage> {
         const SizedBox(
           height: 50,
         ),
-        const Padding(
-          padding: EdgeInsets.only(left: 100),
-          child: Align(
-            alignment: Alignment.centerLeft,
+        Padding(
+          padding: MediaQuery.of(context).size.width > 800
+              ? const EdgeInsets.only(
+                  left: 100,
+                )
+              : const EdgeInsets.only(
+                  left: 10,
+                ),
+          child: const Align(
+            alignment: Alignment.topLeft,
             child: Text(
               "Branch",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -170,7 +176,9 @@ class _BranchPageState extends State<BranchPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 100, top: 15),
+          padding: MediaQuery.of(context).size.width > 800
+              ? const EdgeInsets.only(left: 100, top: 15)
+              : const EdgeInsets.only(left: 10, top: 15),
           child: Align(
             alignment: Alignment.centerLeft,
             child: InkWell(
@@ -308,7 +316,9 @@ class _BranchPageState extends State<BranchPage> {
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 100, right: 100, top: 20),
+            padding: MediaQuery.of(context).size.width > 800
+                ? const EdgeInsets.only(left: 100, right: 100, top: 20)
+                : const EdgeInsets.only(left: 10, right: 10, top: 20),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: DataTable(

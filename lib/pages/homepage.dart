@@ -1001,7 +1001,9 @@ class _HomePageState extends State<HomePage> {
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 100, right: 100, top: 20),
+            padding: MediaQuery.of(context).size.width > 500
+                ? const EdgeInsets.only(left: 100, right: 100, top: 20)
+                : const EdgeInsets.only(left: 10, right: 10, top: 20),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: DataTable(
