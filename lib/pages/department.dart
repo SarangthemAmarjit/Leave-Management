@@ -214,6 +214,9 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                   TextFormField(
                                     controller: namecontroller,
                                     decoration: const InputDecoration(
+                                      hintStyle: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 212, 211, 211)),
                                       hintText: "Department Name",
                                     ),
                                   ),

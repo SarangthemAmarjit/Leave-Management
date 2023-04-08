@@ -203,6 +203,9 @@ class _BranchPageState extends State<BranchPage> {
                                   TextFormField(
                                     controller: namecontroller,
                                     decoration: const InputDecoration(
+                                      hintStyle: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 212, 211, 211)),
                                       hintText: "Branch Name",
                                     ),
                                   ),
