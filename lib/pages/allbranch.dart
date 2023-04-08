@@ -189,7 +189,7 @@ class _BranchPageState extends State<BranchPage> {
                               style: TextStyle(fontSize: 18),
                             ),
                             content: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.3,
+                              height: MediaQuery.of(context).size.height * 0.2,
                               child: Column(
                                 children: [
                                   TextFormField(
@@ -221,29 +221,22 @@ class _BranchPageState extends State<BranchPage> {
                             ),
                             actions: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.red),
-                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.grey,
+                                          side: const BorderSide(
+                                              color: Colors.red)),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: const Text(
-                                        "Cancel",
-                                        style: TextStyle(fontSize: 17),
-                                      )),
-                                  ElevatedButton(
-                                      style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.green),
-                                      ),
-                                      onPressed: () {
+                                      child: const Text("CANCEL")),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  InkWell(
+                                      onTap: () {
                                         if (namecontroller.text.isEmpty ||
                                             namecontroller.text.isEmpty) {
                                           EasyLoading.showError(
@@ -262,9 +255,24 @@ class _BranchPageState extends State<BranchPage> {
                                           Navigator.pop(context);
                                         }
                                       },
-                                      child: const Text(
-                                        "Add",
-                                        style: TextStyle(fontSize: 17),
+                                      child: Material(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13),
+                                        ),
+                                        elevation: 15,
+                                        child: const CardWidget(
+                                            color: Colors.green,
+                                            width: 70,
+                                            height: 30,
+                                            borderRadius: 5,
+                                            child: Center(
+                                              child: Text(
+                                                'Add',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            )),
                                       )),
                                 ],
                               )
@@ -287,7 +295,7 @@ class _BranchPageState extends State<BranchPage> {
                       ],
                       width: 120,
                       height: 40,
-                      borderRadius: 2,
+                      borderRadius: 13,
                       child: Center(
                         child: Text(
                           'Add Branch',

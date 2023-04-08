@@ -189,7 +189,7 @@ class _BranchPageState extends State<DesignationPage> {
                               style: TextStyle(fontSize: 18),
                             ),
                             content: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.3,
+                              height: MediaQuery.of(context).size.height * 0.2,
                               child: Column(
                                 children: [
                                   TextFormField(
@@ -287,7 +287,7 @@ class _BranchPageState extends State<DesignationPage> {
                       ],
                       width: 120,
                       height: 40,
-                      borderRadius: 2,
+                      borderRadius: 13,
                       child: Center(
                         child: Text(
                           'Add Designation',

@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ],
                                         width: 340,
                                         height: 48,
-                                        borderRadius: 2,
+                                        borderRadius: 13,
                                         child: Center(
                                           child: Text(
                                             "Login",
