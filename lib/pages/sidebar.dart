@@ -4,6 +4,7 @@ import 'package:leavemanagementadmin/pages/allbranch.dart';
 import 'package:leavemanagementadmin/pages/department.dart';
 import 'package:leavemanagementadmin/pages/designation.dart';
 import 'package:leavemanagementadmin/pages/homepage.dart';
+import 'package:leavemanagementadmin/widget/logoutPage.dart';
 import 'package:sidebarx/sidebarx.dart';
 
 class SidebarXExampleApp extends StatelessWidget {
@@ -200,31 +201,29 @@ class _ScreensExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      color: Colors.amber,
-      //! -> page contents will come here
-      child: AnimatedBuilder(
-        animation: controller,
-        builder: (context, child) {
-          final pageTitle = _getTitleByIndex(controller.selectedIndex);
-          switch (controller.selectedIndex) {
-            case 0:
-              return const HomePage();
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        final pageTitle = _getTitleByIndex(controller.selectedIndex);
+        switch (controller.selectedIndex) {
+          case 0:
+            return const HomePage();
 
-            case 1:
-              return const BranchPage();
-            case 2:
-              return const DepartmentPage();
-            case 3:
-              return const DesignationPage();
-            default:
-              return Text(
-                pageTitle,
-                style: theme.textTheme.headlineSmall,
-              );
-          }
-        },
-      ),
+          case 1:
+            return const BranchPage();
+          case 2:
+            return const DepartmentPage();
+          case 3:
+            return const DesignationPage();
+          case 4:
+            return const LogOutPage();
+          default:
+            return Text(
+              pageTitle,
+              style: theme.textTheme.headlineSmall,
+            );
+        }
+      },
     );
   }
 }
