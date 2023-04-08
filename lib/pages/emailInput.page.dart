@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/pages/sidebar.dart';
+import 'package:leavemanagementadmin/pages/loginpage.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class EmailInputPage extends StatefulWidget {
+  const EmailInputPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<EmailInputPage> createState() => _EmailInputPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _EmailInputPageState extends State<EmailInputPage> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Center(
                           child: SizedBox(
                             // color: Colors.amber,
-                            height: height / 2.5,
+                            height: height / 3.6,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -96,22 +96,6 @@ class _LoginPageState extends State<LoginPage> {
                                   cursorColor: Colors.red,
                                 ),
                                 SizedBox(
-                                  height: height / 48,
-                                ),
-                                TextFormField(
-                                  autovalidateMode: AutovalidateMode.always,
-                                  autofillHints: const [AutofillHints.email],
-                                  //not for form, this will make the input suggest that the field wants email as input
-                                  decoration: const InputDecoration(
-                                      prefixIcon:
-                                          Icon(Icons.lock_outline_rounded),
-                                      border: OutlineInputBorder(),
-                                      labelText: "OTP : ",
-                                      hintText: " enter OTP"),
-
-                                  cursorColor: Colors.red,
-                                ),
-                                SizedBox(
                                   height: height / 46,
                                 ),
                                 InkWell(
@@ -120,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              SidebarXExampleApp()),
+                                              const LoginPage()),
                                     );
                                   },
                                   child: Center(
@@ -140,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                                           borderRadius: 13,
                                           child: Center(
                                             child: Text(
-                                              "Login",
+                                              "Send OTP",
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.white),

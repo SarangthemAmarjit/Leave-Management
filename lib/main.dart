@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:leavemanagementadmin/pages/loginpage.dart';
+import 'package:leavemanagementadmin/pages/emailInput.page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,6 +17,6 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'KulimPark'),
         builder: EasyLoading.init(),
-        home: const LoginPage());
+        home: const EmailInputPage());
   }
 }
