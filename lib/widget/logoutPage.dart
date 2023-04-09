@@ -22,13 +22,13 @@ class _LogOutPageState extends State<LogOutPage> {
           child: Container(
             height: height / 1.8,
             width: width / 1.8,
-            color: Colors.grey[50],
+            color: Colors.grey[100],
             child: Row(
               children: [
                 Expanded(
                     flex: 1,
                     child: Container(
-                      color: Colors.grey[50],
+                      color: Colors.grey[100],
                       height: height / 4,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
