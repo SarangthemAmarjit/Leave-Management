@@ -22,39 +22,41 @@ class _LogOutPageState extends State<LogOutPage> {
           child: Container(
             height: height / 1.8,
             width: width / 1.8,
-            color: Colors.blue,
+            color: Colors.grey[50],
             child: Row(
               children: [
                 Expanded(
                     flex: 1,
                     child: Container(
                       color: Colors.grey[50],
+                      height: height / 4,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 120,
-                            ),
-                            SizedBox(
-                                height: 90,
-                                child: Image.asset(
-                                    "assets/images/G-png-only.png")),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text(
-                                "Leave Management System",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.w400),
+                        child: SizedBox(
+                          // color: Colors.red,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  height: 90,
+                                  child: Image.asset(
+                                      "assets/images/G-png-only.png")),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text(
+                                  "Leave Management System",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                                ),
                               ),
-                            ),
-                            const Text(
-                              "Admin Panel",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            )
-                          ],
+                              const Text(
+                                "Admin Panel",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     )),
@@ -73,7 +75,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                 height: 120,
                               ),
                               const Text(
-                                "Logout?",
+                                "Logout ?",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18),
                               ),
@@ -106,7 +108,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                               Color.fromARGB(255, 246, 244, 244)
                                             ],
                                             width: 120,
-                                            height: 42,
+                                            height: 32,
                                             borderRadius: 13,
                                             child: Center(
                                               child: Row(
@@ -151,7 +153,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                               Color.fromARGB(255, 164, 92, 95)
                                             ],
                                             width: 120,
-                                            height: 42,
+                                            height: 32,
                                             borderRadius: 13,
                                             child: Center(
                                               child: Row(
