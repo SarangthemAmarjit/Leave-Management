@@ -8,29 +8,36 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i2;
-import 'package:flutter/material.dart' as _i3;
+import 'package:auto_route/auto_route.dart' as _i3;
+import 'package:flutter/material.dart' as _i4;
+import 'package:leavemanagementadmin/pages/emailInput.page.dart' as _i2;
 import 'package:leavemanagementadmin/pages/loginpage.dart' as _i1;
 
-abstract class $AppRouter extends _i2.RootStackRouter {
-  $AppRouter([_i3.GlobalKey<_i3.NavigatorState>? navigatorKey])
+abstract class $AppRouter extends _i3.RootStackRouter {
+  $AppRouter([_i4.GlobalKey<_i4.NavigatorState>? navigatorKey])
       : super(navigatorKey);
 
   @override
-  final Map<String, _i2.PageFactory> pagesMap = {
+  final Map<String, _i3.PageFactory> pagesMap = {
     LoginRoute.name: (routeData) {
-      return _i2.AutoRoutePage<dynamic>(
+      return _i3.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i1.LoginPage(),
       );
-    }
+    },
+    EmailInputRoute.name: (routeData) {
+      return _i3.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i2.EmailInputPage(),
+      );
+    },
   };
 }
 
 /// generated route for
 /// [_i1.LoginPage]
-class LoginRoute extends _i2.PageRouteInfo<void> {
-  const LoginRoute({List<_i2.PageRouteInfo>? children})
+class LoginRoute extends _i3.PageRouteInfo<void> {
+  const LoginRoute({List<_i3.PageRouteInfo>? children})
       : super(
           LoginRoute.name,
           initialChildren: children,
@@ -38,5 +45,19 @@ class LoginRoute extends _i2.PageRouteInfo<void> {
 
   static const String name = 'LoginRoute';
 
-  static const _i2.PageInfo<void> page = _i2.PageInfo<void>(name);
+  static const _i3.PageInfo<void> page = _i3.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i2.EmailInputPage]
+class EmailInputRoute extends _i3.PageRouteInfo<void> {
+  const EmailInputRoute({List<_i3.PageRouteInfo>? children})
+      : super(
+          EmailInputRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'EmailInputRoute';
+
+  static const _i3.PageInfo<void> page = _i3.PageInfo<void>(name);
 }

@@ -1,7 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/pages/loginpage.dart';
+import 'package:leavemanagementadmin/constant/login_emailcheck.dart';
+import 'package:leavemanagementadmin/constant/login_numbercheck.dart';
 
+@RoutePage()
 class EmailInputPage extends StatefulWidget {
   const EmailInputPage({super.key});
 
@@ -10,6 +14,7 @@ class EmailInputPage extends StatefulWidget {
 }
 
 class _EmailInputPageState extends State<EmailInputPage> {
+  TextEditingController emailorphoncontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -82,6 +87,7 @@ class _EmailInputPageState extends State<EmailInputPage> {
                                   height: height / 32,
                                 ),
                                 TextFormField(
+                                  controller: emailorphoncontroller,
                                   autovalidateMode: AutovalidateMode.always,
                                   autofillHints: const [AutofillHints.email],
                                   //not for form, this will make the input suggest that the field wants email as input
@@ -100,12 +106,17 @@ class _EmailInputPageState extends State<EmailInputPage> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const LoginPage()),
-                                    );
+                                    if (isEmail(emailorphoncontroller.text)) {
+                                      //send email to api
+                                      context.router.replaceNamed('/login');
+                                    } else if (isValidPhoneNumber(
+                                        emailorphoncontroller.text)) {
+                                      //send phone to api
+                                      context.router.replaceNamed('/login');
+                                    } else {
+                                      EasyLoading.showToast(
+                                          "Invalid Email or Phone Number");
+                                    }
                                   },
                                   child: Center(
                                     child: Card(

@@ -4,15 +4,14 @@ import 'package:equatable/equatable.dart';
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
 import 'package:leavemanagementadmin/repo/auth_repository.dart';
 
-part 'login_state.dart';
+part 'login_bymail_state.dart';
 
-class LoginCubit extends Cubit<Status> implements AuthLoginListener {
+class LoginBymailCubit extends Cubit<Status> implements AuthLoginListener {
   final _authRepository = AuthRepository();
-  LoginCubit(Status initialState) : super(initialState);
+  LoginBymailCubit(Status initialState) : super(initialState);
 
-  void loginUser({required String email, required String password}) {
-    _authRepository.login(
-        authLoginListener: this, password: password, username: email);
+  void emaillogin({required String email}) {
+    _authRepository.emaillogin(authLoginListener: this, email: email);
   }
 
   @override
@@ -28,10 +27,5 @@ class LoginCubit extends Cubit<Status> implements AuthLoginListener {
   @override
   void loading() {
     emit(Status.loading);
-  }
-
-  @override
-  void nointernet() {
-    // TODO: implement nointernet
   }
 }

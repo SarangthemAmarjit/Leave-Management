@@ -7,6 +7,10 @@ class AppRouter extends $AppRouter {
   final List<AutoRoute> routes = [
     AutoRoute(
       path: '/',
+      page: EmailInputRoute.page,
+    ),
+    AutoRoute(
+      path: '/login',
       page: LoginRoute.page,
     ),
   ];

@@ -1,30 +1,64 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:dio/dio.dart';
 
 class AuthRepository {
-  Future login(
-      {required String username,
-      required String password,
+  static const baseUrl = "https://leavemngt.globizsapp.com";
+  static const loginUrl = "/api/auth/login";
+  static const verifyUser = "/api/auth/login/verify";
+
+  Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
+
+  Future emaillogin(
+      {required String email,
       required AuthLoginListener authLoginListener}) async {
     authLoginListener.loading();
+    try {
+      final response = await dio.post(
+        loginUrl,
+        data: {"username": email},
+      );
 
-    final prefs = await SharedPreferences.getInstance();
-    final body = {'username': username, 'password': password};
-    final response = await http.post(
-        Uri.parse('http://phpstack-598410-2859373.cloudwaysapps.com/api/login'),
-        body: jsonEncode(body));
-
-    if (response.statusCode == 200) {
-      authLoginListener.loaded();
-
-      log('Successfully post Data');
-    } else {
-      log('Failed to PostData.');
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Login successful
+        String token = response.data['token'];
+        authLoginListener.loaded();
+        return token;
+      } else {
+        authLoginListener.error();
+        // Login failed
+        throw Exception('Failed to log in');
+      }
+    } catch (e) {
       authLoginListener.error();
-      log(response.statusCode.toString());
+      rethrow;
+    }
+  }
+
+  Future phonelogin(
+      {required String phone,
+      required AuthLoginListener authLoginListener}) async {
+    authLoginListener.loading();
+    try {
+      final response = await dio.post(
+        loginUrl,
+        data: {"phone": phone},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Login successful
+        String token = response.data['token'];
+        authLoginListener.loaded();
+        return token;
+      } else {
+        authLoginListener.error();
+        // Login failed
+        throw Exception('Failed to log in');
+      }
+    } catch (e) {
+      authLoginListener.error();
+      rethrow;
     }
   }
 }
