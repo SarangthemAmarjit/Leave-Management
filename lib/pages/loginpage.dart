@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Center(
         child: Card(
-          color: Colors.grey[50],
+          color: Colors.grey[100],
           elevation: 20,
           child: SizedBox(
             height: height / 1.8,
@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
                 Expanded(
                     flex: 1,
                     child: Container(
-                      color: Colors.grey[50],
+                      color: Colors.grey[100],
                       height: height / 3.8,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
@@ -92,8 +92,9 @@ class _LoginPageState extends State<LoginPage> {
                                       prefixIcon:
                                           Icon(Icons.account_circle_outlined),
                                       border: OutlineInputBorder(),
-                                      labelText: "Email/Phone No. ",
-                                      hintText: "example@gmail.com"),
+                                      labelText:
+                                          "re-enter your email/ phone no. :",
+                                      hintText: "example@globizs.com"),
 
                                   cursorColor: Colors.red,
                                 ),
@@ -109,7 +110,8 @@ class _LoginPageState extends State<LoginPage> {
                                           Icon(Icons.lock_outline_rounded),
                                       border: OutlineInputBorder(),
                                       labelText: "OTP : ",
-                                      hintText: " enter OTP"),
+                                      hintText:
+                                          " enter the one time password received"),
 
                                   cursorColor: Colors.red,
                                 ),

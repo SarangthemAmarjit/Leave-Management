@@ -22,7 +22,7 @@ class _EmailInputPageState extends State<EmailInputPage> {
     return Scaffold(
       body: Center(
         child: Card(
-          color: Colors.grey[50],
+          color: Colors.grey[100],
           elevation: 20,
           child: SizedBox(
             height: height / 1.8,
@@ -32,7 +32,7 @@ class _EmailInputPageState extends State<EmailInputPage> {
                 Expanded(
                     flex: 1,
                     child: Container(
-                      color: Colors.grey[50],
+                      color: Colors.grey[100],
                       height: height / 3.8,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
@@ -96,7 +96,7 @@ class _EmailInputPageState extends State<EmailInputPage> {
                                       prefixIcon:
                                           Icon(Icons.account_circle_outlined),
                                       border: OutlineInputBorder(),
-                                      labelText: "Email/Phone No. ",
+                                      labelText: "Email/Phone No. :",
                                       hintText: "example@gmail.com"),
 
                                   cursorColor: Colors.red,

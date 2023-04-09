@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/pages/loginpage.dart';
-import 'package:leavemanagementadmin/pages/sidebar.dart';
 
 class LogOutPage extends StatefulWidget {
   const LogOutPage({super.key});
@@ -22,13 +21,13 @@ class _LogOutPageState extends State<LogOutPage> {
           child: Container(
             height: height / 1.8,
             width: width / 1.8,
-            color: Colors.grey[50],
+            color: Colors.grey[100],
             child: Row(
               children: [
                 Expanded(
                     flex: 1,
                     child: Container(
-                      color: Colors.grey[50],
+                      color: Colors.grey[100],
                       height: height / 4,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 40.0),
@@ -91,7 +90,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  SidebarPage()),
+                                                  SidebarXExampleApp()),
                                         );
                                       },
                                       child: Card(
