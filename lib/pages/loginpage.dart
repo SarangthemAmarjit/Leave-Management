@@ -90,8 +90,9 @@ class _LoginPageState extends State<LoginPage> {
                                       prefixIcon:
                                           Icon(Icons.account_circle_outlined),
                                       border: OutlineInputBorder(),
-                                      labelText: "Email/Phone No. ",
-                                      hintText: "example@gmail.com"),
+                                      labelText:
+                                          "re-enter your email/ phone no. :",
+                                      hintText: "example@globizs.com"),
 
                                   cursorColor: Colors.red,
                                 ),
@@ -107,7 +108,8 @@ class _LoginPageState extends State<LoginPage> {
                                           Icon(Icons.lock_outline_rounded),
                                       border: OutlineInputBorder(),
                                       labelText: "OTP : ",
-                                      hintText: " enter OTP"),
+                                      hintText:
+                                          " enter the one time password received"),
 
                                   cursorColor: Colors.red,
                                 ),

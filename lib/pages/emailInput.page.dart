@@ -90,7 +90,7 @@ class _EmailInputPageState extends State<EmailInputPage> {
                                       prefixIcon:
                                           Icon(Icons.account_circle_outlined),
                                       border: OutlineInputBorder(),
-                                      labelText: "Email/Phone No. ",
+                                      labelText: "Email/Phone No. :",
                                       hintText: "example@gmail.com"),
 
                                   cursorColor: Colors.red,
