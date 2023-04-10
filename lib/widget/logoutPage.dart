@@ -83,6 +83,7 @@ class _LogOutPageState extends State<LogOutPage> {
                               ),
                               Center(
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     InkWell(
                                       onTap: () {
