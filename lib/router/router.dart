@@ -14,8 +14,16 @@ class AppRouter extends $AppRouter {
       ),
     ]),
     AutoRoute(
+      path: '/sidebar',
+      page: SidebarRoute.page,
+    ),
+    AutoRoute(
       path: '/login',
       page: LoginRoute.page,
+    ),
+    AutoRoute(
+      path: '/emailinput',
+      page: EmailInputRoute.page,
     ),
   ];
 }

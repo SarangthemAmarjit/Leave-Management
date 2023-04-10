@@ -1,6 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/pages/loginpage.dart';
 
 class LogOutPage extends StatefulWidget {
   const LogOutPage({super.key});
@@ -86,12 +86,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SidebarXExampleApp()),
-                                        );
+                                        context.router.replaceNamed('/sidebar');
                                       },
                                       child: Card(
                                         elevation: 6,
@@ -132,12 +127,8 @@ class _LogOutPageState extends State<LogOutPage> {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const LoginPage()),
-                                        );
+                                        context.router
+                                            .replaceNamed('/emailinput');
                                       },
                                       child: Card(
                                         elevation: 10,
