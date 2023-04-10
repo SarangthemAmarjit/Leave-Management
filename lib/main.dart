@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:leavemanagementadmin/pages/emailInput.page.dart';
+import 'package:leavemanagementadmin/core/multiprovider.wrapper.dart';
+import 'package:leavemanagementadmin/router/router.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  MyApp({super.key});
+  final _appRouter = AppRouter();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MultiproviderWrapper(
+      child: MaterialApp.router(
+        routerConfig: _appRouter.config(),
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(primarySwatch: Colors.red, fontFamily: 'KulimPark'),
         builder: EasyLoading.init(),
-        home: const EmailInputPage());
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-/// The home page of the application which hosts the datagrid.
+@RoutePage()
 class HomePage extends StatefulWidget {
   /// Creates the home page.
   const HomePage({Key? key}) : super(key: key);

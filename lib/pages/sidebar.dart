@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:leavemanagementadmin/pages/allbranch.dart';
@@ -9,8 +10,9 @@ import 'package:sidebarx/sidebarx.dart';
 
 import '../constant/constant.dart';
 
-class SidebarXExampleApp extends StatelessWidget {
-  SidebarXExampleApp({Key? key}) : super(key: key);
+@RoutePage()
+class SidebarPage extends StatelessWidget {
+  SidebarPage({Key? key}) : super(key: key);
 
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _key = GlobalKey<ScaffoldState>();
