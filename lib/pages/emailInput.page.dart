@@ -21,38 +21,80 @@ class _EmailInputPageState extends State<EmailInputPage> {
         child: Card(
           color: Colors.grey[100],
           elevation: 20,
-          child: width <= 600
-              ? Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Center(
-                      child: SizedBox(
-                        // color: Colors.amber,
-                        height: height / 3.6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Login",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
-                            SizedBox(
-                              height: height / 32,
-                            ),
-                            TextFormField(
-                              controller: emailorphoncontroller,
-                              autovalidateMode: AutovalidateMode.always,
-                              autofillHints: const [AutofillHints.email],
-                              //not for form, this will make the input suggest that the field wants email as input
-                              decoration: const InputDecoration(
-                                  // fillColor: Colors.amber,
-                                  prefixIcon:
-                                      Icon(Icons.account_circle_outlined),
-                                  border: OutlineInputBorder(),
-                                  labelText: "Email/Phone No. :",
-                                  hintText: "example@gmail.com"),
+          child: SizedBox(
+            height: height / 1.8,
+            width: width / 1.8,
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.grey[100],
+                      height: height / 3.8,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 40.0),
+                        child: SizedBox(
+                          // color: Colors.red,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  height: 90,
+                                  child: Image.asset(
+                                      "assets/images/G-png-only.png")),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text(
+                                  "Leave Management System",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                              const Text(
+                                "Admin Panel",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Center(
+                          child: SizedBox(
+                            // color: Colors.amber,
+                            height: height / 3.6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                SizedBox(
+                                  height: height / 32,
+                                ),
+                                TextFormField(
+                                  controller: emailorphoncontroller,
+                                  autovalidateMode: AutovalidateMode.always,
+                                  autofillHints: const [AutofillHints.email],
+                                  //not for form, this will make the input suggest that the field wants email as input
+                                  decoration: const InputDecoration(
+                                      // fillColor: Colors.amber,
+                                      prefixIcon:
+                                          Icon(Icons.account_circle_outlined),
+                                      border: OutlineInputBorder(),
+                                      labelText: "Email/Phone No. :",
+                                      hintText: "example@gmail.com"),
 
                               cursorColor: Colors.red,
                             ),
