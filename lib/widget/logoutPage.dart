@@ -20,7 +20,7 @@ class _LogOutPageState extends State<LogOutPage> {
           elevation: 20,
           child: Container(
             height: height / 1.8,
-            width: width / 1.8,
+            width: width <= 670 ? width / 1.2 : width / 1.8,
             color: Colors.grey[100],
             child: Row(
               children: [
@@ -40,20 +40,37 @@ class _LogOutPageState extends State<LogOutPage> {
                                   height: 90,
                                   child: Image.asset(
                                       "assets/images/G-png-only.png")),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text(
-                                  "Leave Management System",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
-                                ),
+                              Padding(
+                                padding: width <= 1200
+                                    ? const EdgeInsets.symmetric(vertical: 3.0)
+                                    : const EdgeInsets.symmetric(vertical: 8.0),
+                                child: width <= 1000
+                                    ? const Text(
+                                        "Leave Management System",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w400),
+                                      )
+                                    : const Text(
+                                        "Leave Management System",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400),
+                                      ),
                               ),
-                              const Text(
-                                "Admin Panel",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              )
+                              width <= 1000
+                                  ? const Text(
+                                      "Admin Panel",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : const Text(
+                                      "Admin Panel",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    )
                             ],
                           ),
                         ),
@@ -65,7 +82,9 @@ class _LogOutPageState extends State<LogOutPage> {
                       color: Colors.white,
                       child: Column(children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                          padding: width <= 1200
+                              ? const EdgeInsets.symmetric(horizontal: 19.0)
+                              : const EdgeInsets.symmetric(horizontal: 24.0),
                           child: Form(
                               child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,25 +121,38 @@ class _LogOutPageState extends State<LogOutPage> {
                                                   255, 219, 217, 217),
                                               Color.fromARGB(255, 246, 244, 244)
                                             ],
-                                            width: 120,
-                                            height: 32,
+                                            width: width <= 1200 ? 80 : 120,
+                                            height: height <= 1200 ? 27 : 32,
                                             borderRadius: 13,
                                             child: Center(
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: const [
-                                                  Icon(
+                                                children: [
+                                                  const Icon(
                                                     Icons.cancel,
                                                     color: Colors.grey,
                                                   ),
-                                                  Text(
-                                                    "Not now",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.grey),
-                                                  ),
+                                                  width <= 1200
+                                                      ? const Text(
+                                                          "Not now",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.grey),
+                                                        )
+                                                      : const Text(
+                                                          "Not now",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.grey),
+                                                        ),
                                                 ],
                                               ),
                                             )),
@@ -143,25 +175,38 @@ class _LogOutPageState extends State<LogOutPage> {
                                               Color.fromARGB(255, 211, 32, 39),
                                               Color.fromARGB(255, 164, 92, 95)
                                             ],
-                                            width: 120,
-                                            height: 32,
+                                            width: width <= 1200 ? 80 : 120,
+                                            height: width <= 1200 ? 27 : 32,
                                             borderRadius: 13,
                                             child: Center(
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: const [
-                                                  Icon(
+                                                children: [
+                                                  const Icon(
                                                     Icons.check_circle_rounded,
                                                     color: Colors.white,
                                                   ),
-                                                  Text(
-                                                    "Confirm",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white),
-                                                  ),
+                                                  width <= 1200
+                                                      ? const Text(
+                                                          "Confirm",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
+                                                        )
+                                                      : const Text(
+                                                          "Confirm",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
                                                 ],
                                               ),
                                             )),

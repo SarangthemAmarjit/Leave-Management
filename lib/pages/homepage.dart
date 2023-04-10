@@ -26,16 +26,18 @@ class _HomePageState extends State<HomePage> {
     {
       "slno.": "1",
       'name': "Amarjit",
-      'branch': "Production",
+      'branch': "Imphal West",
       "role": "Developer",
-      "action": Null
+      "action": Null,
+      "department": "Production"
     },
     {
       "slno.": "2",
       'name': "Jc",
-      'branch': "Production",
+      'branch': "Imphat East",
       "role": "Developer",
-      "action": Null
+      "action": Null,
+      "department": "Production"
     }
   ];
 
@@ -64,6 +66,13 @@ class _HomePageState extends State<HomePage> {
         DataCell(
           Text(
             item['branch'].toString(),
+          ),
+        ),
+      );
+      displayedDataCell.add(
+        DataCell(
+          Text(
+            item['department'].toString(),
           ),
         ),
       );
@@ -180,6 +189,7 @@ class _HomePageState extends State<HomePage> {
                                           'name': _namefieldcontroller.text,
                                           'branch': "Production",
                                           "role": "Developer",
+                                          "department": "Production"
                                         });
                                         log(create_statuscode.toString());
                                         //     getcreate_status();
@@ -721,8 +731,9 @@ class _HomePageState extends State<HomePage> {
 
                                           allemployee.add({
                                             'name': _namefieldcontroller.text,
-                                            'branch': "Production",
+                                            'branch': "Imphal West",
                                             "role": "Developer",
+                                            "department": "Production"
                                           });
                                           log(create_statuscode.toString());
                                           //     getcreate_status();
@@ -1039,13 +1050,14 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
                 rows: <DataRow>[
-                  for (int i = 0; i < displayedDataCell.length; i += 5)
+                  for (int i = 0; i < displayedDataCell.length; i += 6)
                     DataRow(cells: [
                       displayedDataCell[i],
                       displayedDataCell[i + 1],
                       displayedDataCell[i + 2],
                       displayedDataCell[i + 3],
-                      displayedDataCell[i + 4]
+                      displayedDataCell[i + 4],
+                      displayedDataCell[i + 5]
                     ])
                 ],
                 columns: const <DataColumn>[
@@ -1064,6 +1076,11 @@ class _HomePageState extends State<HomePage> {
                   DataColumn(
                     label: Text(
                       'Branch',
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Department',
                     ),
                   ),
                   DataColumn(

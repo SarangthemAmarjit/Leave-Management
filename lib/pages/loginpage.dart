@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
           elevation: 20,
           child: SizedBox(
             height: height / 1.8,
-            width: width / 1.8,
+            width: width <= 700 ? width / 1.2 : width / 1.8,
             child: Row(
               children: [
                 Expanded(
@@ -42,20 +42,35 @@ class _LoginPageState extends State<LoginPage> {
                                   height: 90,
                                   child: Image.asset(
                                       "assets/images/G-png-only.png")),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text(
-                                  "Leave Management System",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400),
-                                ),
+                              Padding(
+                                padding: width <= 600
+                                    ? const EdgeInsets.symmetric(vertical: 2.0)
+                                    : const EdgeInsets.symmetric(vertical: 8.0),
+                                child: width <= 1000
+                                    ? const Text(
+                                        "Leave Management System",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w400),
+                                      )
+                                    : const Text(
+                                        "Leave Management System",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400),
+                                      ),
                               ),
-                              const Text(
-                                "Admin Panel",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              )
+                              width <= 1000
+                                  ? const Text("Admin Panel",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold))
+                                  : const Text(
+                                      "Admin Panel",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    )
                             ],
                           ),
                         ),
