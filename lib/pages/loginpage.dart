@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/pages/sidebar.dart';
 
 @RoutePage()
 class LoginPage extends StatefulWidget {
@@ -120,11 +120,9 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SidebarPage()),
-                                    );
+                                    context.router.replaceNamed('/sidebar');
+                                    EasyLoading.showSuccess(
+                                        'Successfully Login');
                                   },
                                   child: Center(
                                     child: Card(
