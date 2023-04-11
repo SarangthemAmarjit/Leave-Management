@@ -132,6 +132,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                                   const Icon(
                                                     Icons.cancel,
                                                     color: Colors.grey,
+                                                    size: 18,
                                                   ),
                                                   width <= 1200
                                                       ? const Text(
@@ -185,6 +186,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                                 children: [
                                                   const Icon(
                                                     Icons.check_circle_rounded,
+                                                    size: 18,
                                                     color: Colors.white,
                                                   ),
                                                   width <= 1200
