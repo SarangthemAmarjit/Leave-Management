@@ -6,9 +6,10 @@ import 'package:leavemanagementadmin/repo/auth_repository.dart';
 
 part 'login_bymail_state.dart';
 
-class LoginBymailCubit extends Cubit<Status> implements AuthLoginListener {
+class LoginBymailCubit extends Cubit<SendingotpStatusformail>
+    implements AuthLoginListener {
   final _authRepository = AuthRepository();
-  LoginBymailCubit(Status initialState) : super(initialState);
+  LoginBymailCubit(SendingotpStatusformail initialState) : super(initialState);
 
   void emaillogin({required String email}) {
     _authRepository.emaillogin(authLoginListener: this, email: email);
@@ -16,16 +17,16 @@ class LoginBymailCubit extends Cubit<Status> implements AuthLoginListener {
 
   @override
   void error() {
-    emit(Status.error);
+    emit(SendingotpStatusformail.error);
   }
 
   @override
   void loaded() {
-    emit(Status.loaded);
+    emit(SendingotpStatusformail.loaded);
   }
 
   @override
   void loading() {
-    emit(Status.loading);
+    emit(SendingotpStatusformail.loading);
   }
 }
