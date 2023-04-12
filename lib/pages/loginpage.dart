@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/constant/alertbox.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_verifybymail_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginPage extends StatefulWidget {
@@ -19,6 +20,23 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController verifyemailcontroller = TextEditingController();
   TextEditingController verifymailotpcontroller = TextEditingController();
+  bool ismail = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkinput();
+  }
+
+  checkinput() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    if (pref.containsKey('ismail')) {
+      setState(() {
+        ismail = pref.getBool('ismail')!;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -55,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             'Successfully Login',
           );
 
-          context.router.replaceNamed('/sidebar');
+          context.router.replaceNamed('/');
           break;
 
         case VerifyStatusformail.error:
@@ -156,13 +174,14 @@ class _LoginPageState extends State<LoginPage> {
                                     autovalidateMode: AutovalidateMode.always,
                                     autofillHints: const [AutofillHints.email],
                                     //not for form, this will make the input suggest that the field wants email as input
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                         // fillColor: Colors.amber,
-                                        prefixIcon:
-                                            Icon(Icons.account_circle_outlined),
-                                        border: OutlineInputBorder(),
-                                        labelText:
-                                            "re-enter your email/ phone no. :",
+                                        prefixIcon: const Icon(
+                                            Icons.account_circle_outlined),
+                                        border: const OutlineInputBorder(),
+                                        labelText: ismail
+                                            ? "re-enter your email"
+                                            : 're-enter your number',
                                         hintText: "example@globizs.com"),
 
                                     cursorColor: Colors.red,
@@ -190,12 +209,28 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      context
-                                          .read<LoginVerifybymailCubit>()
-                                          .verifymail(
-                                              email: verifyemailcontroller.text,
-                                              otp:
-                                                  verifymailotpcontroller.text);
+                                      if (verifyemailcontroller.text.isEmpty &&
+                                          verifymailotpcontroller
+                                              .text.isEmpty) {
+                                        EasyLoading.showToast(
+                                            'Email or OTP Cannot be Empty');
+                                      } else if (verifyemailcontroller
+                                          .text.isEmpty) {
+                                        EasyLoading.showToast(
+                                            'Email Cannot be Empty');
+                                      } else if (verifymailotpcontroller
+                                          .text.isEmpty) {
+                                        EasyLoading.showToast(
+                                            'OTP cannot be Empty');
+                                      } else {
+                                        context
+                                            .read<LoginVerifybymailCubit>()
+                                            .verifymail(
+                                                email:
+                                                    verifyemailcontroller.text,
+                                                otp: verifymailotpcontroller
+                                                    .text);
+                                      }
                                     },
                                     child: Center(
                                       child: Card(

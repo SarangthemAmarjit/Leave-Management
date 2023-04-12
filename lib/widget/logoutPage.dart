@@ -107,7 +107,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        context.router.replaceNamed('/sidebar');
+                                        context.router.replaceNamed('/');
                                       },
                                       child: Card(
                                         elevation: 6,
@@ -166,9 +166,10 @@ class _LogOutPageState extends State<LogOutPage> {
                                       onTap: () async {
                                         final prefs = await SharedPreferences
                                             .getInstance();
-                                        prefs.remove('tokken').whenComplete(
-                                            () => context.router
-                                                .replaceNamed('/emailinput'));
+
+                                        prefs.remove('tokken').whenComplete(() {
+                                          context.router.replaceNamed('/');
+                                        });
                                       },
                                       child: Card(
                                         elevation: 10,
