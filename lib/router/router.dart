@@ -7,7 +7,7 @@ class AppRouter extends $AppRouter {
   final List<AutoRoute> routes = [
     AutoRoute(path: '/', page: AuthFlowRoute.page, children: [
       AutoRoute(
-        page: EmailInputRoute.page,
+        page: LoginRoute.page,
       ),
       AutoRoute(
         page: SidebarRoute.page,
@@ -20,10 +20,6 @@ class AppRouter extends $AppRouter {
     AutoRoute(
       path: '/login',
       page: LoginRoute.page,
-    ),
-    AutoRoute(
-      path: '/emailinput',
-      page: EmailInputRoute.page,
     ),
   ];
 }

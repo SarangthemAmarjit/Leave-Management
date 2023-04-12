@@ -6,8 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/constant/alertbox.dart';
+import 'package:leavemanagementadmin/constant/login_emailcheck.dart';
+import 'package:leavemanagementadmin/constant/login_numbercheck.dart';
+import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_verifybymail_cubit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginPage extends StatefulWidget {
@@ -18,30 +20,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController verifyemailcontroller = TextEditingController();
+  TextEditingController emailorphoncontroller = TextEditingController();
   TextEditingController verifymailotpcontroller = TextEditingController();
-  bool ismail = false;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    checkinput();
-  }
-
-  checkinput() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    if (pref.containsKey('ismail')) {
-      setState(() {
-        ismail = pref.getBool('ismail')!;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    var c = context.watch<LoginVerifybymailCubit>();
+    var c = context.watch<LoginBymailCubit>();
+    var otpstatus = c.state.status;
+
     return BlocConsumer<LoginVerifybymailCubit, VerifyStatusformail>(
         listener: (context, state) {
       switch (state) {
@@ -58,13 +45,7 @@ class _LoginPageState extends State<LoginPage> {
 
         case VerifyStatusformail.loading:
           log('Loading');
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return alertbox;
-            },
-          );
+          EasyLoading.show(status: 'Please Wait..');
           break;
 
         case VerifyStatusformail.loaded:
@@ -156,12 +137,12 @@ class _LoginPageState extends State<LoginPage> {
                           child: Center(
                             child: SizedBox(
                               // color: Colors.amber,
-                              height: height / 2.5,
+                              height: height / 2.3,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    "Verify",
+                                    "Login",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
@@ -170,19 +151,51 @@ class _LoginPageState extends State<LoginPage> {
                                     height: height / 32,
                                   ),
                                   TextFormField(
-                                    controller: verifyemailcontroller,
+                                    controller: emailorphoncontroller,
                                     autovalidateMode: AutovalidateMode.always,
                                     autofillHints: const [AutofillHints.email],
                                     //not for form, this will make the input suggest that the field wants email as input
                                     decoration: InputDecoration(
                                         // fillColor: Colors.amber,
+                                        suffix: TextButton(
+                                            // style: TextButton.styleFrom(
+                                            //     backgroundColor: Colors.blue),
+                                            onPressed: () {
+                                              if (emailorphoncontroller
+                                                  .text.isEmpty) {
+                                                EasyLoading.showToast(
+                                                    'Email or Phone Cannot be Empty');
+                                              } else if (isEmail(
+                                                  emailorphoncontroller.text)) {
+                                                context
+                                                    .read<LoginBymailCubit>()
+                                                    .emaillogin(
+                                                        email:
+                                                            emailorphoncontroller
+                                                                .text);
+
+                                                //send email to api
+                                              } else if (isValidPhoneNumber(
+                                                  emailorphoncontroller.text)) {
+                                                //send phone to api
+                                              } else {
+                                                EasyLoading.showToast(
+                                                    "Invalid Email or Phone Number");
+                                              }
+                                            },
+                                            child: Text(
+                                              "Send OTP",
+                                              style: TextStyle(
+                                                  color: Colors.grey[600],
+                                                  fontWeight: FontWeight.bold),
+                                            )),
                                         prefixIcon: const Icon(
                                             Icons.account_circle_outlined),
                                         border: const OutlineInputBorder(),
-                                        labelText: ismail
-                                            ? "re-enter your email"
-                                            : 're-enter your number',
-                                        hintText: "example@globizs.com"),
+                                        labelText: "Enter email/ Phone no. :",
+                                        hintText: "example@globizs.com",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[400])),
 
                                     cursorColor: Colors.red,
                                   ),
@@ -194,43 +207,46 @@ class _LoginPageState extends State<LoginPage> {
                                     autovalidateMode: AutovalidateMode.always,
                                     autofillHints: const [AutofillHints.email],
                                     //not for form, this will make the input suggest that the field wants email as input
-                                    decoration: const InputDecoration(
-                                        prefixIcon:
-                                            Icon(Icons.lock_outline_rounded),
-                                        border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                        prefixIcon: const Icon(
+                                            Icons.lock_outline_rounded),
+                                        border: const OutlineInputBorder(),
                                         labelText: "OTP : ",
-                                        hintText:
-                                            " enter the one time password received"),
+                                        hintText: " Enter OTP",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[400])),
 
                                     cursorColor: Colors.red,
                                   ),
                                   SizedBox(
                                     height: height / 46,
                                   ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("Time remaining : "),
+                                      TextButton(
+                                          onPressed: () {},
+                                          child: const Text(
+                                            "Resend OTP",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: height / 46,
+                                  ),
                                   InkWell(
                                     onTap: () {
-                                      if (verifyemailcontroller.text.isEmpty &&
-                                          verifymailotpcontroller
-                                              .text.isEmpty) {
-                                        EasyLoading.showToast(
-                                            'Email or OTP Cannot be Empty');
-                                      } else if (verifyemailcontroller
-                                          .text.isEmpty) {
-                                        EasyLoading.showToast(
-                                            'Email Cannot be Empty');
-                                      } else if (verifymailotpcontroller
-                                          .text.isEmpty) {
-                                        EasyLoading.showToast(
-                                            'OTP cannot be Empty');
-                                      } else {
-                                        context
-                                            .read<LoginVerifybymailCubit>()
-                                            .verifymail(
-                                                email:
-                                                    verifyemailcontroller.text,
-                                                otp: verifymailotpcontroller
-                                                    .text);
-                                      }
+                                      context
+                                          .read<LoginVerifybymailCubit>()
+                                          .verifymail(
+                                              email: emailorphoncontroller.text,
+                                              otp:
+                                                  verifymailotpcontroller.text);
                                     },
                                     child: Center(
                                       child: Card(
@@ -240,17 +256,19 @@ class _LoginPageState extends State<LoginPage> {
                                               BorderRadius.circular(20),
                                           //set border radius more than 50% of height and width to make circle
                                         ),
-                                        child: const CardWidget(
-                                            gradient: [
+                                        child: CardWidget(
+                                            gradient: const [
                                               Color.fromARGB(255, 211, 32, 39),
                                               Color.fromARGB(255, 164, 92, 95)
                                             ],
-                                            width: 340,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             height: 48,
                                             borderRadius: 13,
-                                            child: Center(
+                                            child: const Center(
                                               child: Text(
-                                                "Verify",
+                                                "Login",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white),

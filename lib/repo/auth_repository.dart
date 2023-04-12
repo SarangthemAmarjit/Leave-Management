@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
-  static const baseUrl = "https://leavemngt.globizsapp.com";
+  static const baseUrl = "https://staging.leave.globizs.com";
   static const loginUrl = "/api/auth/login";
   static const verifyUser = "/api/auth/login/verify";
 
