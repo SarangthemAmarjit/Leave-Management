@@ -6,7 +6,7 @@ import 'package:leavemanagementadmin/repo/auth_repository.dart';
 part 'login_verifybymail_state.dart';
 
 class LoginVerifybymailCubit extends Cubit<VerifyStatusformail>
-    implements AuthLoginListener {
+    implements AuthLoginListioner {
   final _authRepository = AuthRepository();
   LoginVerifybymailCubit(VerifyStatusformail initialState)
       : super(initialState);

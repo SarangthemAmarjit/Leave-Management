@@ -9,6 +9,7 @@ import 'package:leavemanagementadmin/constant/alertbox.dart';
 import 'package:leavemanagementadmin/constant/login_emailcheck.dart';
 import 'package:leavemanagementadmin/constant/login_numbercheck.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class EmailInputPage extends StatefulWidget {
@@ -166,8 +167,16 @@ class _EmailInputPageState extends State<EmailInputPage> {
                                     height: height / 46,
                                   ),
                                   InkWell(
-                                    onTap: () {
-                                      if (isEmail(emailorphoncontroller.text)) {
+                                    onTap: () async {
+                                      if (emailorphoncontroller.text.isEmpty) {
+                                        EasyLoading.showToast(
+                                            'Email or Phone Cannot be Empty');
+                                      } else if (isEmail(
+                                          emailorphoncontroller.text)) {
+                                        SharedPreferences pref =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        pref.setBool('ismail', true);
                                         context
                                             .read<LoginBymailCubit>()
                                             .emaillogin(
@@ -177,7 +186,6 @@ class _EmailInputPageState extends State<EmailInputPage> {
                                       } else if (isValidPhoneNumber(
                                           emailorphoncontroller.text)) {
                                         //send phone to api
-                                        context.router.replaceNamed('/login');
                                       } else {
                                         EasyLoading.showToast(
                                             "Invalid Email or Phone Number");

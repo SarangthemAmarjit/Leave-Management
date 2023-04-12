@@ -1,21 +1,20 @@
 import 'dart:developer';
 
+import 'package:leavemanagementadmin/Interceptor/diointerceptor.dart';
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
 
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthRepository {
-  static const baseUrl = "https://leavemngt.globizsapp.com";
-  static const loginUrl = "/api/auth/login";
-  static const verifyUser = "/api/auth/login/verify";
+import '../constant/apiendpoint.dart';
 
+class AuthRepository {
   Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
 
 //Sending Otp to Email
   Future emaillogin(
       {required String email,
-      required AuthLoginListener authLoginListener}) async {
+      required AuthLoginListioner authLoginListener}) async {
     authLoginListener.loading();
     try {
       final response = await dio.post(
@@ -39,12 +38,17 @@ class AuthRepository {
       rethrow;
     }
   }
+
 // Verify Otp From Email
+  AuthRepository() {
+    dio = Dio(BaseOptions(baseUrl: "http://restapi.adequateshop.com/api/"));
+    dio.interceptors.add(DioInterceptor());
+  }
 
   Future Verifyemail(
       {required String email,
       required String otp,
-      required AuthLoginListener authLoginListener}) async {
+      required AuthLoginListioner authLoginListener}) async {
     authLoginListener.loading();
     final prefs = await SharedPreferences.getInstance();
     try {
@@ -77,7 +81,7 @@ class AuthRepository {
 
   Future phonelogin(
       {required String phone,
-      required AuthLoginListener authLoginListener}) async {
+      required AuthLoginListioner authLoginListener}) async {
     authLoginListener.loading();
     try {
       final response = await dio.post(

@@ -7,7 +7,7 @@ import 'package:leavemanagementadmin/repo/auth_repository.dart';
 part 'login_bymail_state.dart';
 
 class LoginBymailCubit extends Cubit<SendingotpStatusformail>
-    implements AuthLoginListener {
+    implements AuthLoginListioner {
   final _authRepository = AuthRepository();
   LoginBymailCubit(SendingotpStatusformail initialState) : super(initialState);
 
