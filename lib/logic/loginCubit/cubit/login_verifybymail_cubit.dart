@@ -11,9 +11,15 @@ class LoginVerifybymailCubit extends Cubit<VerifyStatusformail>
   LoginVerifybymailCubit(VerifyStatusformail initialState)
       : super(initialState);
 
-  void verifymail({required String email, required String otp}) {
+  void verifymail(
+      {required String userorphone,
+      required String email,
+      required String otp}) {
     _authRepository.Verifyemail(
-        authLoginListener: this, email: email, otp: otp);
+        authLoginListener: this,
+        emailorphone: email,
+        otp: otp,
+        userorphone: userorphone);
   }
 
   @override
