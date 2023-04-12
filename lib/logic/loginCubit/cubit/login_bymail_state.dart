@@ -1,11 +1,14 @@
 part of 'login_bymail_cubit.dart';
 
-enum Status { initial, loading, loaded, error }
+enum SendingotpStatusformail { initial, loading, loaded, error }
 
 class LoginBymailState extends Equatable {
-  final Status status;
+  final SendingotpStatusformail status;
+
   const LoginBymailState({required this.status});
 
   @override
-  List get props => [status];
+  List get props => [
+        status,
+      ];
 }

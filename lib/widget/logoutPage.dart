@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:leavemanagementadmin/constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LogOutPage extends StatefulWidget {
   const LogOutPage({super.key});
@@ -20,7 +21,7 @@ class _LogOutPageState extends State<LogOutPage> {
           elevation: 20,
           child: Container(
             height: height / 1.8,
-            width: width <= 670 ? width / 1.2 : width / 1.8,
+            width: width <= 700 ? width / 1.2 : width / 1.8,
             color: Colors.grey[100],
             child: Row(
               children: [
@@ -41,7 +42,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                   child: Image.asset(
                                       "assets/images/G-png-only.png")),
                               Padding(
-                                padding: width <= 1200
+                                padding: width <= 1000
                                     ? const EdgeInsets.symmetric(vertical: 3.0)
                                     : const EdgeInsets.symmetric(vertical: 8.0),
                                 child: width <= 1000
@@ -82,8 +83,8 @@ class _LogOutPageState extends State<LogOutPage> {
                       color: Colors.white,
                       child: Column(children: [
                         Padding(
-                          padding: width <= 1200
-                              ? const EdgeInsets.symmetric(horizontal: 19.0)
+                          padding: width <= 1300
+                              ? const EdgeInsets.symmetric(horizontal: 6.0)
                               : const EdgeInsets.symmetric(horizontal: 24.0),
                           child: Form(
                               child: Column(
@@ -115,7 +116,8 @@ class _LogOutPageState extends State<LogOutPage> {
                                               BorderRadius.circular(20),
                                           //set border radius more than 50% of height and width to make circle
                                         ),
-                                        child: CardWidget(
+                                        child: Center(
+                                          child: CardWidget(
                                             gradient: const [
                                               Color.fromARGB(
                                                   255, 219, 217, 217),
@@ -132,7 +134,6 @@ class _LogOutPageState extends State<LogOutPage> {
                                                   const Icon(
                                                     Icons.cancel,
                                                     color: Colors.grey,
-                                                    size: 18,
                                                   ),
                                                   width <= 1200
                                                       ? const Text(
@@ -160,9 +161,12 @@ class _LogOutPageState extends State<LogOutPage> {
                                       ),
                                     ),
                                     InkWell(
-                                      onTap: () {
-                                        context.router
-                                            .replaceNamed('/emailinput');
+                                      onTap: () async {
+                                        final prefs = await SharedPreferences
+                                            .getInstance();
+                                        prefs.remove('tokken').whenComplete(
+                                            () => context.router
+                                                .replaceNamed('/emailinput'));
                                       },
                                       child: Card(
                                         elevation: 10,
@@ -177,7 +181,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                               Color.fromARGB(255, 164, 92, 95)
                                             ],
                                             width: width <= 1200 ? 80 : 120,
-                                            height: width <= 1200 ? 27 : 32,
+                                            height: height <= 1200 ? 27 : 32,
                                             borderRadius: 13,
                                             child: Center(
                                               child: Row(
@@ -186,7 +190,6 @@ class _LogOutPageState extends State<LogOutPage> {
                                                 children: [
                                                   const Icon(
                                                     Icons.check_circle_rounded,
-                                                    size: 18,
                                                     color: Colors.white,
                                                   ),
                                                   width <= 1200
