@@ -37,7 +37,7 @@ class _AuthFlowPageState extends State<AuthFlowPage> {
               // const AppUpdaterRoute()
             ];
           case logStatus.loggedOut:
-            return [const EmailInputRoute()];
+            return [const LoginRoute()];
           case logStatus.initial:
             return [];
         }

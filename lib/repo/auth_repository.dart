@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constant/apiendpoint.dart';
 
 class AuthRepository {
-  Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
+  // Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
 
 //Sending Otp to Email
   Future emaillogin(
