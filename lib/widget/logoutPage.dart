@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:leavemanagementadmin/Interceptor/storetoken.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LogOutPage extends StatefulWidget {
   const LogOutPage({super.key});
@@ -128,11 +128,9 @@ class _LogOutPageState extends State<LogOutPage> {
                                     ),
                                     InkWell(
                                       onTap: () async {
-                                        final prefs = await SharedPreferences
-                                            .getInstance();
-                                        prefs.remove('tokken').whenComplete(
-                                            () => context.router
-                                                .replaceNamed('/'));
+                                        Store.clear().whenComplete(() {
+                                          context.router.replaceNamed('/');
+                                        });
                                       },
                                       child: Card(
                                         elevation: 10,

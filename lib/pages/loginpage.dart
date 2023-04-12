@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/constant/alertbox.dart';
 import 'package:leavemanagementadmin/constant/login_emailcheck.dart';
 import 'package:leavemanagementadmin/constant/login_numbercheck.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
@@ -34,13 +33,7 @@ class _LoginPageState extends State<LoginPage> {
       switch (state) {
         case VerifyStatusformail.initial:
           log('Initial');
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return alertbox;
-            },
-          );
+          EasyLoading.show(status: 'Please Wait..');
           break;
 
         case VerifyStatusformail.loading:
@@ -52,9 +45,8 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pop(context);
           EasyLoading.showToast(
             'Successfully Login',
-          );
+          ).whenComplete(() => context.router.replaceNamed('/'));
 
-          context.router.replaceNamed('/');
           break;
 
         case VerifyStatusformail.error:

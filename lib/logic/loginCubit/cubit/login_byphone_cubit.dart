@@ -5,7 +5,7 @@ import 'package:leavemanagementadmin/repo/auth_repository.dart';
 
 part 'login_byphone_state.dart';
 
-class LoginByphoneCubit extends Cubit<Status2> implements AuthLoginListener {
+class LoginByphoneCubit extends Cubit<Status2> implements AuthLoginListioner {
   final _authRepository = AuthRepository();
   LoginByphoneCubit(Status2 initialState) : super(initialState);
 
