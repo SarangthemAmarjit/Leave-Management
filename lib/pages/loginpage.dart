@@ -143,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    "Verify",
+                                    "Login",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
@@ -156,14 +156,25 @@ class _LoginPageState extends State<LoginPage> {
                                     autovalidateMode: AutovalidateMode.always,
                                     autofillHints: const [AutofillHints.email],
                                     //not for form, this will make the input suggest that the field wants email as input
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
                                         // fillColor: Colors.amber,
-                                        prefixIcon:
-                                            Icon(Icons.account_circle_outlined),
-                                        border: OutlineInputBorder(),
-                                        labelText:
-                                            "re-enter your email/ phone no. :",
-                                        hintText: "example@globizs.com"),
+                                        suffix: TextButton(
+                                            // style: TextButton.styleFrom(
+                                            //     backgroundColor: Colors.blue),
+                                            onPressed: () {},
+                                            child: Text(
+                                              "Send OTP",
+                                              style: TextStyle(
+                                                  color: Colors.red[900],
+                                                  fontWeight: FontWeight.bold),
+                                            )),
+                                        prefixIcon: const Icon(
+                                            Icons.account_circle_outlined),
+                                        border: const OutlineInputBorder(),
+                                        labelText: "Enter email/ Phone no. :",
+                                        hintText: "example@globizs.com",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[400])),
 
                                     cursorColor: Colors.red,
                                   ),
@@ -175,15 +186,34 @@ class _LoginPageState extends State<LoginPage> {
                                     autovalidateMode: AutovalidateMode.always,
                                     autofillHints: const [AutofillHints.email],
                                     //not for form, this will make the input suggest that the field wants email as input
-                                    decoration: const InputDecoration(
-                                        prefixIcon:
-                                            Icon(Icons.lock_outline_rounded),
-                                        border: OutlineInputBorder(),
+                                    decoration: InputDecoration(
+                                        prefixIcon: const Icon(
+                                            Icons.lock_outline_rounded),
+                                        border: const OutlineInputBorder(),
                                         labelText: "OTP : ",
-                                        hintText:
-                                            " enter the one time password received"),
+                                        hintText: " Enter OTP",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[400])),
 
                                     cursorColor: Colors.red,
+                                  ),
+                                  SizedBox(
+                                    height: height / 46,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("Time remaining : "),
+                                      TextButton(
+                                          onPressed: () {},
+                                          child: const Text(
+                                            "Resend OTP",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ))
+                                    ],
                                   ),
                                   SizedBox(
                                     height: height / 46,
@@ -215,7 +245,7 @@ class _LoginPageState extends State<LoginPage> {
                                             borderRadius: 13,
                                             child: Center(
                                               child: Text(
-                                                "Verify",
+                                                "Login",
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white),
