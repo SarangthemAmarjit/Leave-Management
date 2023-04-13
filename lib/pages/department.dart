@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
+import 'package:leavemanagementadmin/logic/loginCubit/department/cubit/postdepartment_cubit.dart';
 
 class DepartmentPage extends StatefulWidget {
   /// Creates the home page.
@@ -223,21 +225,21 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                   const SizedBox(
                                     height: 30,
                                   ),
-                                  Row(
-                                    children: [
-                                      const Text("Active : "),
-                                      Switch(
-                                        value: isactive,
-                                        activeColor: const Color.fromARGB(
-                                            255, 72, 217, 77),
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            isactive = value;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  )
+                                  // Row(
+                                  //   children: [
+                                  //     const Text("Active : "),
+                                  //     Switch(
+                                  //       value: isactive,
+                                  //       activeColor: const Color.fromARGB(
+                                  //           255, 72, 217, 77),
+                                  //       onChanged: (bool value) {
+                                  //         setState(() {
+                                  //           isactive = value;
+                                  //         });
+                                  //       },
+                                  //     ),
+                                  //   ],
+                                  // )
                                 ],
                               ),
                             ),
@@ -267,17 +269,27 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                           EasyLoading.showError(
                                               'Name field is empty');
                                         } else {
-                                          allbranch.add({
-                                            "slno.": index,
-                                            "branchname": namecontroller.text,
-                                            "is_active": isactive == true
-                                                ? "Active"
-                                                : "Not Active",
-                                          });
+                                          // allbranch.add({
+                                          //   "slno.": index,
+                                          //   "branchname": namecontroller.text,
+                                          //   "is_active": isactive == true
+                                          //       ? "Active"
+                                          //       : "Not Active",
+                                          // });
+
+                                          context
+                                              .read<PostdepartmentCubit>()
+                                              .postdept(
+                                                  deptname: namecontroller.text
+
+                                                  //isactive: isactive ? "1" : "0",
+                                                  );
 
                                           namecontroller.clear();
                                           isactive = false;
                                           Navigator.pop(context);
+                                          EasyLoading.showToast(
+                                              "Successfully added");
                                         }
                                       },
                                       child: Material(

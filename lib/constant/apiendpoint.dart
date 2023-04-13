@@ -3,3 +3,7 @@ const loginUrl = "/api/auth/login";
 const verifyUser = "/api/auth/login/verify";
 const branchaddurl = "/api/admin/create/branch";
 const basebranchUrl = "https://staging.leave.globizs.com";
+const getbranchUrl = "/api/admin/get/branch";
+const postdeptUrl = "/api/department";
+const postdesignationURL = "/api/designation";
+const updateBranchURL = "/api/admin/update/branch/";

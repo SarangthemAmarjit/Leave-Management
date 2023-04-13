@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/cubit/branch/branch_cubit.dart';
-
-import '../logic/loginCubit/cubit/branch/branch_state.dart';
+import 'package:leavemanagementadmin/logic/loginCubit/branch/branch_cubit.dart';
 
 class BranchPage extends StatefulWidget {
   /// Creates the home page.
@@ -29,6 +27,9 @@ class _BranchPageState extends State<BranchPage> {
   @override
   void initState() {
     super.initState();
+
+    // get branch list
+
     for (var item in allbranch) {
       displayedDataCell.add(
         DataCell(
@@ -159,25 +160,8 @@ class _BranchPageState extends State<BranchPage> {
   @override
   Widget build(BuildContext context) {
     int index = 1;
-    final branch = context.watch<BranchCubit>();
-    final branchstatus = branch.state.branchstatus;
-
-    switch (branchstatus) {
-      case BranchStatus.initial:
-        log("Status initial");
-        break;
-      case BranchStatus.loading:
-        CircularProgressIndicator();
-        log("Status loading");
-        break;
-      case BranchStatus.loaded:
-        log("Status loaded");
-        EasyLoading.showToast("Added Succesfully");
-        break;
-      case BranchStatus.error:
-        log("Status error");
-        break;
-    }
+    // final branch = context.watch<BranchCubit>();
+    // final branchstatus = branch.state.branchstatus;
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
@@ -238,21 +222,21 @@ class _BranchPageState extends State<BranchPage> {
                                   const SizedBox(
                                     height: 30,
                                   ),
-                                  Row(
-                                    children: [
-                                      const Text("Active : "),
-                                      Switch(
-                                        value: isactive,
-                                        activeColor: const Color.fromARGB(
-                                            255, 72, 217, 77),
-                                        onChanged: (bool value) {
-                                          setState(() {
-                                            isactive = value;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  )
+                                  // Row(
+                                  //   children: [
+                                  //     const Text("Active : "),
+                                  //     Switch(
+                                  //       value: isactive,
+                                  //       activeColor: const Color.fromARGB(
+                                  //           255, 72, 217, 77),
+                                  //       onChanged: (bool value) {
+                                  //         setState(() {
+                                  //           isactive = value;
+                                  //         });
+                                  //       },
+                                  //     ),
+                                  //   ],
+                                  // )
                                 ],
                               ),
                             ),
@@ -291,11 +275,16 @@ class _BranchPageState extends State<BranchPage> {
                                           // });
 
                                           context.read<BranchCubit>().addbranch(
-                                              branchname: namecontroller.text);
+                                                branchname: namecontroller.text,
+                                                //isactive: isactive ? "1" : "0",
+                                              );
 
                                           namecontroller.clear();
                                           isactive = false;
+
                                           Navigator.pop(context);
+                                          EasyLoading.showToast(
+                                              "Successfully added");
                                         }
                                       },
                                       child: Material(
