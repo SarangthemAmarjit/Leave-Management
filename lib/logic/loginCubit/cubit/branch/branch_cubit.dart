@@ -10,7 +10,7 @@ import 'package:leavemanagementadmin/logic/loginCubit/cubit/branch/branch_state.
 class BranchCubit extends Cubit<BranchState> {
   BranchCubit() : super(BranchState(branchstatus: BranchStatus.initial));
 
-  Dio dio = Dio(BaseOptions(baseUrl: basebranchUrl));
+  Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
 
   void addbranch({
     required String branchname,
@@ -18,7 +18,7 @@ class BranchCubit extends Cubit<BranchState> {
     EasyLoading.show(status: "Loading....");
 
     try {
-      var response = await dio.post(basebranchUrl, data: {"name": branchname});
+      var response = await dio.post(baseUrl, data: {"name": branchname});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         emit(BranchState(branchstatus: BranchStatus.loaded));

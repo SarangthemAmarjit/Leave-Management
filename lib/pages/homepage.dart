@@ -1,10 +1,13 @@
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:intl/intl.dart';
 import 'package:leavemanagementadmin/constant.dart';
+import 'package:leavemanagementadmin/logic/loginCubit/Employee/cubit/getemployeelist_cubit.dart';
+import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -44,20 +47,25 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    employees = getEmployeeData();
-    employeeDataSource = EmployeeDataSource(employees: employees);
-    for (var item in allemployee) {
+    context.read<GetemployeelistCubit>().getemployeelist();
+    log('Init State');
+  }
+
+  void fetchdata(List<EmployeeListModel> allemplist) async {
+    log('Not empty');
+
+    for (var item in allemplist) {
       displayedDataCell.add(
         DataCell(
           Text(
-            item['slno.'].toString(),
+            (allemplist.indexOf(item) + 1).toString(),
           ),
         ),
       );
       displayedDataCell.add(
         DataCell(
           Text(
-            item['name'].toString(),
+            item.name.toString(),
           ),
         ),
       );
@@ -65,29 +73,29 @@ class _HomePageState extends State<HomePage> {
       displayedDataCell.add(
         DataCell(
           Text(
-            item['branch'].toString(),
+            item.branchId.toString(),
           ),
         ),
       );
       displayedDataCell.add(
         DataCell(
           Text(
-            item['department'].toString(),
+            item.departmentId.toString(),
           ),
         ),
       );
       displayedDataCell.add(
-        DataCell(
+        const DataCell(
           Text(
-            item['role'].toString(),
+            'Employee',
           ),
         ),
       );
       displayedDataCell.add(
         DataCell(TextButton(
             onPressed: () {
-              empcode.text = item['slno.'];
-              _namefieldcontroller.text = item['name'];
+              empcode.text = item.id.toString();
+              _namefieldcontroller.text = item.name;
 
               showDialog(
                 context: context,
@@ -575,541 +583,563 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     String size = MediaQuery.of(context).size.width.toString();
     print("Size : $size");
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
-      // appBar: AppBar(
-      //   backgroundColor: const Color.fromARGB(255, 249, 119, 109),
-      //   title: const Text(
-      //     'Globizs Emp Leave Management Admin',
-      //   ),
-      // ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        // Center(
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.center,
-        //     children: [
-        //       Image.asset(
-        //         'assets/images/G.png',
-        //         height: 70,
-        //       ),
-        //       const Text(
-        //         'Leave Management System',
-        //         style: TextStyle(fontSize: 20),
-        //       ),
-        //       const SizedBox(
-        //         height: 5,
-        //       ),
-        //       const Text(
-        //         'Admin Panel',
-        //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        //       ),
-        //     ],
+
+    return BlocConsumer<GetemployeelistCubit, PostState>(
+        listener: (context, state) {
+      if (state is PostErrorState) {
+        SnackBar snackBar = SnackBar(
+          content: Text(state.error),
+          backgroundColor: Colors.red,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } else if (state is PostLoadingState) {
+        EasyLoading.show(status: 'Fetching Data..');
+      } else if (state is PostLoadedState) {
+        fetchdata(state.posts);
+      }
+    }, builder: (context, state) {
+      return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 245, 245, 245),
+        // appBar: AppBar(
+        //   backgroundColor: const Color.fromARGB(255, 249, 119, 109),
+        //   title: const Text(
+        //     'Globizs Emp Leave Management Admin',
         //   ),
         // ),
+        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          // Center(
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //       Image.asset(
+          //         'assets/images/G.png',
+          //         height: 70,
+          //       ),
+          //       const Text(
+          //         'Leave Management System',
+          //         style: TextStyle(fontSize: 20),
+          //       ),
+          //       const SizedBox(
+          //         height: 5,
+          //       ),
+          //       const Text(
+          //         'Admin Panel',
+          //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          //       ),
+          //     ],
+          //   ),
+          // ),
 
-        const SizedBox(
-          height: 50,
-        ),
-        Padding(
-          padding: MediaQuery.of(context).size.width > 1040
-              ? const EdgeInsets.only(
-                  left: 100,
-                )
-              : const EdgeInsets.only(
-                  left: 10,
-                ),
-          child: const Text(
-            'Employee ',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          const SizedBox(
+            height: 50,
           ),
-        ),
-        Padding(
-          padding: MediaQuery.of(context).size.width > 1040
-              ? const EdgeInsets.only(left: 100, top: 15)
-              : const EdgeInsets.only(left: 10, top: 15),
-          child: InkWell(
-              onTap: () {
-                _namefieldcontroller.clear();
-                emailcontroller.clear();
-                numbercontroller.clear();
-                empcode.clear();
-                showDialog(
-                  context: context,
-                  builder: (cnt) {
-                    return StatefulBuilder(
-                      builder: (BuildContext context,
-                          void Function(void Function()) setState) {
-                        return AlertDialog(
-                          actions: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.grey[300],
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      setState(() {
-                                        _namefieldcontroller.clear();
-                                        datetime2 = '';
-
-                                        dropdownvalue1 = null;
-                                        dropdownvalue2 = null;
-                                        _position = null;
-                                      });
-                                    },
-                                    child: const Text(
-                                      "Cancel",
-                                      style: TextStyle(color: Colors.blueGrey),
-                                    )),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: InkWell(
-                                      onTap: () async {
-                                        EasyLoading.show(status: 'Adding..');
-                                        if (_namefieldcontroller.text.isEmpty ||
-                                                empcode.text.isEmpty ||
-                                                emailcontroller.text.isEmpty ||
-                                                empcode.text.isEmpty
-                                            // dropdownvalue11 == null ||
-                                            // dropdownvalue22 == null ||
-                                            // dropdownvalue33==null
-                                            ) {
-                                          EasyLoading.dismiss();
-                                          Navigator.of(context).pop();
-                                          CustomSnackBar(
-                                              context,
-                                              const Text(
-                                                'All Fields Are Mandatory',
-                                              ),
-                                              Colors.red);
-                                        } else {
-                                          // await ServiceApi()
-                                          //     .create_employee(
-                                          //         name: _namefieldcontroller.text,
-                                          //         desId: dropdownvalue11!,
-                                          //         depId: dropdownvalue22!,
-                                          //         dob: datetime,
-                                          //         token: finaltoken,
-                                          //         image: profileimage,
-                                          //         location: finallocation!)
-                                          //     .whenComplete(() {
-                                          //   getdata2().whenComplete(() {
-                                          //     _namefieldcontroller.clear();
-                                          //     all_desid = [];
-                                          //     all_depid = [];
-                                          //     all_dep = [];
-                                          //     all_des = [];
-                                          //     _position = null;
-                                          //     datetime2 = '';
-
-                                          //     dropdownvalue1 = null;
-                                          //     dropdownvalue2 = null;
-                                          //     setState(() {});
-
-                                          //     getcreate_status();
-                                          //     getdata();
-                                          //     EasyLoading.dismiss();
-                                          //     context.router.pop();
-                                          //   });
-                                          // });
-
-                                          // employeeDataSource._employees.add(
-                                          //     Employee(
-                                          //         index++,
-                                          //         _namefieldcontroller.text,
-                                          //         'Production',
-                                          //         'Developer',
-                                          //         TextButton(
-                                          //             onPressed: () {},
-                                          //             child:
-                                          //                 const Text('Edit'))));
-                                          // employeeDataSource.updateDataGridRows();
-                                          // employeeDataSource
-                                          //     .updateDataGridSource();
-
-                                          allemployee.add({
-                                            'name': _namefieldcontroller.text,
-                                            'branch': "Imphal West",
-                                            "role": "Developer",
-                                            "department": "Production"
-                                          });
-                                          log(create_statuscode.toString());
-                                          //     getcreate_status();
-                                          getdata();
-                                          EasyLoading.dismiss();
+          Padding(
+            padding: MediaQuery.of(context).size.width > 1040
+                ? const EdgeInsets.only(
+                    left: 100,
+                  )
+                : const EdgeInsets.only(
+                    left: 10,
+                  ),
+            child: const Text(
+              'Employee ',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: MediaQuery.of(context).size.width > 1040
+                ? const EdgeInsets.only(left: 100, top: 15)
+                : const EdgeInsets.only(left: 10, top: 15),
+            child: InkWell(
+                onTap: () {
+                  _namefieldcontroller.clear();
+                  emailcontroller.clear();
+                  numbercontroller.clear();
+                  empcode.clear();
+                  showDialog(
+                    context: context,
+                    builder: (cnt) {
+                      return StatefulBuilder(
+                        builder: (BuildContext context,
+                            void Function(void Function()) setState) {
+                          return AlertDialog(
+                            actions: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.grey[300],
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        setState(() {
                                           _namefieldcontroller.clear();
-                                          emailcontroller.clear();
-                                          numbercontroller.clear();
-                                          empcode.clear();
-                                          Navigator.of(context).pop();
-                                        }
+                                          datetime2 = '';
+
+                                          dropdownvalue1 = null;
+                                          dropdownvalue2 = null;
+                                          _position = null;
+                                        });
                                       },
-                                      child: Material(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(13),
-                                        ),
-                                        elevation: 15,
-                                        child: const CardWidget(
-                                            color: Colors.green,
-                                            width: 70,
-                                            height: 30,
-                                            borderRadius: 5,
-                                            child: Center(
-                                              child: Text(
-                                                'Add',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            )),
+                                      child: const Text(
+                                        "Cancel",
+                                        style:
+                                            TextStyle(color: Colors.blueGrey),
                                       )),
-                                )
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: InkWell(
+                                        onTap: () async {
+                                          EasyLoading.show(status: 'Adding..');
+                                          if (_namefieldcontroller
+                                                      .text.isEmpty ||
+                                                  empcode.text.isEmpty ||
+                                                  emailcontroller
+                                                      .text.isEmpty ||
+                                                  empcode.text.isEmpty
+                                              // dropdownvalue11 == null ||
+                                              // dropdownvalue22 == null ||
+                                              // dropdownvalue33==null
+                                              ) {
+                                            EasyLoading.dismiss();
+                                            Navigator.of(context).pop();
+                                            CustomSnackBar(
+                                                context,
+                                                const Text(
+                                                  'All Fields Are Mandatory',
+                                                ),
+                                                Colors.red);
+                                          } else {
+                                            // await ServiceApi()
+                                            //     .create_employee(
+                                            //         name: _namefieldcontroller.text,
+                                            //         desId: dropdownvalue11!,
+                                            //         depId: dropdownvalue22!,
+                                            //         dob: datetime,
+                                            //         token: finaltoken,
+                                            //         image: profileimage,
+                                            //         location: finallocation!)
+                                            //     .whenComplete(() {
+                                            //   getdata2().whenComplete(() {
+                                            //     _namefieldcontroller.clear();
+                                            //     all_desid = [];
+                                            //     all_depid = [];
+                                            //     all_dep = [];
+                                            //     all_des = [];
+                                            //     _position = null;
+                                            //     datetime2 = '';
+
+                                            //     dropdownvalue1 = null;
+                                            //     dropdownvalue2 = null;
+                                            //     setState(() {});
+
+                                            //     getcreate_status();
+                                            //     getdata();
+                                            //     EasyLoading.dismiss();
+                                            //     context.router.pop();
+                                            //   });
+                                            // });
+
+                                            // employeeDataSource._employees.add(
+                                            //     Employee(
+                                            //         index++,
+                                            //         _namefieldcontroller.text,
+                                            //         'Production',
+                                            //         'Developer',
+                                            //         TextButton(
+                                            //             onPressed: () {},
+                                            //             child:
+                                            //                 const Text('Edit'))));
+                                            // employeeDataSource.updateDataGridRows();
+                                            // employeeDataSource
+                                            //     .updateDataGridSource();
+
+                                            allemployee.add({
+                                              'name': _namefieldcontroller.text,
+                                              'branch': "Imphal West",
+                                              "role": "Developer",
+                                              "department": "Production"
+                                            });
+                                            log(create_statuscode.toString());
+                                            //     getcreate_status();
+                                            getdata();
+                                            EasyLoading.dismiss();
+                                            _namefieldcontroller.clear();
+                                            emailcontroller.clear();
+                                            numbercontroller.clear();
+                                            empcode.clear();
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        child: Material(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(13),
+                                          ),
+                                          elevation: 15,
+                                          child: const CardWidget(
+                                              color: Colors.green,
+                                              width: 70,
+                                              height: 30,
+                                              borderRadius: 5,
+                                              child: Center(
+                                                child: Text(
+                                                  'Add',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              )),
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ],
+                            title: const Text(
+                              "Add new Employee",
                             ),
-                          ],
-                          title: const Text(
-                            "Add new Employee",
-                          ),
-                          content: SingleChildScrollView(
-                            child: Form(
-                              child: SizedBox(
-                                width: 300,
-                                height: 425,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        SizedBox(
-                                          width: 30,
-                                        ),
-                                        // const ProfileImagepicker(),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        keyboardType: TextInputType.number,
-                                        controller: empcode,
-                                        decoration: const InputDecoration(
-                                          hintStyle: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 212, 211, 211)),
-                                          hintText: 'Employee Code',
-                                        )),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        keyboardType: TextInputType.text,
-                                        controller: _namefieldcontroller,
-                                        decoration: const InputDecoration(
-                                          hintStyle: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 212, 211, 211)),
-                                          hintText: 'Name',
-                                        )),
-                                    // _dataofbirth(datetime2),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        keyboardType: TextInputType.text,
-                                        controller: emailcontroller,
-                                        decoration: const InputDecoration(
-                                          hintStyle: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 212, 211, 211)),
-                                          hintText: 'Email',
-                                        )),
-                                    // _dataofbirth(datetime2),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        keyboardType: TextInputType.text,
-                                        controller: numbercontroller,
-                                        decoration: const InputDecoration(
-                                          hintStyle: TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 212, 211, 211)),
-                                          hintText: 'Phone Number',
-                                        )),
-                                    // _dataofbirth(datetime2),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 13),
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 240, 237, 237),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: const Color.fromARGB(
-                                                  255, 225, 222, 222))),
-                                      child: DropdownSearch<String>(
-                                        popupProps: PopupProps.menu(
-                                          searchFieldProps:
-                                              const TextFieldProps(
-                                                  decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                              maxHeight: 40))),
-                                          constraints: BoxConstraints.tight(
-                                              const Size(250, 250)),
-                                          showSearchBox: true,
-                                          showSelectedItems: true,
-                                        ),
-                                        items: all_des,
-                                        dropdownDecoratorProps:
-                                            const DropDownDecoratorProps(
-                                          dropdownSearchDecoration:
-                                              InputDecoration(
-                                            border: InputBorder.none,
-                                            labelText: "Designation :",
-                                            hintText: "Choose Your Designation",
+                            content: SingleChildScrollView(
+                              child: Form(
+                                child: SizedBox(
+                                  width: 300,
+                                  height: 425,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: const [
+                                          SizedBox(
+                                            width: 30,
                                           ),
-                                        ),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            dropdownvalue1 = newValue as String;
-                                          });
-                                          int ind =
-                                              all_des.indexOf(dropdownvalue1!);
-                                          dropdownvalue11 = all_desid[ind];
-                                        },
+                                          // const ProfileImagepicker(),
+                                        ],
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 13),
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 240, 237, 237),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: const Color.fromARGB(
-                                                  255, 225, 222, 222))),
-                                      child: DropdownSearch<String>(
-                                        popupProps: PopupProps.menu(
-                                          searchFieldProps:
-                                              const TextFieldProps(
-                                                  decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                              maxHeight: 40))),
-                                          constraints: BoxConstraints.tight(
-                                              const Size(250, 250)),
-                                          showSearchBox: true,
-                                          showSelectedItems: true,
-                                        ),
-                                        items: all_dep,
-                                        dropdownDecoratorProps:
-                                            const DropDownDecoratorProps(
-                                          dropdownSearchDecoration:
-                                              InputDecoration(
-                                            border: InputBorder.none,
-                                            labelText: "Department :",
-                                            hintText: "Choose Your Department",
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextFormField(
+                                          keyboardType: TextInputType.number,
+                                          controller: empcode,
+                                          decoration: const InputDecoration(
+                                            hintStyle: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 212, 211, 211)),
+                                            hintText: 'Employee Code',
+                                          )),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextFormField(
+                                          keyboardType: TextInputType.text,
+                                          controller: _namefieldcontroller,
+                                          decoration: const InputDecoration(
+                                            hintStyle: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 212, 211, 211)),
+                                            hintText: 'Name',
+                                          )),
+                                      // _dataofbirth(datetime2),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextFormField(
+                                          keyboardType: TextInputType.text,
+                                          controller: emailcontroller,
+                                          decoration: const InputDecoration(
+                                            hintStyle: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 212, 211, 211)),
+                                            hintText: 'Email',
+                                          )),
+                                      // _dataofbirth(datetime2),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextFormField(
+                                          keyboardType: TextInputType.text,
+                                          controller: numbercontroller,
+                                          decoration: const InputDecoration(
+                                            hintStyle: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 212, 211, 211)),
+                                            hintText: 'Phone Number',
+                                          )),
+                                      // _dataofbirth(datetime2),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 13),
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 240, 237, 237),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: const Color.fromARGB(
+                                                    255, 225, 222, 222))),
+                                        child: DropdownSearch<String>(
+                                          popupProps: PopupProps.menu(
+                                            searchFieldProps:
+                                                const TextFieldProps(
+                                                    decoration: InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        constraints:
+                                                            BoxConstraints(
+                                                                maxHeight:
+                                                                    40))),
+                                            constraints: BoxConstraints.tight(
+                                                const Size(250, 250)),
+                                            showSearchBox: true,
+                                            showSelectedItems: true,
                                           ),
-                                        ),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            dropdownvalue2 = newValue as String;
-                                          });
-                                          int ind =
-                                              all_dep.indexOf(dropdownvalue2!);
-                                          dropdownvalue22 = all_depid[ind];
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 13),
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 240, 237, 237),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: const Color.fromARGB(
-                                                  255, 225, 222, 222))),
-                                      child: DropdownSearch<String>(
-                                        popupProps: PopupProps.menu(
-                                          searchFieldProps:
-                                              const TextFieldProps(
-                                                  decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                              maxHeight: 40))),
-                                          constraints: BoxConstraints.tight(
-                                              const Size(250, 250)),
-                                          showSearchBox: true,
-                                          showSelectedItems: true,
-                                        ),
-                                        items: all_des,
-                                        dropdownDecoratorProps:
-                                            const DropDownDecoratorProps(
-                                          dropdownSearchDecoration:
-                                              InputDecoration(
-                                            border: InputBorder.none,
-                                            labelText: "Role :",
-                                            hintText: "Choose Your Role",
+                                          items: all_des,
+                                          dropdownDecoratorProps:
+                                              const DropDownDecoratorProps(
+                                            dropdownSearchDecoration:
+                                                InputDecoration(
+                                              border: InputBorder.none,
+                                              labelText: "Designation :",
+                                              hintText:
+                                                  "Choose Your Designation",
+                                            ),
                                           ),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              dropdownvalue1 =
+                                                  newValue as String;
+                                            });
+                                            int ind = all_des
+                                                .indexOf(dropdownvalue1!);
+                                            dropdownvalue11 = all_desid[ind];
+                                          },
                                         ),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            dropdownvalue3 = newValue as String;
-                                          });
-                                          int ind =
-                                              all_role.indexOf(dropdownvalue3!);
-                                          dropdownvalue33 = all_roleid[ind];
-                                        },
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 13),
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 240, 237, 237),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: const Color.fromARGB(
+                                                    255, 225, 222, 222))),
+                                        child: DropdownSearch<String>(
+                                          popupProps: PopupProps.menu(
+                                            searchFieldProps:
+                                                const TextFieldProps(
+                                                    decoration: InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        constraints:
+                                                            BoxConstraints(
+                                                                maxHeight:
+                                                                    40))),
+                                            constraints: BoxConstraints.tight(
+                                                const Size(250, 250)),
+                                            showSearchBox: true,
+                                            showSelectedItems: true,
+                                          ),
+                                          items: all_dep,
+                                          dropdownDecoratorProps:
+                                              const DropDownDecoratorProps(
+                                            dropdownSearchDecoration:
+                                                InputDecoration(
+                                              border: InputBorder.none,
+                                              labelText: "Department :",
+                                              hintText:
+                                                  "Choose Your Department",
+                                            ),
+                                          ),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              dropdownvalue2 =
+                                                  newValue as String;
+                                            });
+                                            int ind = all_dep
+                                                .indexOf(dropdownvalue2!);
+                                            dropdownvalue22 = all_depid[ind];
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 13),
+                                        decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                255, 240, 237, 237),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            border: Border.all(
+                                                color: const Color.fromARGB(
+                                                    255, 225, 222, 222))),
+                                        child: DropdownSearch<String>(
+                                          popupProps: PopupProps.menu(
+                                            searchFieldProps:
+                                                const TextFieldProps(
+                                                    decoration: InputDecoration(
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                        constraints:
+                                                            BoxConstraints(
+                                                                maxHeight:
+                                                                    40))),
+                                            constraints: BoxConstraints.tight(
+                                                const Size(250, 250)),
+                                            showSearchBox: true,
+                                            showSelectedItems: true,
+                                          ),
+                                          items: all_des,
+                                          dropdownDecoratorProps:
+                                              const DropDownDecoratorProps(
+                                            dropdownSearchDecoration:
+                                                InputDecoration(
+                                              border: InputBorder.none,
+                                              labelText: "Role :",
+                                              hintText: "Choose Your Role",
+                                            ),
+                                          ),
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              dropdownvalue3 =
+                                                  newValue as String;
+                                            });
+                                            int ind = all_role
+                                                .indexOf(dropdownvalue3!);
+                                            dropdownvalue33 = all_roleid[ind];
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-              child: Material(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                elevation: 15,
-                child: const CardWidget(
-                    gradient: [
-                      Color.fromARGB(255, 211, 32, 39),
-                      Color.fromARGB(255, 164, 92, 95)
-                    ],
-                    width: 120,
-                    height: 40,
-                    borderRadius: 13,
-                    child: Center(
-                      child: Text(
-                        'Add Employee',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )),
-              )),
-        ),
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+                child: Material(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  elevation: 15,
+                  child: const CardWidget(
+                      gradient: [
+                        Color.fromARGB(255, 211, 32, 39),
+                        Color.fromARGB(255, 164, 92, 95)
+                      ],
+                      width: 120,
+                      height: 40,
+                      borderRadius: 13,
+                      child: Center(
+                        child: Text(
+                          'Add Employee',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      )),
+                )),
+          ),
 
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: MediaQuery.of(context).size.width > 1040
-                ? const EdgeInsets.only(left: 100, right: 100, top: 20)
-                : const EdgeInsets.only(left: 10, right: 10, top: 20),
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: DataTable(
-                columnSpacing:
-                    MediaQuery.of(context).size.width > 900 ? 50 : 10,
-                dividerThickness: 2,
-                headingRowColor:
-                    MaterialStateProperty.all(Colors.grey.withOpacity(0.2)),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          blurRadius: 4,
-                          spreadRadius: 3,
-                          offset: const Offset(0, 3))
-                    ]),
-                headingTextStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                rows: <DataRow>[
-                  for (int i = 0; i < displayedDataCell.length; i += 6)
-                    DataRow(cells: [
-                      displayedDataCell[i],
-                      displayedDataCell[i + 1],
-                      displayedDataCell[i + 2],
-                      displayedDataCell[i + 3],
-                      displayedDataCell[i + 4],
-                      displayedDataCell[i + 5]
-                    ])
-                ],
-                columns: const <DataColumn>[
-                  DataColumn(
-                    label: Text(
-                      'Sl.no',
-                    ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: MediaQuery.of(context).size.width > 1040
+                  ? const EdgeInsets.only(left: 100, right: 100, top: 20)
+                  : const EdgeInsets.only(left: 10, right: 10, top: 20),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: DataTable(
+                  columnSpacing:
+                      MediaQuery.of(context).size.width > 900 ? 50 : 10,
+                  dividerThickness: 2,
+                  headingRowColor:
+                      MaterialStateProperty.all(Colors.grey.withOpacity(0.2)),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            blurRadius: 4,
+                            spreadRadius: 3,
+                            offset: const Offset(0, 3))
+                      ]),
+                  headingTextStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
-                  DataColumn(
-                    label: Flexible(
-                      child: Text(
-                        'Employee Name',
+                  rows: <DataRow>[
+                    for (int i = 0; i < displayedDataCell.length; i += 6)
+                      DataRow(cells: [
+                        displayedDataCell[i],
+                        displayedDataCell[i + 1],
+                        displayedDataCell[i + 2],
+                        displayedDataCell[i + 3],
+                        displayedDataCell[i + 4],
+                        displayedDataCell[i + 5]
+                      ])
+                  ],
+                  columns: const <DataColumn>[
+                    DataColumn(
+                      label: Text(
+                        'Sl.no',
                       ),
                     ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Branch',
+                    DataColumn(
+                      label: Flexible(
+                        child: Text(
+                          'Employee Name',
+                        ),
+                      ),
                     ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Department',
+                    DataColumn(
+                      label: Text(
+                        'Branch',
+                      ),
                     ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Role',
+                    DataColumn(
+                      label: Text(
+                        'Department',
+                      ),
                     ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Action',
+                    DataColumn(
+                      label: Text(
+                        'Role',
+                      ),
                     ),
-                  ),
-                ],
+                    DataColumn(
+                      label: Text(
+                        'Action',
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(
-          height: 50,
-        ),
-      ]),
-    );
-  }
-
-  List<Employee> getEmployeeData() {
-    return [
-      Employee(index, 'Puspa', 'Production', 'Developer',
-          TextButton(onPressed: () {}, child: const Text('Edit'))),
-    ];
+          const SizedBox(
+            height: 50,
+          ),
+        ]),
+      );
+    });
   }
 }
 
