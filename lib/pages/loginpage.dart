@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/constant/login_emailcheck.dart';
 import 'package:leavemanagementadmin/constant/login_numbercheck.dart';
+import 'package:leavemanagementadmin/logic/Authflow/auth_flow_cubit.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_verifybymail_cubit.dart';
 
@@ -21,12 +23,53 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailorphoncontroller = TextEditingController();
   TextEditingController verifymailotpcontroller = TextEditingController();
+
+  Timer? countdownTimer;
+  Duration myDuration = const Duration(seconds: 120);
+  bool isresend = false;
+  bool istimeout = false;
+
+  void startTimer() {
+    countdownTimer =
+        Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+  }
+
+  void setCountDown() {
+    const reduceSecondsBy = 1;
+    final seconds = myDuration.inSeconds - reduceSecondsBy;
+    setState(() {
+      if (seconds < 0) {
+        countdownTimer!.cancel();
+        setState(() {
+          isresend = true;
+          istimeout = true;
+        });
+      } else {
+        myDuration = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  void stopTimer() {
+    setState(() => countdownTimer!.cancel());
+  }
+
+  void resetTimer() {
+    stopTimer();
+    setState(() => myDuration = const Duration(seconds: 120));
+  }
+
+  String strDigits(int n) => n.toString().padLeft(
+        3,
+      );
+
   @override
   Widget build(BuildContext context) {
+    final seconds = strDigits(myDuration.inSeconds);
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     var c = context.watch<LoginBymailCubit>();
-    var otpstatus = c.state.status;
+    var issend = c.state.issend;
 
     return BlocConsumer<LoginVerifybymailCubit, VerifyStatusformail>(
         listener: (context, state) {
@@ -45,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pop(context);
           EasyLoading.showToast(
             'Successfully Login',
-          ).whenComplete(() => context.router.replaceNamed('/'));
+          ).whenComplete(() => context.read<AuthFlowCubit>().getloginstatus());
 
           break;
 
@@ -152,29 +195,44 @@ class _LoginPageState extends State<LoginPage> {
                                         suffix: TextButton(
                                             // style: TextButton.styleFrom(
                                             //     backgroundColor: Colors.blue),
-                                            onPressed: () {
-                                              if (emailorphoncontroller
-                                                  .text.isEmpty) {
-                                                EasyLoading.showToast(
-                                                    'Email or Phone Cannot be Empty');
-                                              } else if (isEmail(
-                                                  emailorphoncontroller.text)) {
-                                                context
-                                                    .read<LoginBymailCubit>()
-                                                    .emaillogin(
-                                                        email:
-                                                            emailorphoncontroller
-                                                                .text);
+                                            onPressed: issend
+                                                ? null
+                                                : () {
+                                                    if (emailorphoncontroller
+                                                        .text.isEmpty) {
+                                                      EasyLoading.showToast(
+                                                          'Email or Phone Cannot be Empty');
+                                                    } else if (isEmail(
+                                                        emailorphoncontroller
+                                                            .text)) {
+                                                      context
+                                                          .read<
+                                                              LoginBymailCubit>()
+                                                          .emaillogin(
+                                                              email:
+                                                                  emailorphoncontroller
+                                                                      .text)
+                                                          .then((value) =>
+                                                              startTimer());
 
-                                                //send email to api
-                                              } else if (isValidPhoneNumber(
-                                                  emailorphoncontroller.text)) {
-                                                //send phone to api
-                                              } else {
-                                                EasyLoading.showToast(
-                                                    "Invalid Email or Phone Number");
-                                              }
-                                            },
+                                                      //send email to api
+                                                    } else if (isValidPhoneNumber(
+                                                        emailorphoncontroller
+                                                            .text)) {
+                                                      context
+                                                          .read<
+                                                              LoginBymailCubit>()
+                                                          .phonelogin(
+                                                              phonenumber:
+                                                                  emailorphoncontroller
+                                                                      .text)
+                                                          .then((value) =>
+                                                              startTimer());
+                                                    } else {
+                                                      EasyLoading.showToast(
+                                                          "Invalid Email or Phone Number");
+                                                    }
+                                                  },
                                             child: Text(
                                               "Send OTP",
                                               style: TextStyle(
@@ -213,32 +271,109 @@ class _LoginPageState extends State<LoginPage> {
                                   SizedBox(
                                     height: height / 46,
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text("Time remaining : "),
-                                      TextButton(
-                                          onPressed: () {},
-                                          child: const Text(
-                                            "Resend OTP",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ))
-                                    ],
-                                  ),
+                                  issend
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            istimeout
+                                                ? const Text(
+                                                    'Didn\'t recieved code?')
+                                                : Text(
+                                                    "Time remaining : $seconds"),
+                                            TextButton(
+                                                onPressed: isresend
+                                                    ? () {
+                                                        if (isEmail(
+                                                            emailorphoncontroller
+                                                                .text)) {
+                                                          context
+                                                              .read<
+                                                                  LoginBymailCubit>()
+                                                              .emaillogin_forreset(
+                                                                  email:
+                                                                      emailorphoncontroller
+                                                                          .text);
+                                                          resetTimer();
+                                                          startTimer();
+                                                          setState(() {
+                                                            isresend = false;
+                                                            istimeout = false;
+                                                          });
+
+                                                          //send email to api
+                                                        } else if (isValidPhoneNumber(
+                                                            emailorphoncontroller
+                                                                .text)) {
+                                                          context
+                                                              .read<
+                                                                  LoginBymailCubit>()
+                                                              .phonelogin_forreset(
+                                                                  phonenumber:
+                                                                      emailorphoncontroller
+                                                                          .text);
+                                                          resetTimer();
+                                                          startTimer();
+                                                          setState(() {
+                                                            isresend = false;
+                                                            istimeout = false;
+                                                          });
+                                                        }
+                                                      }
+                                                    : null,
+                                                child: const Text(
+                                                  "Resend OTP",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ))
+                                          ],
+                                        )
+                                      : const SizedBox(),
                                   SizedBox(
                                     height: height / 46,
                                   ),
                                   InkWell(
                                     onTap: () {
-                                      context
-                                          .read<LoginVerifybymailCubit>()
-                                          .verifymail(
-                                              email: emailorphoncontroller.text,
-                                              otp:
-                                                  verifymailotpcontroller.text);
+                                      if (emailorphoncontroller.text.isEmpty &&
+                                          verifymailotpcontroller
+                                              .text.isEmpty) {
+                                        EasyLoading.showToast(
+                                            'Email or Phone Cannot be Empty');
+                                      } else if (emailorphoncontroller
+                                          .text.isEmpty) {
+                                        EasyLoading.showToast(
+                                            'Email Cannot be Empty');
+                                      } else if (verifymailotpcontroller
+                                          .text.isEmpty) {
+                                        EasyLoading.showToast(
+                                            'OTP Cannot be Empty');
+                                      } else if (isEmail(
+                                          emailorphoncontroller.text)) {
+                                        context
+                                            .read<LoginVerifybymailCubit>()
+                                            .verifymail(
+                                                email:
+                                                    emailorphoncontroller.text,
+                                                otp: verifymailotpcontroller
+                                                    .text,
+                                                userorphone: 'username');
+
+                                        //send email to api
+                                      } else if (isValidPhoneNumber(
+                                          emailorphoncontroller.text)) {
+                                        context
+                                            .read<LoginVerifybymailCubit>()
+                                            .verifymail(
+                                                email:
+                                                    emailorphoncontroller.text,
+                                                otp: verifymailotpcontroller
+                                                    .text,
+                                                userorphone: 'phone');
+                                      } else {
+                                        EasyLoading.showToast(
+                                            "Invalid Email or Phone Number");
+                                      }
                                     },
                                     child: Center(
                                       child: Card(

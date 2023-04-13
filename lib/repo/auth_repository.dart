@@ -21,19 +21,19 @@ class AuthRepository {
 
 // Verify Otp From Email
   Future Verifyemail(
-      {required String email,
+      {required String emailorphone,
       required String otp,
+      required String userorphone,
       required AuthLoginListioner authLoginListener}) async {
     authLoginListener.loading();
 
     try {
       final response = await dio.post(
         verifyUser,
-        data: {"username": email, "otp": otp},
+        data: {userorphone: emailorphone, "otp": otp},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log('Verify mail response' + response.data['message']);
         Store.setToken(response.data['data']['accessToken']);
 
         authLoginListener.loaded();

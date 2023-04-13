@@ -3,12 +3,12 @@ part of 'login_bymail_cubit.dart';
 enum SendingotpStatusformail { initial, loading, loaded, error }
 
 class LoginBymailState extends Equatable {
-  final SendingotpStatusformail status;
+  final bool issend;
 
-  const LoginBymailState({required this.status});
+  const LoginBymailState({
+    required this.issend,
+  });
 
   @override
-  List get props => [
-        status,
-      ];
+  List get props => [issend];
 }
