@@ -8,10 +8,18 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 part 'login_bymail_state.dart';
 
-class LoginBymailCubit extends Cubit<SendingotpStatusformail>
-    implements AuthLoginListener {
-  final _authRepository = AuthRepository();
-  LoginBymailCubit(SendingotpStatusformail initialState) : super(initialState);
+class LoginBymailCubit extends Cubit<LoginBymailState> {
+  LoginBymailCubit(initialState)
+      : super(const LoginBymailState(status: SendingotpStatusformail.initial));
+  static const baseUrl = "https://staging.leave.globizs.com";
+  static const loginUrl = "/api/auth/login";
+  static const verifyUser = "/api/auth/login/verify";
+  Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
+
+  void emaillogin({
+    required String email,
+  }) async {
+    EasyLoading.show(status: 'Please Wait..');
 
     try {
       final response = await dio.post(

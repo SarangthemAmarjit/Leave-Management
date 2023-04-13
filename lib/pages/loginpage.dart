@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/constant/alertbox.dart';
 import 'package:leavemanagementadmin/constant/login_emailcheck.dart';
 import 'package:leavemanagementadmin/constant/login_numbercheck.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
@@ -34,13 +33,7 @@ class _LoginPageState extends State<LoginPage> {
       switch (state) {
         case VerifyStatusformail.initial:
           log('Initial');
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return alertbox;
-            },
-          );
+          EasyLoading.show(status: 'Please Wait..');
           break;
 
         case VerifyStatusformail.loading:
@@ -52,9 +45,8 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pop(context);
           EasyLoading.showToast(
             'Successfully Login',
-          );
+          ).whenComplete(() => context.router.replaceNamed('/'));
 
-          context.router.replaceNamed('/');
           break;
 
         case VerifyStatusformail.error:
@@ -157,15 +149,36 @@ class _LoginPageState extends State<LoginPage> {
                                     //not for form, this will make the input suggest that the field wants email as input
                                     decoration: InputDecoration(
                                         // fillColor: Colors.amber,
-<<<<<<<<< Temporary merge branch 1
                                         suffix: TextButton(
                                             // style: TextButton.styleFrom(
                                             //     backgroundColor: Colors.blue),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              if (emailorphoncontroller
+                                                  .text.isEmpty) {
+                                                EasyLoading.showToast(
+                                                    'Email or Phone Cannot be Empty');
+                                              } else if (isEmail(
+                                                  emailorphoncontroller.text)) {
+                                                context
+                                                    .read<LoginBymailCubit>()
+                                                    .emaillogin(
+                                                        email:
+                                                            emailorphoncontroller
+                                                                .text);
+
+                                                //send email to api
+                                              } else if (isValidPhoneNumber(
+                                                  emailorphoncontroller.text)) {
+                                                //send phone to api
+                                              } else {
+                                                EasyLoading.showToast(
+                                                    "Invalid Email or Phone Number");
+                                              }
+                                            },
                                             child: Text(
                                               "Send OTP",
                                               style: TextStyle(
-                                                  color: Colors.red[900],
+                                                  color: Colors.grey[600],
                                                   fontWeight: FontWeight.bold),
                                             )),
                                         prefixIcon: const Icon(
@@ -175,15 +188,6 @@ class _LoginPageState extends State<LoginPage> {
                                         hintText: "example@globizs.com",
                                         hintStyle:
                                             TextStyle(color: Colors.grey[400])),
-=========
-                                        prefixIcon: const Icon(
-                                            Icons.account_circle_outlined),
-                                        border: const OutlineInputBorder(),
-                                        labelText: ismail
-                                            ? "re-enter your email"
-                                            : 're-enter your number',
-                                        hintText: "example@globizs.com"),
->>>>>>>>> Temporary merge branch 2
 
                                     cursorColor: Colors.red,
                                   ),
