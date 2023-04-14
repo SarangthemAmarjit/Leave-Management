@@ -10,7 +10,10 @@ part 'get_alldept_state.dart';
 
 class GetAlldeptCubit extends Cubit<GetAlldeptState> {
   GetAlldeptCubit()
-      : super(const GetAlldeptState(alldeptlist: [], deptidwithname: {})) {
+      : super(const GetAlldeptState(
+            alldeptlist: [],
+            deptidwithname: {},
+            deptStatus: DeptStatus.initial)) {
     getalldept();
   }
 
@@ -43,7 +46,10 @@ class GetAlldeptCubit extends Cubit<GetAlldeptState> {
 
         var result = Map.fromIterables(alldeptidlist, alldeptnamelist);
         log(result.toString());
-        emit(GetAlldeptState(alldeptlist: alldept, deptidwithname: result));
+        emit(GetAlldeptState(
+            alldeptlist: alldept,
+            deptidwithname: result,
+            deptStatus: DeptStatus.loaded));
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }

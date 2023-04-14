@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -17,6 +19,7 @@ class DesignationPage extends StatefulWidget {
 class _BranchPageState extends State<DesignationPage> {
   TextEditingController namecontroller = TextEditingController();
   bool isactive = false;
+  String active = "";
 
   List<DataCell> displayedDataCell = [];
 
@@ -52,13 +55,15 @@ class _BranchPageState extends State<DesignationPage> {
       displayedDataCell.add(
         DataCell(TextButton(
             onPressed: () {
-              namecontroller.text = item.isActive;
-              isactive = item.isActive as bool;
+              namecontroller.text = item.name;
+              active = item.isActive;
               showDialog(
                 context: context,
-                builder: (context) {
+                builder: (cnt) {
+                  log("inside show dialog");
                   return StatefulBuilder(
-                    builder: (BuildContext context, setState) {
+                    builder: (BuildContext context,
+                        void Function(void Function()) setState) {
                       return AlertDialog(
                         title: const Text(
                           "Add new Designation",
@@ -194,9 +199,10 @@ class _BranchPageState extends State<DesignationPage> {
 
                       showDialog(
                         context: context,
-                        builder: (context) {
+                        builder: (cnt) {
                           return StatefulBuilder(
-                            builder: (BuildContext context, setState) {
+                            builder: (BuildContext context,
+                                void Function(void Function()) setState) {
                               return AlertDialog(
                                 title: const Text(
                                   "Add new Designation",

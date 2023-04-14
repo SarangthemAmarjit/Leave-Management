@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.dart';
@@ -54,7 +55,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
         DataCell(TextButton(
             onPressed: () {
               namecontroller.text = item.name;
-              isactive = item.isActive as bool;
+
               showDialog(
                 context: context,
                 builder: (context) {
@@ -168,7 +169,19 @@ class _DepartmentPageState extends State<DepartmentPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<GetAlldeptCubit, GetAlldeptState>(
       listener: (context, state) {
-        getdept(state.alldeptlist);
+        switch (state.deptStatus) {
+          case DeptStatus.initial:
+            // TODO: Handle this case.
+            break;
+          case DeptStatus.loading:
+            break;
+          case DeptStatus.loaded:
+            getdept(state.alldeptlist);
+            break;
+          case DeptStatus.error:
+            // TODO: Handle this case.
+            break;
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -294,6 +307,9 @@ class _DepartmentPageState extends State<DepartmentPage> {
 
                                               namecontroller.clear();
                                               isactive = false;
+                                              context
+                                                  .read<GetAlldeptCubit>()
+                                                  .getalldept();
                                               Navigator.pop(context);
                                               EasyLoading.showToast(
                                                 "Successfully added",
@@ -350,70 +366,81 @@ class _DepartmentPageState extends State<DepartmentPage> {
                     )),
               ),
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: MediaQuery.of(context).size.width > 1040
-                    ? const EdgeInsets.only(left: 100, right: 100, top: 20)
-                    : const EdgeInsets.only(left: 10, right: 10, top: 20),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: DataTable(
-                    dividerThickness: 2,
-                    headingTextStyle:
-                        const TextStyle(fontWeight: FontWeight.bold),
-                    headingRowColor: MaterialStateProperty.resolveWith(
-                        (states) => Colors.grey.withOpacity(0.2)),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 3,
-                          blurRadius: 4,
-                          offset:
-                              const Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    // border: TableBorder.all(
-                    //     color: const Color.fromARGB(255, 159, 154, 154)),
-                    rows: <DataRow>[
-                      for (int i = 0; i < displayedDataCell.length; i += 4)
-                        DataRow(cells: [
-                          displayedDataCell[i],
-                          displayedDataCell[i + 1],
-                          displayedDataCell[i + 2],
-                          displayedDataCell[i + 3],
-                        ])
-                    ],
-                    columns: const <DataColumn>[
-                      DataColumn(
-                        label: Text(
-                          'Sl.no',
-                        ),
-                      ),
-                      DataColumn(
-                        label: Flexible(
-                          child: Text(
-                            'Department Name',
+            Expanded(
+              flex: 8,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: MediaQuery.of(context).size.width > 1040
+                          ? const EdgeInsets.only(
+                              left: 100, right: 100, top: 20)
+                          : const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: DataTable(
+                          dividerThickness: 2,
+                          headingTextStyle:
+                              const TextStyle(fontWeight: FontWeight.bold),
+                          headingRowColor: MaterialStateProperty.resolveWith(
+                              (states) => Colors.grey.withOpacity(0.2)),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                spreadRadius: 3,
+                                blurRadius: 4,
+                                offset: const Offset(
+                                    0, 3), // changes position of shadow
+                              ),
+                            ],
                           ),
+                          // border: TableBorder.all(
+                          //     color: const Color.fromARGB(255, 159, 154, 154)),
+                          rows: <DataRow>[
+                            for (int i = 0;
+                                i < displayedDataCell.length;
+                                i += 4)
+                              DataRow(cells: [
+                                displayedDataCell[i],
+                                displayedDataCell[i + 1],
+                                displayedDataCell[i + 2],
+                                displayedDataCell[i + 3],
+                              ])
+                          ],
+                          columns: const <DataColumn>[
+                            DataColumn(
+                              label: Text(
+                                'Sl.no',
+                              ),
+                            ),
+                            DataColumn(
+                              label: Flexible(
+                                child: Text(
+                                  'Department Name',
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Is_Active',
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Action',
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      DataColumn(
-                        label: Text(
-                          'Is_Active',
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Action',
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ]),
