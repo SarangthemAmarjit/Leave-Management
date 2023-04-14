@@ -6,8 +6,9 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:intl/intl.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/Employee/cubit/getemployeelist_cubit.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/cubit/branch/cubit/getallbranch_cubit.dart';
+import 'package:leavemanagementadmin/logic/Employee/cubit/getemployeelist_cubit.dart';
+import 'package:leavemanagementadmin/logic/branch/getallbranch_cubit.dart';
+
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +49,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<GetemployeelistCubit>().getemployeelist();
     context.read<GetallbranchCubit>().getallbranch();
+    context.read<GetemployeelistCubit>().getemployeelist();
+
     log('Init State');
   }
 

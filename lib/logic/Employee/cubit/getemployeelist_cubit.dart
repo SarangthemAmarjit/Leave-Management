@@ -3,9 +3,10 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:leavemanagementadmin/logic/Employee/cubit/getemployeelist_cubit.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:leavemanagementadmin/repo/auth_repository.dart';
+
+part 'getemployeelist_state.dart';
 
 class GetemployeelistCubit extends Cubit<PostState> {
   GetemployeelistCubit() : super(PostLoadingState());

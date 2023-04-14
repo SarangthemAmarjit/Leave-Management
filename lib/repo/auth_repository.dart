@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/Interceptor/diointerceptor.dart';
 import 'package:leavemanagementadmin/Interceptor/storetoken.dart';
+import 'package:leavemanagementadmin/constant/apiendpoint.dart';
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
+import 'package:leavemanagementadmin/model/branchModel.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -23,10 +27,10 @@ class AuthRepository {
 
 // Verify Otp From Email
   Future Verifyemail(
-      {required String emailorphone,
-      required String otp,
-      required String userorphone,
-      required AuthLoginListioner authLoginListener}) async {
+      {required String otp,
+      required AuthLoginListioner authLoginListener,
+      required String emailorphone,
+      required String userorphone}) async {
     authLoginListener.loading();
 
     try {
@@ -36,6 +40,7 @@ class AuthRepository {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        log('Verify mail response' + response.data['message']);
         Store.setToken(response.data['data']['accessToken']);
 
         authLoginListener.loaded();
@@ -74,6 +79,121 @@ class AuthRepository {
     } catch (e) {
       authLoginListener.error();
       rethrow;
+    }
+  }
+
+  // Add Branch
+  Future<dynamic> addbranch({
+    required String branchname,
+    // required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.post(
+        branchaddurl,
+        data: {
+          "name": branchname,
+          //"is_activ": isactive
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully added branch name");
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  // Update Branch
+
+  Future<dynamic> updatebranch({
+    required String branchname,
+    required String isactive,
+
+    // required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.post(
+        updateBranchURL,
+        data: {
+          "name": branchname,
+          "is_active": isactive
+          //"is_activ": isactive
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Update branch data");
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+// Post DEPARTMENT
+  Future<dynamic> postdept({
+    required String departmentname,
+    // required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.post(
+        postdeptUrl,
+        data: {
+          "name": departmentname,
+          //"is_activ": isactive
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully added department name");
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  /// ADD DESIGNATION
+
+  Future<dynamic> postdesignation({
+    required String designationname,
+    // required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.post(
+        postdesignationURL,
+        data: {
+          "name": designationname,
+          //"is_activ": isactive
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully added designation name");
+      } else {}
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  // GET BRANCH
+  Future<List<GetBranchModel>?> getbranch() async {
+    try {
+      var response = await dio.get("/api/admin/get/branch");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        List<dynamic> data = response.data;
+        return data.map((e) => GetBranchModel.fromJson(e)).toList();
+      } else {}
+    } catch (e) {
+      log(e.toString());
     }
   }
 
