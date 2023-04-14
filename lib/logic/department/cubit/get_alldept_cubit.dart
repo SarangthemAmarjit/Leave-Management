@@ -10,7 +10,9 @@ part 'get_alldept_state.dart';
 
 class GetAlldeptCubit extends Cubit<GetAlldeptState> {
   GetAlldeptCubit()
-      : super(const GetAlldeptState(alldeptlist: [], deptidwithname: {}));
+      : super(const GetAlldeptState(alldeptlist: [], deptidwithname: {})) {
+    getalldept();
+  }
 
   API api = API();
   void getalldept() async {
@@ -18,7 +20,7 @@ class GetAlldeptCubit extends Cubit<GetAlldeptState> {
     List alldeptnamelist = [];
 
     try {
-      final response = await api.sendRequest.get("/api/admin/get/branch");
+      final response = await api.sendRequest.get("/api/department");
       if (response.statusCode == 200) {
         List<dynamic> postMaps = response.data;
         var alldept =
