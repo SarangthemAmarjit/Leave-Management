@@ -169,19 +169,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<GetAlldeptCubit, GetAlldeptState>(
       listener: (context, state) {
-        switch (state.deptStatus) {
-          case DeptStatus.initial:
-            // TODO: Handle this case.
-            break;
-          case DeptStatus.loading:
-            break;
-          case DeptStatus.loaded:
-            getdept(state.alldeptlist);
-            break;
-          case DeptStatus.error:
-            // TODO: Handle this case.
-            break;
-        }
+        getdept(state.alldeptlist);
       },
       builder: (context, state) {
         return Scaffold(
