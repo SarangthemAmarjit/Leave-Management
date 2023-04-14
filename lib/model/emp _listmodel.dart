@@ -28,6 +28,7 @@ class EmployeeListModel {
     required this.departmentId,
     required this.designationId,
     required this.employeeGradeId,
+    required this.role,
   });
 
   final int id;
@@ -45,6 +46,7 @@ class EmployeeListModel {
   final int departmentId;
   final int designationId;
   final int employeeGradeId;
+  final String? role;
 
   factory EmployeeListModel.fromJson(Map<String, dynamic> json) =>
       EmployeeListModel(
@@ -63,14 +65,14 @@ class EmployeeListModel {
         departmentId: json["department_id"],
         designationId: json["designation_id"],
         employeeGradeId: json["employee_grade_id"],
+        role: json["role"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
         "emp_code": empCode,
-        "date_of_joining":
-            "${dateOfJoining.year.toString().padLeft(4, '0')}-${dateOfJoining.month.toString().padLeft(2, '0')}-${dateOfJoining.day.toString().padLeft(2, '0')}",
+        "date_of_joining": dateOfJoining.toIso8601String(),
         "photo": photo,
         "phone": phone,
         "emp_status": empStatus,
@@ -82,5 +84,6 @@ class EmployeeListModel {
         "department_id": departmentId,
         "designation_id": designationId,
         "employee_grade_id": employeeGradeId,
+        "role": role,
       };
 }

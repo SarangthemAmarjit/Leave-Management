@@ -89,5 +89,6 @@ class AuthRepository {
     } catch (ex) {
       rethrow;
     }
+    return null;
   }
 }

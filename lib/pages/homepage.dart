@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/Employee/cubit/getemployeelist_cubit.dart';
+import 'package:leavemanagementadmin/logic/loginCubit/cubit/branch/cubit/getallbranch_cubit.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -48,13 +49,19 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<GetemployeelistCubit>().getemployeelist();
+    context.read<GetallbranchCubit>().getallbranch();
     log('Init State');
   }
 
-  void fetchdata(List<EmployeeListModel> allemplist) async {
+  void fetchdata(
+      List<EmployeeListModel> allemplist, Map<dynamic, dynamic> branchname) {
     log('Not empty');
 
     for (var item in allemplist) {
+      // context
+      //     .read<GetspecificCubit>()
+      //     .getspecificbrance(id: item.branchId.toString());
+
       displayedDataCell.add(
         DataCell(
           Text(
@@ -73,7 +80,7 @@ class _HomePageState extends State<HomePage> {
       displayedDataCell.add(
         DataCell(
           Text(
-            item.branchId.toString(),
+            branchname[item.branchId].toString(),
           ),
         ),
       );
@@ -85,11 +92,7 @@ class _HomePageState extends State<HomePage> {
         ),
       );
       displayedDataCell.add(
-        const DataCell(
-          Text(
-            'Employee',
-          ),
-        ),
+        DataCell(Text(item.role == null ? 'Employee' : item.role!)),
       );
       displayedDataCell.add(
         DataCell(TextButton(
@@ -582,6 +585,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     String size = MediaQuery.of(context).size.width.toString();
+    var c = context.watch<GetallbranchCubit>();
+    var branchname = c.state.branchidwithname;
     print("Size : $size");
 
     return BlocConsumer<GetemployeelistCubit, PostState>(
@@ -595,7 +600,7 @@ class _HomePageState extends State<HomePage> {
       } else if (state is PostLoadingState) {
         EasyLoading.show(status: 'Fetching Data..');
       } else if (state is PostLoadedState) {
-        fetchdata(state.posts);
+        fetchdata(state.posts, branchname);
       }
     }, builder: (context, state) {
       return Scaffold(

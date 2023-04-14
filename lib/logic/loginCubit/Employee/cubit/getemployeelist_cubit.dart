@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -14,8 +16,8 @@ class GetemployeelistCubit extends Cubit<PostState> {
   void getemployeelist() async {
     try {
       List<EmployeeListModel>? emplist = await postRepository.fetchPosts();
-
-      emit(PostLoadedState(emplist!));
+      log(emplist!.length.toString());
+      emit(PostLoadedState(emplist));
     } on DioError catch (ex) {
       if (ex.type == DioErrorType.connectionError) {
         emit(PostErrorState(
@@ -27,6 +29,5 @@ class GetemployeelistCubit extends Cubit<PostState> {
             "Can't fetch posts, please check your internet connection!");
       }
     }
-    return null;
   }
 }
