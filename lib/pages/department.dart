@@ -296,7 +296,8 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                               isactive = false;
                                               Navigator.pop(context);
                                               EasyLoading.showToast(
-                                                  "Successfully added");
+                                                "Successfully added",
+                                              );
                                             }
                                           },
                                           child: Material(
