@@ -6,7 +6,7 @@ import 'package:leavemanagementadmin/Interceptor/diointerceptor.dart';
 import 'package:leavemanagementadmin/Interceptor/storetoken.dart';
 import 'package:leavemanagementadmin/constant/apiendpoint.dart';
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
-import 'package:leavemanagementadmin/model/branchModel.dart';
+
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -184,18 +184,6 @@ class AuthRepository {
   }
 
   // GET BRANCH
-  Future<List<GetBranchModel>?> getbranch() async {
-    try {
-      var response = await dio.get("/api/admin/get/branch");
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        List<dynamic> data = response.data;
-        return data.map((e) => GetBranchModel.fromJson(e)).toList();
-      } else {}
-    } catch (e) {
-      log(e.toString());
-    }
-  }
 
   Future<List<EmployeeListModel>?> fetchPosts() async {
     try {

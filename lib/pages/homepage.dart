@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/logic/Employee/cubit/getemployeelist_cubit.dart';
 import 'package:leavemanagementadmin/logic/branch/getallbranch_cubit.dart';
+import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.dart';
 
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,6 +51,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<GetallbranchCubit>().getallbranch();
+    context.read<GetAlldeptCubit>().getalldept();
     context.read<GetemployeelistCubit>().getemployeelist();
 
     log('Init State');

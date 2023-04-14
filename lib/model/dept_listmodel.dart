@@ -1,19 +1,18 @@
 // To parse this JSON data, do
 //
-//     final getBranchModel = getBranchModelFromJson(jsonString);
+//     final allDeptListModel = allDeptListModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
-List<GetBranchModel> getBranchModelFromJson(String str) =>
-    List<GetBranchModel>.from(
-        json.decode(str).map((x) => GetBranchModel.fromJson(x)));
+List<AllDeptListModel> allDeptListModelFromJson(String str) =>
+    List<AllDeptListModel>.from(
+        json.decode(str).map((x) => AllDeptListModel.fromJson(x)));
 
-String getBranchModelToJson(List<GetBranchModel> data) =>
+String allDeptListModelToJson(List<AllDeptListModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class GetBranchModel {
-  GetBranchModel({
+class AllDeptListModel {
+  AllDeptListModel({
     required this.id,
     required this.name,
     required this.createdAt,
@@ -27,7 +26,8 @@ class GetBranchModel {
   final dynamic updatedAt;
   final String isActive;
 
-  factory GetBranchModel.fromJson(Map<String, dynamic> json) => GetBranchModel(
+  factory AllDeptListModel.fromJson(Map<String, dynamic> json) =>
+      AllDeptListModel(
         id: json["id"],
         name: json["name"],
         createdAt: DateTime.parse(json["created_at"]),
