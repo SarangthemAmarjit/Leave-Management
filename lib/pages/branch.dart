@@ -57,25 +57,82 @@ class _BranchPageState extends State<BranchPage> {
         DataCell(TextButton(
             onPressed: () {
               namecontroller.text = item.name;
-              isactive = item.isActive as bool;
+
               showDialog(
                 context: context,
-                builder: (context) {
+                builder: (cnt) {
                   return StatefulBuilder(
-                    builder: (BuildContext context, setState) {
+                    builder: (BuildContext context,
+                        void Function(void Function()) setState) {
                       return AlertDialog(
+                        actions: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.grey,
+                                      side:
+                                          const BorderSide(color: Colors.red)),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("CANCEL")),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              InkWell(
+                                  onTap: () {
+                                    if (namecontroller.text.isEmpty ||
+                                        namecontroller.text.isEmpty) {
+                                      EasyLoading.showError(
+                                          'Name field is empty');
+                                    } else {
+                                      // allbranch.add({
+                                      //   "slno.": 3,
+                                      //   "branchname": namecontroller.text,
+                                      //   "is_active": isactive == true
+                                      //       ? "Active"
+                                      //       : "Not Active",
+                                      // });
+
+                                      namecontroller.clear();
+                                      isactive = false;
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                  child: Material(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(13),
+                                    ),
+                                    elevation: 15,
+                                    child: const CardWidget(
+                                        color: Colors.green,
+                                        width: 70,
+                                        height: 30,
+                                        borderRadius: 5,
+                                        child: Center(
+                                          child: Text(
+                                            'Add',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )),
+                                  )),
+                            ],
+                          )
+                        ],
                         title: const Text(
                           "Add new Branch",
-                          style: TextStyle(fontSize: 18),
                         ),
                         content: SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.2,
+                          height: MediaQuery.of(context).size.height * 0.3,
                           child: Column(
                             children: [
                               TextFormField(
                                 controller: namecontroller,
                                 decoration: const InputDecoration(
-                                  hintText: "Branch Name",
+                                  hintText: "Department Name",
                                 ),
                               ),
                               const SizedBox(
@@ -99,44 +156,6 @@ class _BranchPageState extends State<BranchPage> {
                             ],
                           ),
                         ),
-                        actions: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(Colors.red),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text(
-                                    "Cancel",
-                                    style: TextStyle(fontSize: 17),
-                                  )),
-                              ElevatedButton(
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(Colors.green),
-                                  ),
-                                  onPressed: () {
-                                    if (namecontroller.text.isEmpty) {
-                                      EasyLoading.showError(
-                                          'Name field is empty');
-                                    } else {
-                                      namecontroller.clear();
-                                      isactive = false;
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                  child: const Text(
-                                    "Update",
-                                    style: TextStyle(fontSize: 17),
-                                  )),
-                            ],
-                          )
-                        ],
                       );
                     },
                   );
