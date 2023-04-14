@@ -184,18 +184,6 @@ class AuthRepository {
   }
 
   // GET BRANCH
-  // Future<List<GetBranchModel>?> getbranch() async {
-  //   try {
-  //     var response = await dio.get("/api/admin/get/branch");
-
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       List<dynamic> data = response.data;
-  //       return data.map((e) => GetBranchModel.fromJson(e)).toList();
-  //     } else {}
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
 
   Future<List<EmployeeListModel>?> fetchPosts() async {
     try {

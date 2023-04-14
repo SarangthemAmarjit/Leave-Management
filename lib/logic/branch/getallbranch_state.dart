@@ -7,5 +7,5 @@ class GetallbranchState extends Equatable {
       {required this.branchidwithname, required this.allbranchlist});
 
   @override
-  List<Object> get props => [allbranchlist];
+  List<Object> get props => [allbranchlist, branchidwithname];
 }

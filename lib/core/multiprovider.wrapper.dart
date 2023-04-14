@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:leavemanagementadmin/logic/Authflow/auth_flow_cubit.dart';
 import 'package:leavemanagementadmin/logic/branch/create_branch_state.dart';
+import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/postdepartment_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/post_designation_cubit.dart';
 
@@ -45,6 +46,9 @@ class MultiproviderWrapper extends StatelessWidget {
       ),
       BlocProvider(
         create: (context) => GetallbranchCubit(),
+      ),
+      BlocProvider(
+        create: (context) => GetAlldeptCubit(),
       ),
     ], child: child);
   }
