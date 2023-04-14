@@ -10,16 +10,16 @@ part 'getallbranch_state.dart';
 
 class GetallbranchCubit extends Cubit<GetallbranchState> {
   GetallbranchCubit()
-      : super(
-            const GetallbranchState(allbranchlist: [], branchidwithname: {})) {
+      : super(const GetallbranchState(
+          allbranchlist: [],
+          branchidwithname: {},
+        )) {
     getallbranch();
   }
-
+  List allbranchIdlist = [];
+  List allbranchNamelist = [];
   API api = API();
   void getallbranch() async {
-    List allbranchIdlist = [];
-    List allbranchNamelist = [];
-
     try {
       final response = await api.sendRequest.get("/api/admin/get/branch");
       if (response.statusCode == 200) {
@@ -44,7 +44,9 @@ class GetallbranchCubit extends Cubit<GetallbranchState> {
         var result = Map.fromIterables(allbranchIdlist, allbranchNamelist);
         log(result.toString());
         emit(GetallbranchState(
-            branchidwithname: result, allbranchlist: allbranch));
+          branchidwithname: result,
+          allbranchlist: allbranch,
+        ));
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }
