@@ -50,11 +50,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    super.initState();
     context.read<GetallbranchCubit>().getallbranch();
     context.read<GetAlldeptCubit>().getalldept();
     context.read<GetAlldesignCubit>().getalldesign();
-    super.initState();
-
     context.read<GetemployeelistCubit>().getemployeelist();
 
     log('Init State');

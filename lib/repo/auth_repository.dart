@@ -100,7 +100,11 @@ class AuthRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log("Successfully added branch name");
-      } else {}
+        authLoginListener.loaded();
+        EasyLoading.showToast("Successfully added");
+      } else {
+        authLoginListener.error();
+      }
     } catch (e) {
       log(e.toString());
     }
@@ -152,7 +156,10 @@ class AuthRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log("Successfully added department name");
-      } else {}
+        authLoginListener.loaded();
+      } else {
+        authLoginListener.error();
+      }
     } catch (e) {
       log(e.toString());
     }
@@ -177,7 +184,10 @@ class AuthRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log("Successfully added designation name");
-      } else {}
+        authLoginListener.loaded();
+      } else {
+        authLoginListener.error();
+      }
     } catch (e) {
       log(e.toString());
     }
