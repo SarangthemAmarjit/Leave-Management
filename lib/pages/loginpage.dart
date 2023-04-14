@@ -335,6 +335,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   InkWell(
                                     onTap: () {
+                                      countdownTimer!.cancel();
                                       if (emailorphoncontroller.text.isEmpty &&
                                           verifymailotpcontroller
                                               .text.isEmpty) {

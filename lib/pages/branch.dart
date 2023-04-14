@@ -5,8 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/branch/branch_cubit.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/branch/getbranch/cubit/get_branch_cubit.dart';
+import 'package:leavemanagementadmin/logic/loginCubit/cubit/branch/cubit/getallbranch_cubit.dart';
 import 'package:leavemanagementadmin/model/branchModel.dart';
+import 'package:leavemanagementadmin/model/branch_list.dart';
 
 class BranchPage extends StatefulWidget {
   /// Creates the home page.
@@ -30,11 +31,11 @@ class _BranchPageState extends State<BranchPage> {
   @override
   void initState() {
     super.initState();
-    context.read<GetBranchCubit>().getbranchlist();
+    context.read<GetallbranchCubit>().getallbranch();
   }
   // get branch list
 
-  void getbranchlist(List<GetBranchModel> getbranchlist) async {
+  void getbranchlist(List<AllBranchList> getbranchlist) async {
     for (var item in getbranchlist) {
       displayedDataCell.add(
         DataCell(
@@ -154,19 +155,20 @@ class _BranchPageState extends State<BranchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<GetBranchCubit, GetBranchState>(
+    return BlocConsumer<GetallbranchCubit, GetallbranchState>(
       listener: (context, state) {
-        if (state is GetBranchErrorState) {
-          SnackBar snackBar = SnackBar(
-            content: Text(state.error),
-            backgroundColor: Colors.red,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        } else if (state is GetBranchLoadingState) {
-          EasyLoading.show(status: 'Fetching Data..');
-        } else if (state is GetBranchLoadedState) {
-          getbranchlist(state.getbranchposts);
-        }
+        getbranchlist(state.allbranchlist);
+        // if (state is GetBranchErrorState) {
+        //   // SnackBar snackBar = SnackBar(
+        //   //   content: Text(state.error),
+        //   //   backgroundColor: Colors.red,
+        //   // );
+        //   //ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        // } else if (state is GetBranchLoadingState) {
+        //   EasyLoading.show(status: 'Fetching Data..');
+        // } else if (state is GetBranchLoadedState) {
+
+        // }
       },
       builder: (context, state) {
         return Scaffold(
