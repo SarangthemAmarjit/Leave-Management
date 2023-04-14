@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/department/cubit/postdepartment_cubit.dart';
+import 'package:leavemanagementadmin/logic/department/cubit/postdepartment_cubit.dart';
 
 class DepartmentPage extends StatefulWidget {
   /// Creates the home page.

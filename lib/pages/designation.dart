@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/designation/postdesignation/cubit/post_designation_cubit.dart';
+import 'package:leavemanagementadmin/logic/designation/cubit/post_designation_cubit.dart';
 
 class DesignationPage extends StatefulWidget {
   /// Creates the home page.

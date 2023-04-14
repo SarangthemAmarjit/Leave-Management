@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:leavemanagementadmin/logic/Authflow/auth_flow_cubit.dart';
-
-import 'package:leavemanagementadmin/logic/loginCubit/branch/update_branch_cubit.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/branch/update_branch_state.dart';
-
-import 'package:leavemanagementadmin/logic/loginCubit/Employee/cubit/getemployeelist_cubit.dart';
-
-import 'package:leavemanagementadmin/logic/loginCubit/cubit/branch/cubit/getallbranch_cubit.dart';
+import 'package:leavemanagementadmin/logic/branch/create_branch_state.dart';
+import 'package:leavemanagementadmin/logic/department/cubit/postdepartment_cubit.dart';
+import 'package:leavemanagementadmin/logic/designation/cubit/post_designation_cubit.dart';
 
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_byphone_cubit.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_verifybymail_cubit.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/department/cubit/postdepartment_cubit.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/designation/postdesignation/cubit/post_designation_cubit.dart';
-import '../logic/loginCubit/branch/branch_cubit.dart';
-import '../logic/loginCubit/branch/branch_state.dart';
+
+import '../logic/Employee/cubit/getemployeelist_cubit.dart';
+import '../logic/branch/create_branch_cubit.dart';
+import '../logic/branch/getallbranch_cubit.dart';
+import '../logic/branch/update_branch_cubit.dart';
+import '../logic/branch/update_branch_state.dart';
 
 class MultiproviderWrapper extends StatelessWidget {
   final Widget child;

@@ -3,8 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
-
-import 'package:leavemanagementadmin/logic/loginCubit/branch/update_branch_state.dart';
+import 'package:leavemanagementadmin/logic/branch/update_branch_state.dart';
 
 import 'package:leavemanagementadmin/repo/auth_repository.dart';
 

@@ -1,12 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/branch/branch_cubit.dart';
-import 'package:leavemanagementadmin/logic/loginCubit/cubit/branch/cubit/getallbranch_cubit.dart';
-import 'package:leavemanagementadmin/model/branchModel.dart';
+import 'package:leavemanagementadmin/logic/branch/create_branch_cubit.dart';
+import 'package:leavemanagementadmin/logic/branch/getallbranch_cubit.dart';
+
 import 'package:leavemanagementadmin/model/branch_list.dart';
 
 class BranchPage extends StatefulWidget {
@@ -46,9 +44,7 @@ class _BranchPageState extends State<BranchPage> {
       );
       displayedDataCell.add(
         DataCell(
-          Text(
-            item.name.toString(),
-          ),
+          Text(item.name),
         ),
       );
 
@@ -158,17 +154,6 @@ class _BranchPageState extends State<BranchPage> {
     return BlocConsumer<GetallbranchCubit, GetallbranchState>(
       listener: (context, state) {
         getbranchlist(state.allbranchlist);
-        // if (state is GetBranchErrorState) {
-        //   // SnackBar snackBar = SnackBar(
-        //   //   content: Text(state.error),
-        //   //   backgroundColor: Colors.red,
-        //   // );
-        //   //ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        // } else if (state is GetBranchLoadingState) {
-        //   EasyLoading.show(status: 'Fetching Data..');
-        // } else if (state is GetBranchLoadedState) {
-
-        // }
       },
       builder: (context, state) {
         return Scaffold(
