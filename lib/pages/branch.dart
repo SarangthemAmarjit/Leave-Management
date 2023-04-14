@@ -49,9 +49,7 @@ class _BranchPageState extends State<BranchPage> {
       );
 
       displayedDataCell.add(
-        DataCell(
-          Text(item.isActive),
-        ),
+        DataCell(Text(item.isActive == "1" ? "Active" : "Not Active")),
       );
 
       displayedDataCell.add(
