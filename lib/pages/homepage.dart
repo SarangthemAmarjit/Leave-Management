@@ -9,6 +9,7 @@ import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/logic/Employee/cubit/getemployeelist_cubit.dart';
 import 'package:leavemanagementadmin/logic/branch/getallbranch_cubit.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.dart';
+import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit.dart';
 
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,16 +50,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();
     context.read<GetallbranchCubit>().getallbranch();
     context.read<GetAlldeptCubit>().getalldept();
+    context.read<GetAlldesignCubit>().getalldesign();
+    super.initState();
+
     context.read<GetemployeelistCubit>().getemployeelist();
 
     log('Init State');
   }
 
   void fetchdata(
-      List<EmployeeListModel> allemplist, Map<dynamic, dynamic> branchname) {
+      {required List<EmployeeListModel> allemplist,
+      required Map<dynamic, dynamic> branchidwithname,
+      required Map<dynamic, dynamic> deptnamewithid,
+      required Map<dynamic, dynamic> designidwithname}) {
     log('Not empty');
 
     for (var item in allemplist) {
@@ -84,15 +90,18 @@ class _HomePageState extends State<HomePage> {
       displayedDataCell.add(
         DataCell(
           Text(
-            branchname[item.branchId].toString(),
+            branchidwithname[item.branchId].toString(),
           ),
         ),
       );
       displayedDataCell.add(
         DataCell(
-          Text(
-            item.departmentId.toString(),
-          ),
+          Text(deptnamewithid[item.departmentId].toString()),
+        ),
+      );
+      displayedDataCell.add(
+        DataCell(
+          Text(designidwithname[item.designationId].toString()),
         ),
       );
       displayedDataCell.add(
@@ -589,9 +598,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     String size = MediaQuery.of(context).size.width.toString();
-    var c = context.watch<GetallbranchCubit>();
-    var branchname = c.state.branchidwithname;
-    print("Size : $size");
+    var branch = context.watch<GetallbranchCubit>();
+    var dept = context.watch<GetAlldeptCubit>();
+    var design = context.watch<GetAlldesignCubit>();
+    var branchidwithname = branch.state.branchidwithname;
+    var deptname = dept.state.deptidwithname;
+    var designidwithname = design.state.designidwithname;
 
     return BlocConsumer<GetemployeelistCubit, PostState>(
         listener: (context, state) {
@@ -604,7 +616,11 @@ class _HomePageState extends State<HomePage> {
       } else if (state is PostLoadingState) {
         EasyLoading.show(status: 'Fetching Data..');
       } else if (state is PostLoadedState) {
-        fetchdata(state.posts, branchname);
+        fetchdata(
+            allemplist: state.posts,
+            branchidwithname: branchidwithname,
+            deptnamewithid: deptname,
+            designidwithname: designidwithname);
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -1095,14 +1111,15 @@ class _HomePageState extends State<HomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                   rows: <DataRow>[
-                    for (int i = 0; i < displayedDataCell.length; i += 6)
+                    for (int i = 0; i < displayedDataCell.length; i += 7)
                       DataRow(cells: [
                         displayedDataCell[i],
                         displayedDataCell[i + 1],
                         displayedDataCell[i + 2],
                         displayedDataCell[i + 3],
                         displayedDataCell[i + 4],
-                        displayedDataCell[i + 5]
+                        displayedDataCell[i + 5],
+                        displayedDataCell[i + 6]
                       ])
                   ],
                   columns: const <DataColumn>[
@@ -1126,6 +1143,11 @@ class _HomePageState extends State<HomePage> {
                     DataColumn(
                       label: Text(
                         'Department',
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Designation',
                       ),
                     ),
                     DataColumn(
