@@ -6,6 +6,9 @@ import 'package:leavemanagementadmin/Interceptor/diointerceptor.dart';
 import 'package:leavemanagementadmin/Interceptor/storetoken.dart';
 import 'package:leavemanagementadmin/constant/apiendpoint.dart';
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
+import 'package:leavemanagementadmin/model/branchModel.dart';
+import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class AuthRepository {
   static const baseUrl = "https://staging.leave.globizs.com";
@@ -19,6 +22,7 @@ class AuthRepository {
   AuthRepository() {
     dio = Dio(BaseOptions(baseUrl: baseUrl));
     dio.interceptors.add(DioInterceptor());
+    dio.interceptors.add(PrettyDioLogger());
   }
 
 // Verify Otp From Email
@@ -180,19 +184,30 @@ class AuthRepository {
   }
 
   // GET BRANCH
-  Future<dynamic> getbranch({
-    required AuthLoginListioner authLoginListener,
-  }) async {
-    authLoginListener.loading();
+  Future<List<GetBranchModel>?> getbranch() async {
     try {
-      var response = await dio.post(getbranchUrl, data: {});
+      var response = await dio.get("/api/admin/get/branch");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return response.data;
-        log("Successfully added branch name");
+        List<dynamic> data = response.data;
+        return data.map((e) => GetBranchModel.fromJson(e)).toList();
       } else {}
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  Future<List<EmployeeListModel>?> fetchPosts() async {
+    try {
+      final response = await dio.get("/api/admin/employees");
+      if (response.statusCode == 200) {
+        List<dynamic> postMaps = response.data;
+        return postMaps.map((e) => EmployeeListModel.fromJson(e)).toList();
+      } else {
+        EasyLoading.showError('Cannot fetch Data');
+      }
+    } catch (ex) {
+      rethrow;
     }
   }
 }
