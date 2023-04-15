@@ -113,6 +113,7 @@ class AuthRepository {
   // Update Branch
 
   Future<dynamic> updatebranch({
+    required int id,
     required String branchname,
     required String isactive,
 
@@ -121,8 +122,8 @@ class AuthRepository {
   }) async {
     authLoginListener.loading();
     try {
-      var response = await dio.post(
-        updateBranchURL,
+      var response = await dio.patch(
+        "https://staging.leave.globizs.com/api/admin/update/branch/$id",
         data: {
           "name": branchname,
           "is_active": isactive
@@ -132,8 +133,10 @@ class AuthRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log("Successfully Update branch data");
+        authLoginListener.loaded();
       } else {}
     } catch (e) {
+      authLoginListener.error();
       log(e.toString());
     }
   }
@@ -189,6 +192,7 @@ class AuthRepository {
         authLoginListener.error();
       }
     } catch (e) {
+      authLoginListener.error();
       log(e.toString());
     }
   }
