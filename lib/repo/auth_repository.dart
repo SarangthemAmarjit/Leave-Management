@@ -197,6 +197,27 @@ class AuthRepository {
     }
   }
 
+  // Delete DEPARTMENT
+  Future<dynamic> deletedept({
+    required int id,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.delete(
+        "https://staging.leave.globizs.com/api/department/$id",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Delete Deparment data");
+        authLoginListener.loaded();
+      } else {}
+    } catch (e) {
+      authLoginListener.error();
+      log(e.toString());
+    }
+  }
+
   /// ADD DESIGNATION
 
   Future<dynamic> postdesignation({
@@ -242,6 +263,27 @@ class AuthRepository {
           "is_active": isactive
           //"is_activ": isactive
         },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Update Designation data");
+        authLoginListener.loaded();
+      } else {}
+    } catch (e) {
+      authLoginListener.error();
+      log(e.toString());
+    }
+  }
+
+  // Delete DESIGNATION
+  Future<dynamic> deletedesign({
+    required int id,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.delete(
+        "https://staging.leave.globizs.com/api/designation/$id",
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

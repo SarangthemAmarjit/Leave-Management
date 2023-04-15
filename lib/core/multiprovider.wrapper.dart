@@ -5,10 +5,14 @@ import 'package:leavemanagementadmin/logic/Authflow/auth_flow_cubit.dart';
 import 'package:leavemanagementadmin/logic/Employee/cubit/create_employee_cubit.dart';
 import 'package:leavemanagementadmin/logic/branch/create_branch_state.dart';
 import 'package:leavemanagementadmin/logic/branch/delete_branch_cubit.dart';
+import 'package:leavemanagementadmin/logic/department/cubit/delete_dept_cubit.dart';
+import 'package:leavemanagementadmin/logic/department/cubit/delete_dept_state.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/postdepartment_cubit.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/update_dept.state.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/update_dept_cubit.dart';
+import 'package:leavemanagementadmin/logic/designation/cubit/delete_design_cubit.dart';
+import 'package:leavemanagementadmin/logic/designation/cubit/delete_design_state.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/post_designation_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/update_design_cubit.dart';
@@ -68,6 +72,10 @@ class MultiproviderWrapper extends StatelessWidget {
           create: (context) =>
               CreateEmployeeCubit(CreateEmployeeStatus.initial)),
       BlocProvider(create: (context) => DeleteBranchCubit()),
+      BlocProvider(
+          create: (context) => DeleteDesignCubit(DeleteDesignStatus.initial)),
+      BlocProvider(
+          create: (context) => DeleteDeptCubit(DeleteDeptStatus.initial)),
     ], child: child);
   }
 }
