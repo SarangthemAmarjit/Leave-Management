@@ -7,8 +7,12 @@ import 'package:leavemanagementadmin/logic/branch/create_branch_state.dart';
 import 'package:leavemanagementadmin/logic/branch/delete_branch_cubit.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/postdepartment_cubit.dart';
+import 'package:leavemanagementadmin/logic/department/cubit/update_dept.state.dart';
+import 'package:leavemanagementadmin/logic/department/cubit/update_dept_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/post_designation_cubit.dart';
+import 'package:leavemanagementadmin/logic/designation/cubit/update_design_cubit.dart';
+import 'package:leavemanagementadmin/logic/designation/cubit/update_design_state.dart';
 
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_byphone_cubit.dart';
@@ -44,6 +48,10 @@ class MultiproviderWrapper extends StatelessWidget {
           create: (context) => PostDesignationCubit(PostDesignStatus.initial)),
       BlocProvider(
           create: (context) => UpdateBranchCubit(UpdateBranchStatus.initial)),
+      BlocProvider(
+          create: (context) => UpdateDeptCubit(UpdateDeptStatus.initial)),
+      BlocProvider(
+          create: (context) => UpdateDesignCubit(UpdateDesignStatus.initial)),
       BlocProvider(
         create: (context) => GetemployeelistCubit(),
       ),

@@ -24,10 +24,6 @@ class _BranchPageState extends State<BranchPage> {
   bool isactive = false;
   final String avtive = "";
 
-  // List<Map<String, dynamic>> allbranch = [
-  //   {"slno.": "1", "branchname": "Imphal East", "is_active": true},
-  //   {"slno.": "2", "branchname": "Imphal west", "is_active": false}
-  // ];
   List<DataCell> displayedDataCell = [];
 
   @override
@@ -94,19 +90,24 @@ class _BranchPageState extends State<BranchPage> {
                                           EasyLoading.showError(
                                               'Name field is empty');
                                         } else {
-                                          context
-                                              .read<UpdateBranchCubit>()
-                                              .updatebranch(
-                                                  branchname:
-                                                      namecontroller.text,
-                                                  id: item.id,
-                                                  isactive: isactive == true
-                                                      ? "1"
-                                                      : "0");
+                                          if (namecontroller.text.length < 5) {
+                                            EasyLoading.showToast(
+                                                "Name must be longer than or equal to 5 characters ");
+                                          } else {
+                                            context
+                                                .read<UpdateBranchCubit>()
+                                                .updatebranch(
+                                                    branchname:
+                                                        namecontroller.text,
+                                                    id: item.id,
+                                                    isactive: isactive == true
+                                                        ? "1"
+                                                        : "0");
 
-                                          namecontroller.clear();
-                                          isactive = false;
-                                          Navigator.pop(context);
+                                            namecontroller.clear();
+                                            isactive = false;
+                                            Navigator.pop(context);
+                                          }
                                         }
                                       },
                                       child: Material(

@@ -168,6 +168,35 @@ class AuthRepository {
     }
   }
 
+  // Update Department
+
+  Future<dynamic> updatedept({
+    required int id,
+    required String branchname,
+    required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.patch(
+        "https://staging.leave.globizs.com/api/department/$id",
+        data: {
+          "name": branchname,
+          "is_active": isactive
+          //"is_activ": isactive
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Update Department data");
+        authLoginListener.loaded();
+      } else {}
+    } catch (e) {
+      authLoginListener.error();
+      log(e.toString());
+    }
+  }
+
   /// ADD DESIGNATION
 
   Future<dynamic> postdesignation({
@@ -191,6 +220,34 @@ class AuthRepository {
       } else {
         authLoginListener.error();
       }
+    } catch (e) {
+      authLoginListener.error();
+      log(e.toString());
+    }
+  }
+
+  // UPDATE DESIGNATION
+  Future<dynamic> updatedesign({
+    required int id,
+    required String designname,
+    required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.patch(
+        "https://staging.leave.globizs.com/api/designation/$id",
+        data: {
+          "name": designname,
+          "is_active": isactive
+          //"is_activ": isactive
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Update Designation data");
+        authLoginListener.loaded();
+      } else {}
     } catch (e) {
       authLoginListener.error();
       log(e.toString());
