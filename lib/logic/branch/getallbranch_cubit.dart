@@ -13,11 +13,12 @@ class GetallbranchCubit extends Cubit<GetallbranchState> {
       : super(const GetallbranchState(
           allbranchlist: [],
           branchidwithname: {},
+          allbranchnamelist: [],
         )) {
     getallbranch();
   }
   List allbranchIdlist = [];
-  List allbranchNamelist = [];
+  List<String> allbranchNamelist = [];
   API api = API();
   void getallbranch() async {
     try {
@@ -46,6 +47,7 @@ class GetallbranchCubit extends Cubit<GetallbranchState> {
         emit(GetallbranchState(
           branchidwithname: result,
           allbranchlist: allbranch,
+          allbranchnamelist: allbranchNamelist,
         ));
       } else {
         EasyLoading.showError('Cannot fetch Data');

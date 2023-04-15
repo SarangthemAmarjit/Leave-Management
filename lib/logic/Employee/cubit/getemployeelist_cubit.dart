@@ -16,8 +16,9 @@ class GetemployeelistCubit extends Cubit<PostState> {
   void getemployeelist() async {
     try {
       List<EmployeeListModel>? emplist = await postRepository.fetchPosts();
+
       log(emplist!.length.toString());
-      emit(PostLoadedState(emplist));
+      emit(PostLoadedState(allemployeelist: emplist));
     } on DioError catch (ex) {
       if (ex.type == DioErrorType.connectionError) {
         emit(PostErrorState(

@@ -5,8 +5,9 @@ abstract class PostState {}
 class PostLoadingState extends PostState {}
 
 class PostLoadedState extends PostState {
-  final List<EmployeeListModel> posts;
-  PostLoadedState(this.posts);
+  final List<EmployeeListModel> allemployeelist;
+
+  PostLoadedState({required this.allemployeelist});
 }
 
 class PostErrorState extends PostState {

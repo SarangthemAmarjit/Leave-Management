@@ -7,3 +7,4 @@ const postdeptUrl = "/api/department";
 const postdesignationURL = "/api/designation";
 const updateBranchURL = "/api/admin/update/branch/2";
 const getbranchUrl = "/api/admin/get/branch";
+const createempUrl = "/api/admin/create/employee";

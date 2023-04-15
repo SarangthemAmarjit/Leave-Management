@@ -28,6 +28,11 @@ class _LoginPageState extends State<LoginPage> {
   Duration myDuration = const Duration(seconds: 120);
   bool isresend = false;
   bool istimeout = false;
+  bool issend = false;
+  bool showsendbutton = false;
+  bool is30second = false;
+
+  final FocusNode _passwordFocusNode = FocusNode();
 
   void startTimer() {
     countdownTimer =
@@ -40,10 +45,12 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       if (seconds < 0) {
         countdownTimer!.cancel();
-        setState(() {
-          isresend = true;
-          istimeout = true;
-        });
+
+        isresend = true;
+        istimeout = true;
+      } else if (seconds < 31) {
+        is30second = true;
+        myDuration = Duration(seconds: seconds);
       } else {
         myDuration = Duration(seconds: seconds);
       }
@@ -64,12 +71,22 @@ class _LoginPageState extends State<LoginPage> {
       );
 
   @override
+  void initState() {
+    super.initState();
+    setState(() {
+      isresend = false;
+      istimeout = false;
+      issend = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final seconds = strDigits(myDuration.inSeconds);
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     var c = context.watch<LoginBymailCubit>();
-    var issend = c.state.issend;
+    issend = c.state.issend;
 
     return BlocConsumer<LoginVerifybymailCubit, VerifyStatusformail>(
         listener: (context, state) {
@@ -186,59 +203,74 @@ class _LoginPageState extends State<LoginPage> {
                                     height: height / 32,
                                   ),
                                   TextFormField(
+                                    onTap: () {
+                                      setState(() {
+                                        showsendbutton = true;
+                                      });
+                                    },
+                                    enabled: issend ? false : true,
+
                                     controller: emailorphoncontroller,
                                     autovalidateMode: AutovalidateMode.always,
                                     autofillHints: const [AutofillHints.email],
                                     //not for form, this will make the input suggest that the field wants email as input
                                     decoration: InputDecoration(
                                         // fillColor: Colors.amber,
-                                        suffix: TextButton(
-                                            // style: TextButton.styleFrom(
-                                            //     backgroundColor: Colors.blue),
-                                            onPressed: issend
-                                                ? null
-                                                : () {
-                                                    if (emailorphoncontroller
-                                                        .text.isEmpty) {
-                                                      EasyLoading.showToast(
-                                                          'Email or Phone Cannot be Empty');
-                                                    } else if (isEmail(
-                                                        emailorphoncontroller
-                                                            .text)) {
-                                                      context
-                                                          .read<
-                                                              LoginBymailCubit>()
-                                                          .emaillogin(
-                                                              email:
-                                                                  emailorphoncontroller
-                                                                      .text)
-                                                          .then((value) =>
-                                                              startTimer());
+                                        suffix: showsendbutton
+                                            ? TextButton(
+                                                // style: TextButton.styleFrom(
+                                                //     backgroundColor: Colors.blue),
+                                                onPressed: issend
+                                                    ? null
+                                                    : () {
+                                                        if (emailorphoncontroller
+                                                            .text.isEmpty) {
+                                                          EasyLoading.showToast(
+                                                              'Email or Phone Cannot be Empty');
+                                                        } else if (isEmail(
+                                                            emailorphoncontroller
+                                                                .text)) {
+                                                          context
+                                                              .read<
+                                                                  LoginBymailCubit>()
+                                                              .emaillogin(
+                                                                  email:
+                                                                      emailorphoncontroller
+                                                                          .text)
+                                                              .then((value) =>
+                                                                  startTimer());
 
-                                                      //send email to api
-                                                    } else if (isValidPhoneNumber(
-                                                        emailorphoncontroller
-                                                            .text)) {
-                                                      context
-                                                          .read<
-                                                              LoginBymailCubit>()
-                                                          .phonelogin(
-                                                              phonenumber:
-                                                                  emailorphoncontroller
-                                                                      .text)
-                                                          .then((value) =>
-                                                              startTimer());
-                                                    } else {
-                                                      EasyLoading.showToast(
-                                                          "Invalid Email or Phone Number");
-                                                    }
-                                                  },
-                                            child: Text(
-                                              "Send OTP",
-                                              style: TextStyle(
-                                                  color: Colors.grey[600],
-                                                  fontWeight: FontWeight.bold),
-                                            )),
+                                                          //send email to api
+                                                        } else if (isValidPhoneNumber(
+                                                            emailorphoncontroller
+                                                                .text)) {
+                                                          context
+                                                              .read<
+                                                                  LoginBymailCubit>()
+                                                              .phonelogin(
+                                                                  phonenumber:
+                                                                      emailorphoncontroller
+                                                                          .text)
+                                                              .then((value) {
+                                                            startTimer();
+                                                            FocusScope.of(
+                                                                    context)
+                                                                .requestFocus(
+                                                                    _passwordFocusNode);
+                                                          });
+                                                        } else {
+                                                          EasyLoading.showToast(
+                                                              "Invalid Email or Phone Number");
+                                                        }
+                                                      },
+                                                child: Text(
+                                                  "Send OTP",
+                                                  style: TextStyle(
+                                                      color: Colors.grey[600],
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ))
+                                            : null,
                                         prefixIcon: const Icon(
                                             Icons.account_circle_outlined),
                                         border: const OutlineInputBorder(),
@@ -253,6 +285,7 @@ class _LoginPageState extends State<LoginPage> {
                                     height: height / 48,
                                   ),
                                   TextFormField(
+                                    focusNode: _passwordFocusNode,
                                     controller: verifymailotpcontroller,
                                     autovalidateMode: AutovalidateMode.always,
                                     autofillHints: const [AutofillHints.email],
@@ -279,8 +312,19 @@ class _LoginPageState extends State<LoginPage> {
                                             istimeout
                                                 ? const Text(
                                                     'Didn\'t recieved code?')
-                                                : Text(
-                                                    "Time remaining : $seconds"),
+                                                : Row(
+                                                    children: [
+                                                      const Text(
+                                                          "Time remaining : "),
+                                                      Text(
+                                                        "${seconds}s",
+                                                        style: TextStyle(
+                                                            color: is30second
+                                                                ? Colors.red
+                                                                : Colors.grey),
+                                                      )
+                                                    ],
+                                                  ),
                                             TextButton(
                                                 onPressed: isresend
                                                     ? () {

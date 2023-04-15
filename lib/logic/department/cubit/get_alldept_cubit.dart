@@ -13,14 +13,15 @@ class GetAlldeptCubit extends Cubit<GetAlldeptState> {
       : super(const GetAlldeptState(
             alldeptlist: [],
             deptidwithname: {},
-            deptStatus: DeptStatus.initial)) {
+            deptStatus: DeptStatus.initial,
+            alldeptnamelist: [])) {
     getalldept();
   }
 
   API api = API();
   void getalldept() async {
     List alldeptidlist = [];
-    List alldeptnamelist = [];
+    List<String> alldeptnamelist = [];
 
     try {
       final response = await api.sendRequest.get("/api/department");
@@ -49,7 +50,8 @@ class GetAlldeptCubit extends Cubit<GetAlldeptState> {
         emit(GetAlldeptState(
             alldeptlist: alldept,
             deptidwithname: result,
-            deptStatus: DeptStatus.loaded));
+            deptStatus: DeptStatus.loaded,
+            alldeptnamelist: alldeptnamelist));
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }

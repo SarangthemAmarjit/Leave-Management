@@ -11,15 +11,17 @@ part 'get_alldesign_state.dart';
 
 class GetAlldesignCubit extends Cubit<GetAlldesignState> {
   GetAlldesignCubit()
-      : super(
-            const GetAlldesignState(alldesignlist: [], designidwithname: {})) {
+      : super(const GetAlldesignState(
+            alldesignlist: [],
+            designidwithname: {},
+            alldesignationnamelist: [])) {
     getalldesign();
   }
 
   API api = API();
   void getalldesign() async {
     List alldesignidlist = [];
-    List alldesignamelist = [];
+    List<String> alldesignamelist = [];
 
     try {
       final response = await api.sendRequest.get("/api/designation");
@@ -46,7 +48,9 @@ class GetAlldesignCubit extends Cubit<GetAlldesignState> {
         var result = Map.fromIterables(alldesignidlist, alldesignamelist);
         log(result.toString());
         emit(GetAlldesignState(
-            alldesignlist: alldesign, designidwithname: result));
+            alldesignlist: alldesign,
+            designidwithname: result,
+            alldesignationnamelist: alldesignamelist));
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }

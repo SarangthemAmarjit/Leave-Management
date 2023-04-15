@@ -209,4 +209,49 @@ class AuthRepository {
     }
     return null;
   }
+
+  // Create Employee
+  void createEmployee({
+    required String empname,
+    required String empusername,
+    required String email,
+    required String empcode,
+    required String phonenumber,
+    required int deptid,
+    required int designid,
+    required int branchid,
+    required int roleid,
+    required DateTime dateofjoining,
+    required String emptype,
+
+    // required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.post(createempUrl, data: {
+        "username": "direct intern",
+        "email": "directintern@example.com",
+        "emp_code": 268,
+        "name": "direct intern",
+        "branch_id": 1,
+        "department_id": 2,
+        "designation_id": 3,
+        "date_of_joining": "2022-01-01",
+        "phone": "123456784",
+        "emp_type": "1",
+        "role": 1
+      });
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully added branch name");
+        authLoginListener.loaded();
+        EasyLoading.showToast("Successfully added Employee");
+      } else {
+        authLoginListener.error();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }
