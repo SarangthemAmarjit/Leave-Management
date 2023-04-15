@@ -4,10 +4,10 @@ enum UpdateBranchStatus { initial, loading, loaded, error }
 
 // enum VerifyStatusformail { initial, loading, loaded, error }
 
-class BranchState extends Equatable {
+class UpdateBranchState extends Equatable {
   final UpdateBranchStatus updatebranchStatus;
 
-  const BranchState({
+  const UpdateBranchState({
     required this.updatebranchStatus,
   });
 

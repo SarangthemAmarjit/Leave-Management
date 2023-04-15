@@ -14,11 +14,14 @@ class UpdateBranchCubit extends Cubit<UpdateBranchStatus>
 
   void updatebranch({
     required String branchname,
-    required String id,
-    //required String isactive,
+    required int id,
+    required String isactive,
   }) {
     _authRepository.updatebranch(
-        authLoginListener: this, branchname: branchname, isactive: id
+        authLoginListener: this,
+        branchname: branchname,
+        isactive: isactive,
+        id: id
 
         // isactive: isactive,
         );
