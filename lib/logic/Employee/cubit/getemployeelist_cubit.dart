@@ -9,11 +9,12 @@ import 'package:leavemanagementadmin/repo/auth_repository.dart';
 part 'getemployeelist_state.dart';
 
 class GetemployeelistCubit extends Cubit<PostState> {
-  GetemployeelistCubit() : super(PostLoadingState());
+  GetemployeelistCubit() : super(PostinitialState(''));
 
   AuthRepository postRepository = AuthRepository();
 
   void getemployeelist() async {
+    emit(PostLoadingState('Fetching Data..'));
     try {
       List<EmployeeListModel>? emplist = await postRepository.fetchPosts();
 

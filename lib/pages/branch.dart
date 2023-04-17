@@ -224,7 +224,7 @@ class _BranchPageState extends State<BranchPage> {
                               ],
                             )
                           ],
-                          title: Text("Are you sure to delete"),
+                          title: const Text("Are you sure to delete"),
                         );
                       },
                     );
@@ -519,6 +519,7 @@ class _BranchPageState extends State<BranchPage> {
                                   ),
                                   // border: TableBorder.all(
                                   //     color: const Color.fromARGB(255, 159, 154, 154)),
+
                                   rows: <DataRow>[
                                     for (int i = 0;
                                         i < displayedDataCell.length;

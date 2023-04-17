@@ -43,7 +43,7 @@ class GetallbranchCubit extends Cubit<GetallbranchState> {
         }
 
         var result = Map.fromIterables(allbranchIdlist, allbranchNamelist);
-        log(result.toString());
+        log('From Cubit For Branch :$result');
         emit(GetallbranchState(
           branchidwithname: result,
           allbranchlist: allbranch,

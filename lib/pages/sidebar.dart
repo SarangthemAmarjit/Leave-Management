@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -75,7 +77,7 @@ class SidebarPage extends StatelessWidget {
   }
 }
 
-class ExampleSidebarX extends StatelessWidget {
+class ExampleSidebarX extends StatefulWidget {
   const ExampleSidebarX({
     Key? key,
     required SidebarXController controller,
@@ -85,116 +87,187 @@ class ExampleSidebarX extends StatelessWidget {
   final SidebarXController _controller;
 
   @override
+  State<ExampleSidebarX> createState() => _ExampleSidebarXState();
+}
+
+class _ExampleSidebarXState extends State<ExampleSidebarX> {
+  List<SidebarXItem> _items = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _items = _generateItems;
+  }
+
+  bool isclicksetting = false;
+  List<SidebarXItem> get settingsubitems {
+    return [
+      const SidebarXItem(
+        iconWidget: Icon(
+          FontAwesomeIcons.codeBranch,
+          color: Colors.blue,
+          size: 15,
+        ),
+        label: 'Branch',
+      ),
+      const SidebarXItem(
+        iconWidget: Icon(
+          FontAwesomeIcons.buildingUser,
+          color: Colors.blue,
+          size: 15,
+        ),
+        label: 'Department',
+      ),
+      const SidebarXItem(
+        iconWidget: Icon(
+          FontAwesomeIcons.addressCard,
+          color: Colors.blue,
+          size: 15,
+        ),
+        label: 'Designation',
+      ),
+      SidebarXItem(
+        icon: Icons.logout_rounded,
+        label: 'Log out',
+        onTap: () {
+          log('log out');
+        },
+      ),
+    ];
+  }
+
+  List<SidebarXItem> get _generateItems {
+    return [
+      SidebarXItem(
+        icon: Icons.home,
+        label: 'Dashboard',
+        onTap: () {
+          debugPrint('Home');
+        },
+      ),
+      SidebarXItem(
+        icon: Icons.settings,
+        label: 'Setting',
+        onTap: () {
+          if (_items.length > 3) {
+            int i;
+            for (i = 1; i < 4; i++) {
+              _items.removeAt(_items.length - 2);
+            }
+          } else {
+            _items.removeAt(2);
+            _items.addAll(settingsubitems);
+          }
+
+          log(_items.length.toString());
+        },
+      ),
+      SidebarXItem(
+        icon: Icons.logout_rounded,
+        label: 'Log out',
+        onTap: () {
+          log('log out');
+        },
+      ),
+    ];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SidebarX(
-      controller: _controller,
-      theme: SidebarXTheme(
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: canvasColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        hoverColor: scaffoldBackgroundColor,
-        textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
-        selectedTextStyle: const TextStyle(color: Colors.black),
-        itemTextPadding: const EdgeInsets.only(left: 30),
-        selectedItemTextPadding: const EdgeInsets.only(left: 30),
-        itemDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: canvasColor),
-        ),
-        selectedItemDecoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: actionColor.withOpacity(0.37),
+        controller: widget._controller,
+        theme: SidebarXTheme(
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: canvasColor,
+            borderRadius: BorderRadius.circular(20),
           ),
-          gradient: LinearGradient(
-            colors: [accentCanvasColor, accentCanvasColorLight],
+          hoverColor: scaffoldBackgroundColor,
+          textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
+          selectedTextStyle: const TextStyle(color: Colors.black),
+          itemTextPadding: const EdgeInsets.only(left: 30),
+          selectedItemTextPadding: const EdgeInsets.only(left: 30),
+          itemDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: canvasColor),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.28),
-              blurRadius: 10,
-            )
-          ],
-        ),
-        //! -> sidebar icon theme
-        iconTheme: IconThemeData(
-          color: Colors.black.withOpacity(0.7),
-          size: 20,
-        ),
-        selectedIconTheme: const IconThemeData(
-          color: Colors.black,
-          size: 20,
-        ),
-      ),
-      extendedTheme: const SidebarXTheme(
-        width: 200,
-        decoration: BoxDecoration(
-          color: canvasColor,
-        ),
-      ),
-      footerDivider: divider,
-      headerBuilder: (context, extended) {
-        //todo -> ternary operation on Glogo
-
-        return FittedBox(
-          child: Row(
-            children: [
-              SizedBox(
-                height: 80,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset('assets/images/G-png-only.png'),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    "Leave",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "Management",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ],
+          selectedItemDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: actionColor.withOpacity(0.37),
+            ),
+            gradient: LinearGradient(
+              colors: [accentCanvasColor, accentCanvasColorLight],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.28),
+                blurRadius: 10,
               )
             ],
           ),
-        );
-      },
-      items: [
-        SidebarXItem(
-          icon: Icons.home,
-          label: 'Dashboard',
-          onTap: () {
-            debugPrint('Home');
-          },
+          //! -> sidebar icon theme
+          iconTheme: IconThemeData(
+            color: Colors.black.withOpacity(0.7),
+            size: 20,
+          ),
+          selectedIconTheme: const IconThemeData(
+            color: Colors.black,
+            size: 20,
+          ),
         ),
-        const SidebarXItem(
-          icon: FontAwesomeIcons.codeBranch,
-          label: 'Branch',
+        extendedTheme: const SidebarXTheme(
+          width: 200,
+          decoration: BoxDecoration(
+            color: canvasColor,
+          ),
         ),
-        const SidebarXItem(
-          icon: FontAwesomeIcons.buildingUser,
-          label: 'Department',
-        ),
-        const SidebarXItem(
-          icon: FontAwesomeIcons.addressCard,
-          label: 'Designation',
-        ),
-        const SidebarXItem(
-          icon: Icons.logout_rounded,
-          label: 'Log out',
-        ),
-      ],
-    );
+        footerDivider: divider,
+        headerBuilder: (context, extended) {
+          //todo -> ternary operation on Glogo
+
+          return FittedBox(
+            child: Row(
+              children: [
+                SizedBox(
+                  height: 80,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset('assets/images/G-png-only.png'),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      "Leave",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "Management",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        },
+        items: _items);
   }
 }
 
-class _ScreensExample extends StatelessWidget {
+bool isselectedsetting = false;
+bool isselected0 = false;
+bool isselected2 = false;
+bool isselected3 = false;
+bool isselected4 = false;
+bool isselected5 = false;
+
+class _ScreensExample extends StatefulWidget {
   const _ScreensExample({
     Key? key,
     required this.controller,
@@ -203,24 +276,126 @@ class _ScreensExample extends StatelessWidget {
   final SidebarXController controller;
 
   @override
+  State<_ScreensExample> createState() => _ScreensExampleState();
+}
+
+class _ScreensExampleState extends State<_ScreensExample> {
+  void check() {}
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.controller.addListener(() {
+      switch (widget.controller.selectedIndex) {
+        case 0:
+          setState(
+            () {
+              isselected0 = true;
+              isselected2 = false;
+              isselected3 = false;
+              isselected4 = false;
+              isselected5 = false;
+            },
+          );
+          break;
+        case 1:
+          setState(
+            () {
+              isselectedsetting = !isselectedsetting;
+              isselected0 = isselected0 ? true : false;
+              isselected2 = isselected2 ? true : false;
+              isselected3 = isselected3 ? true : false;
+              isselected4 = isselected4 ? true : false;
+              isselected5 = isselected5 ? true : false;
+            },
+          );
+          break;
+        case 2:
+          setState(
+            () {
+              isselected0 = false;
+              isselected2 = true;
+              isselected3 = false;
+              isselected4 = false;
+              isselected5 = false;
+            },
+          );
+          break;
+        case 3:
+          setState(
+            () {
+              isselected0 = false;
+              isselected2 = false;
+              isselected3 = true;
+              isselected4 = false;
+              isselected5 = false;
+            },
+          );
+          break;
+        case 4:
+          setState(
+            () {
+              isselected0 = false;
+              isselected2 = false;
+              isselected3 = false;
+              isselected4 = true;
+              isselected5 = false;
+            },
+          );
+          break;
+        case 5:
+          setState(
+            () {
+              isselected0 = false;
+              isselected2 = false;
+              isselected3 = false;
+              isselected4 = false;
+              isselected5 = true;
+            },
+          );
+          break;
+
+        default:
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AnimatedBuilder(
-      animation: controller,
+      animation: widget.controller,
       builder: (context, child) {
-        final pageTitle = _getTitleByIndex(controller.selectedIndex);
-        switch (controller.selectedIndex) {
+        final pageTitle = _getTitleByIndex(widget.controller.selectedIndex);
+
+        switch (widget.controller.selectedIndex) {
           case 0:
             return const HomePage();
 
           case 1:
-            return const BranchPage();
+            return isselected0
+                ? const HomePage()
+                : isselected2
+                    ? const BranchPage()
+                    : isselected3
+                        ? const DepartmentPage()
+                        : isselected4
+                            ? const DesignationPage()
+                            : isselected5
+                                ? isselectedsetting
+                                    ? const LogOutPage()
+                                    : const LogOutPage()
+                                : const HomePage();
+
           case 2:
-            return const DepartmentPage();
+            return isselectedsetting ? const BranchPage() : const LogOutPage();
           case 3:
-            return const DesignationPage();
+            return const DepartmentPage();
           case 4:
-            return const LogOutPage();
+            return const DesignationPage();
+          case 5:
+            return isselectedsetting ? const LogOutPage() : const LogOutPage();
           default:
             return Text(
               pageTitle,

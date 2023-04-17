@@ -46,7 +46,7 @@ class GetAlldeptCubit extends Cubit<GetAlldeptState> {
         }
 
         var result = Map.fromIterables(alldeptidlist, alldeptnamelist);
-        log(result.toString());
+        log('From Cubit for Department :$result');
         emit(GetAlldeptState(
             alldeptlist: alldept,
             deptidwithname: result,
