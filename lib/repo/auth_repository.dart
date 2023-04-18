@@ -245,7 +245,6 @@ class AuthRepository {
     }
   }
 
-<<<<<<< HEAD
   // UPDATE DESIGNATION
   Future<dynamic> updatedesign({
     required int id,
@@ -296,9 +295,8 @@ class AuthRepository {
   }
 
   // GET BRANCH
-=======
+
   // GET Employee List
->>>>>>> eb89cbe7c45ca27883a4db15f25338180204df81
 
   Future<List<Employee>?> fetchPosts(int pagenumber) async {
     try {
