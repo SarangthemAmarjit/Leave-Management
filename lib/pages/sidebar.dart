@@ -441,7 +441,22 @@ class _ScreensExampleState extends State<_ScreensExample> {
           case 0:
             return FittedBox(
                 fit: BoxFit.fill,
-                child: Image.asset('assets/images/dashboard.png'));
+                child: Column(
+                  children: const [
+                    Text(
+                      "Welcome",
+                      style:
+                          TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        "Globizs web solution Pvt. Ltd.",
+                        style: TextStyle(color: Colors.redAccent, fontSize: 56),
+                      ),
+                    )
+                  ],
+                ));
           case 1:
             return const HomePage();
 
