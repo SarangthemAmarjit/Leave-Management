@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:leavemanagementadmin/Interceptor/storetoken.dart';
 import 'package:leavemanagementadmin/constant.dart';
+import 'package:leavemanagementadmin/logic/Authflow/auth_flow_cubit.dart';
 
 class LogOutPage extends StatefulWidget {
   const LogOutPage({super.key});
@@ -86,7 +89,7 @@ class _LogOutPageState extends State<LogOutPage> {
                                   children: [
                                     InkWell(
                                       onTap: () {
-                                        context.router.replaceNamed('/sidebar');
+                                        context.router.replaceNamed('/');
                                       },
                                       child: Card(
                                         elevation: 6,
@@ -126,9 +129,12 @@ class _LogOutPageState extends State<LogOutPage> {
                                       ),
                                     ),
                                     InkWell(
-                                      onTap: () {
-                                        context.router
-                                            .replaceNamed('/emailinput');
+                                      onTap: () async {
+                                        Store.clear().whenComplete(() {
+                                          context
+                                              .read<AuthFlowCubit>()
+                                              .getloginstatus();
+                                        });
                                       },
                                       child: Card(
                                         elevation: 10,

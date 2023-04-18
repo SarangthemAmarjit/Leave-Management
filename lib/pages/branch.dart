@@ -1,6 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:leavemanagementadmin/constant.dart';
+import 'package:leavemanagementadmin/logic/loginCubit/cubit/branch/branch_cubit.dart';
+
+import '../logic/loginCubit/cubit/branch/branch_state.dart';
 
 class BranchPage extends StatefulWidget {
   /// Creates the home page.
@@ -153,6 +159,26 @@ class _BranchPageState extends State<BranchPage> {
   @override
   Widget build(BuildContext context) {
     int index = 1;
+    final branch = context.watch<BranchCubit>();
+    final branchstatus = branch.state.branchstatus;
+
+    switch (branchstatus) {
+      case BranchStatus.initial:
+        log("Status initial");
+        break;
+      case BranchStatus.loading:
+        CircularProgressIndicator();
+        log("Status loading");
+        break;
+      case BranchStatus.loaded:
+        log("Status loaded");
+        EasyLoading.showToast("Added Succesfully");
+        break;
+      case BranchStatus.error:
+        log("Status error");
+        break;
+    }
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: Column(children: [
@@ -256,13 +282,16 @@ class _BranchPageState extends State<BranchPage> {
                                           EasyLoading.showError(
                                               'Name field is empty');
                                         } else {
-                                          allbranch.add({
-                                            "slno.": index,
-                                            "branchname": namecontroller.text,
-                                            "is_active": isactive == true
-                                                ? "Active"
-                                                : "Not Active",
-                                          });
+                                          // allbranch.add({
+                                          //   "slno.": index,
+                                          //   "branchname": namecontroller.text,
+                                          //   "is_active": isactive == true
+                                          //       ? "Active"
+                                          //       : "Not Active",
+                                          // });
+
+                                          context.read<BranchCubit>().addbranch(
+                                              branchname: namecontroller.text);
 
                                           namecontroller.clear();
                                           isactive = false;

@@ -1,67 +1,41 @@
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
+import 'package:leavemanagementadmin/Interceptor/diointerceptor.dart';
+import 'package:leavemanagementadmin/Interceptor/storetoken.dart';
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
 
-import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 class AuthRepository {
-  static const baseUrl = "https://leavemngt.globizsapp.com";
+  static const baseUrl = "https://staging.leave.globizs.com";
   static const loginUrl = "/api/auth/login";
   static const verifyUser = "/api/auth/login/verify";
 
-  Dio dio = Dio(BaseOptions(baseUrl: baseUrl));
-
 //Sending Otp to Email
-  Future emaillogin(
-      {required String email,
-      required AuthLoginListener authLoginListener}) async {
-    authLoginListener.loading();
-    try {
-      final response = await dio.post(
-        loginUrl,
-        data: {"username": email},
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.data['message']);
-        // Login successful
-
-        authLoginListener.loaded();
-      } else {
-        print('error');
-        authLoginListener.error();
-        // Login failed
-        throw Exception('Failed to log in');
-      }
-    } catch (e) {
-      authLoginListener.error();
-      rethrow;
-    }
+  late final Dio dio;
+//
+//
+  AuthRepository() {
+    dio = Dio(BaseOptions(baseUrl: baseUrl));
+    dio.interceptors.add(DioInterceptor());
   }
-// Verify Otp From Email
 
+// Verify Otp From Email
   Future Verifyemail(
-      {required String email,
+      {required String emailorphone,
       required String otp,
-      required AuthLoginListener authLoginListener}) async {
+      required String userorphone,
+      required AuthLoginListioner authLoginListener}) async {
     authLoginListener.loading();
-    final prefs = await SharedPreferences.getInstance();
+
     try {
       final response = await dio.post(
         verifyUser,
-        data: {"username": email, "otp": otp},
+        data: {userorphone: emailorphone, "otp": otp},
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log('Verify mail response' + response.data['message']);
+        Store.setToken(response.data['data']['accessToken']);
 
-        // var finaldata = verifymailmodelFromJson(response.data);
-
-        // log('Access Number :${finaldata.data.accessToken}');
-
-        // Login successful
-        prefs.setString('tokken', response.data['data']['accessToken']);
         authLoginListener.loaded();
       } else {
         print('error');
@@ -77,7 +51,7 @@ class AuthRepository {
 
   Future phonelogin(
       {required String phone,
-      required AuthLoginListener authLoginListener}) async {
+      required AuthLoginListioner authLoginListener}) async {
     authLoginListener.loading();
     try {
       final response = await dio.post(

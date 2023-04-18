@@ -19,6 +19,7 @@ class _AuthFlowPageState extends State<AuthFlowPage> {
   @override
   void initState() {
     context.read<AuthFlowCubit>().getloginstatus();
+    log('hjjhhjvhj');
     super.initState();
   }
 
@@ -37,7 +38,7 @@ class _AuthFlowPageState extends State<AuthFlowPage> {
               // const AppUpdaterRoute()
             ];
           case logStatus.loggedOut:
-            return [const EmailInputRoute()];
+            return [const LoginRoute()];
           case logStatus.initial:
             return [];
         }
