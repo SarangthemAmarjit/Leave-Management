@@ -428,17 +428,15 @@ class _LoginPageState extends State<LoginPage> {
                                               BorderRadius.circular(20),
                                           //set border radius more than 50% of height and width to make circle
                                         ),
-                                        child: CardWidget(
-                                            gradient: const [
+                                        child: const CardWidget(
+                                            gradient: [
                                               Color.fromARGB(255, 211, 32, 39),
                                               Color.fromARGB(255, 164, 92, 95)
                                             ],
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
+                                            width: 340,
                                             height: 48,
                                             borderRadius: 13,
-                                            child: const Center(
+                                            child: Center(
                                               child: Text(
                                                 "Login",
                                                 style: TextStyle(
