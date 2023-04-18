@@ -243,7 +243,7 @@ class _BranchPageState extends State<BranchPage> {
                               ],
                             )
                           ],
-                          title: Text("Are you sure to delete"),
+                          title: const Text("Are you sure to delete"),
                         );
                       },
                     );
