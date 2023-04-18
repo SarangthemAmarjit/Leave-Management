@@ -29,6 +29,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
   @override
   void initState() {
     super.initState();
+    context.read<GetAlldeptCubit>().getalldept();
   }
 
   void getdept(List<AllDeptListModel> alldeptlist) async {

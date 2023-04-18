@@ -1,19 +1,39 @@
 // To parse this JSON data, do
 //
-//     final EmployeeListModel = EmployeeListModelFromJson(jsonString);
+//     final employeeListModel = employeeListModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
-List<EmployeeListModel> EmployeeListModelFromJson(String str) =>
-    List<EmployeeListModel>.from(
-        json.decode(str).map((x) => EmployeeListModel.fromJson(x)));
+EmployeeListModel employeeListModelFromJson(String str) =>
+    EmployeeListModel.fromJson(json.decode(str));
 
-String EmployeeListModelToJson(List<EmployeeListModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String employeeListModelToJson(EmployeeListModel data) =>
+    json.encode(data.toJson());
 
 class EmployeeListModel {
   EmployeeListModel({
+    required this.count,
+    required this.employees,
+  });
+
+  final int count;
+  final List<Employee> employees;
+
+  factory EmployeeListModel.fromJson(Map<String, dynamic> json) =>
+      EmployeeListModel(
+        count: json["count"],
+        employees: List<Employee>.from(
+            json["employees"].map((x) => Employee.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "count": count,
+        "employees": List<dynamic>.from(employees.map((x) => x.toJson())),
+      };
+}
+
+class Employee {
+  Employee({
     required this.employeeId,
     required this.employeeName,
     required this.employeeEmpCode,
@@ -49,8 +69,7 @@ class EmployeeListModel {
   final int employeeEmployeeGradeId;
   final String role;
 
-  factory EmployeeListModel.fromJson(Map<String, dynamic> json) =>
-      EmployeeListModel(
+  factory Employee.fromJson(Map<String, dynamic> json) => Employee(
         employeeId: json["employee_id"],
         employeeName: json["employee_name"],
         employeeEmpCode: json["employee_emp_code"],

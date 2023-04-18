@@ -197,13 +197,14 @@ class AuthRepository {
 
   // GET Employee List
 
-  Future<List<EmployeeListModel>?> fetchPosts(int pagenumber) async {
+  Future<List<Employee>?> fetchPosts(int pagenumber) async {
     try {
       final response = await dio.get("/api/admin/employees",
           queryParameters: {"limit": 10, "page_no": pagenumber});
       if (response.statusCode == 200) {
-        List<dynamic> postMaps = response.data;
-        return postMaps.map((e) => EmployeeListModel.fromJson(e)).toList();
+        log(response.data.toString());
+        List<dynamic> postMaps = response.data['employees'];
+        return postMaps.map((e) => Employee.fromJson(e)).toList();
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }

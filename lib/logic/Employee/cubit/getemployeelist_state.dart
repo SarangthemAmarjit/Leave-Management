@@ -15,7 +15,7 @@ class PostinitialState extends PostState {
 }
 
 class PostLoadedState extends PostState {
-  final List<EmployeeListModel> allemployeelist;
+  final List<Employee> allemployeelist;
 
   PostLoadedState({required this.allemployeelist});
 }

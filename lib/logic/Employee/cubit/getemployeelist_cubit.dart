@@ -16,8 +16,7 @@ class GetemployeelistCubit extends Cubit<PostState> {
   void getemployeelist(int pagenumber) async {
     emit(PostLoadingState('Fetching Data..'));
     try {
-      List<EmployeeListModel>? emplist =
-          await postRepository.fetchPosts(pagenumber);
+      List<Employee>? emplist = await postRepository.fetchPosts(pagenumber);
 
       log(emplist!.length.toString());
       emit(PostLoadedState(allemployeelist: emplist));

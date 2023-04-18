@@ -26,6 +26,7 @@ class _BranchPageState extends State<DesignationPage> {
   @override
   void initState() {
     super.initState();
+    context.read<GetAlldesignCubit>().getalldesign();
   }
 
   void getalldesignation(List<AllDesignModel> alldesignlist) async {
