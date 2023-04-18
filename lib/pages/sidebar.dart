@@ -7,6 +7,7 @@ import 'package:leavemanagementadmin/pages/branch.dart';
 import 'package:leavemanagementadmin/pages/department.dart';
 import 'package:leavemanagementadmin/pages/designation.dart';
 import 'package:leavemanagementadmin/pages/homepage.dart';
+
 import 'package:leavemanagementadmin/widget/logoutPage.dart';
 import 'package:sidebarx/sidebarx.dart';
 
@@ -459,13 +460,13 @@ class _ScreensExampleState extends State<_ScreensExample> {
                                         : const LogOutPage()
                                     : const HomePage();
           case 3:
-            return const BranchPage();
+            return isselectedsetting ? const BranchPage() : const LogOutPage();
           case 4:
             return const DepartmentPage();
           case 5:
             return const DesignationPage();
           case 6:
-            return isselectedsetting ? const LogOutPage() : const LogOutPage();
+            return const LogOutPage();
           default:
             return Text(
               pageTitle,

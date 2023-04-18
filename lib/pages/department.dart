@@ -29,7 +29,6 @@ class _DepartmentPageState extends State<DepartmentPage> {
   @override
   void initState() {
     super.initState();
-    context.read<GetAlldeptCubit>().getalldept();
   }
 
   void getdept(List<AllDeptListModel> alldeptlist) async {
@@ -213,7 +212,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                               ],
                             )
                           ],
-                          title: Text("Are you sure to delete"),
+                          title: const Text("Are you sure to delete"),
                         );
                       },
                     );

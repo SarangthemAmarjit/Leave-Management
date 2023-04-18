@@ -13,6 +13,7 @@ import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.da
 import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit.dart';
 import 'package:leavemanagementadmin/logic/role/cubit/get_role_cubit.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
+import 'package:leavemanagementadmin/repo/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -87,7 +88,7 @@ class _HomePageState extends State<HomePage> {
     context.read<GetAlldeptCubit>().getalldept();
     context.read<GetAlldesignCubit>().getalldesign();
     context.read<GetRoleCubit>().getallrole();
-    context.read<GetemployeelistCubit>().getemployeelist();
+    context.read<GetemployeelistCubit>().getemployeelist(1);
   }
 
   void fetchdata(
@@ -114,29 +115,29 @@ class _HomePageState extends State<HomePage> {
         displayedDataCell.add(
           DataCell(
             Text(
-              item.name.toString(),
+              item.employeeName.toString(),
             ),
           ),
         );
         displayedDataCell.add(
           DataCell(
-            Text(designidwithname[item.designationId].toString()),
+            Text(designidwithname[item.employeeDesignationId].toString()),
           ),
         );
 
         displayedDataCell.add(
           DataCell(
-            Text(deptnamewithid[item.departmentId].toString()),
+            Text(deptnamewithid[item.employeeDepartmentId].toString()),
           ),
         );
 
         displayedDataCell.add(
-          DataCell(Text(item.role == null ? 'Employee' : item.role!)),
+          DataCell(Text(item.role ?? 'Employee')),
         );
         displayedDataCell.add(
           DataCell(
             Text(
-              branchidwithname[item.branchId].toString(),
+              branchidwithname[item.employeeBranchId].toString(),
             ),
           ),
         );
@@ -144,8 +145,8 @@ class _HomePageState extends State<HomePage> {
         displayedDataCell.add(
           DataCell(TextButton(
               onPressed: () {
-                empcode.text = item.id.toString();
-                _namefieldcontroller.text = item.name;
+                empcode.text = item.employeeId.toString();
+                _namefieldcontroller.text = item.employeeName;
 
                 showDialog(
                   context: context,
@@ -585,6 +586,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<FormFieldState> _keydep = GlobalKey();
   final GlobalKey<FormFieldState> _keydes = GlobalKey();
 
+  bool? isempcodeexist;
   String finaltoken = '';
   DateTime? initialdate = DateTime(2010);
   Future getdata() async {
@@ -701,7 +703,7 @@ class _HomePageState extends State<HomePage> {
                             context.read<GetAlldesignCubit>().getalldesign();
                             context
                                 .read<GetemployeelistCubit>()
-                                .getemployeelist();
+                                .getemployeelist(1);
                           });
 
                           break;
@@ -989,14 +991,32 @@ class _HomePageState extends State<HomePage> {
                                                       child: Column(
                                                         children: [
                                                           TextFormField(
+                                                              onChanged:
+                                                                  (value) async {
+                                                                isempcodeexist =
+                                                                    await AuthRepository()
+                                                                        .checkempcode(
+                                                                            value);
+                                                              },
                                                               keyboardType:
                                                                   TextInputType
                                                                       .number,
                                                               controller:
                                                                   empcode,
                                                               decoration:
-                                                                  const InputDecoration(
-                                                                hintStyle: TextStyle(
+                                                                  InputDecoration(
+                                                                suffixIcon: isempcodeexist ==
+                                                                        null
+                                                                    ? const SizedBox()
+                                                                    : isempcodeexist!
+                                                                        ? const Icon(
+                                                                            Icons.error)
+                                                                        : const Icon(
+                                                                            Icons.check,
+                                                                            color:
+                                                                                Colors.green,
+                                                                          ),
+                                                                hintStyle: const TextStyle(
                                                                     fontSize:
                                                                         15,
                                                                     color: Color

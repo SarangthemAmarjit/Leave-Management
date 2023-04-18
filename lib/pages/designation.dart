@@ -26,7 +26,6 @@ class _BranchPageState extends State<DesignationPage> {
   @override
   void initState() {
     super.initState();
-    context.read<GetAlldesignCubit>().getalldesign();
   }
 
   void getalldesignation(List<AllDesignModel> alldesignlist) async {
@@ -205,7 +204,7 @@ class _BranchPageState extends State<DesignationPage> {
                               ],
                             )
                           ],
-                          title: Text("Are you sure to delete"),
+                          title: const Text("Are you sure to delete"),
                         );
                       },
                     );
