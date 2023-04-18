@@ -46,7 +46,7 @@ class GetAlldesignCubit extends Cubit<GetAlldesignState> {
         }
 
         var result = Map.fromIterables(alldesignidlist, alldesignamelist);
-        log(result.toString());
+        log('From Cubit For Designatio :$result');
         emit(GetAlldesignState(
             alldesignlist: alldesign,
             designidwithname: result,

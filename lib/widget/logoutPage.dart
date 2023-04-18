@@ -85,94 +85,99 @@ class _LogOutPageState extends State<LogOutPage> {
                                 height: 20,
                               ),
                               Center(
-                                child: Row(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        context.router.replaceNamed('/');
-                                      },
-                                      child: Card(
-                                        elevation: 6,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          //set border radius more than 50% of height and width to make circle
+                                child: FittedBox(
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          context.router.replaceNamed('/');
+                                        },
+                                        child: Card(
+                                          elevation: 6,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            //set border radius more than 50% of height and width to make circle
+                                          ),
+                                          child: CardWidget(
+                                              gradient: const [
+                                                Color.fromARGB(
+                                                    255, 219, 217, 217),
+                                                Color.fromARGB(
+                                                    255, 246, 244, 244)
+                                              ],
+                                              width: 120,
+                                              height: 32,
+                                              borderRadius: 13,
+                                              child: Center(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: const [
+                                                    Icon(
+                                                      Icons.cancel,
+                                                      color: Colors.grey,
+                                                    ),
+                                                    Text(
+                                                      "Not now",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.grey),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
                                         ),
-                                        child: CardWidget(
-                                            gradient: const [
-                                              Color.fromARGB(
-                                                  255, 219, 217, 217),
-                                              Color.fromARGB(255, 246, 244, 244)
-                                            ],
-                                            width: 120,
-                                            height: 32,
-                                            borderRadius: 13,
-                                            child: Center(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: const [
-                                                  Icon(
-                                                    Icons.cancel,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  Text(
-                                                    "Not now",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.grey),
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
                                       ),
-                                    ),
-                                    InkWell(
-                                      onTap: () async {
-                                        Store.clear().whenComplete(() {
-                                          context
-                                              .read<AuthFlowCubit>()
-                                              .getloginstatus();
-                                        });
-                                      },
-                                      child: Card(
-                                        elevation: 10,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          //set border radius more than 50% of height and width to make circle
+                                      InkWell(
+                                        onTap: () async {
+                                          Store.clear().whenComplete(() {
+                                            context
+                                                .read<AuthFlowCubit>()
+                                                .getloginstatus();
+                                          });
+                                        },
+                                        child: Card(
+                                          elevation: 10,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            //set border radius more than 50% of height and width to make circle
+                                          ),
+                                          child: CardWidget(
+                                              gradient: const [
+                                                Color.fromARGB(
+                                                    255, 211, 32, 39),
+                                                Color.fromARGB(255, 164, 92, 95)
+                                              ],
+                                              width: 120,
+                                              height: 32,
+                                              borderRadius: 13,
+                                              child: Center(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: const [
+                                                    Icon(
+                                                      Icons
+                                                          .check_circle_rounded,
+                                                      color: Colors.white,
+                                                    ),
+                                                    Text(
+                                                      "Confirm",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )),
                                         ),
-                                        child: CardWidget(
-                                            gradient: const [
-                                              Color.fromARGB(255, 211, 32, 39),
-                                              Color.fromARGB(255, 164, 92, 95)
-                                            ],
-                                            width: 120,
-                                            height: 32,
-                                            borderRadius: 13,
-                                            child: Center(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: const [
-                                                  Icon(
-                                                    Icons.check_circle_rounded,
-                                                    color: Colors.white,
-                                                  ),
-                                                  Text(
-                                                    "Confirm",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white),
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               )
                             ],

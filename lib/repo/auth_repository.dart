@@ -8,7 +8,6 @@ import 'package:leavemanagementadmin/constant/apiendpoint.dart';
 import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
 
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class AuthRepository {
   static const baseUrl = "https://staging.leave.globizs.com";
@@ -22,7 +21,6 @@ class AuthRepository {
   AuthRepository() {
     dio = Dio(BaseOptions(baseUrl: baseUrl));
     dio.interceptors.add(DioInterceptor());
-    dio.interceptors.add(PrettyDioLogger());
   }
 
 // Verify Otp From Email

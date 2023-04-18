@@ -21,6 +21,7 @@ import 'package:leavemanagementadmin/logic/designation/cubit/update_design_state
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_byphone_cubit.dart';
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_verifybymail_cubit.dart';
+import 'package:leavemanagementadmin/logic/role/cubit/get_role_cubit.dart';
 
 import '../logic/Employee/cubit/getemployeelist_cubit.dart';
 import '../logic/branch/create_branch_cubit.dart';
@@ -76,6 +77,7 @@ class MultiproviderWrapper extends StatelessWidget {
           create: (context) => DeleteDesignCubit(DeleteDesignStatus.initial)),
       BlocProvider(
           create: (context) => DeleteDeptCubit(DeleteDeptStatus.initial)),
+      BlocProvider(create: (context) => GetRoleCubit()),
     ], child: child);
   }
 }
