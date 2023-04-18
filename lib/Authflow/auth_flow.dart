@@ -19,7 +19,7 @@ class _AuthFlowPageState extends State<AuthFlowPage> {
   @override
   void initState() {
     context.read<AuthFlowCubit>().getloginstatus();
-    log('hjjhhjvhj');
+
     super.initState();
   }
 
