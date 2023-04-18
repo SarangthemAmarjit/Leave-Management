@@ -39,7 +39,7 @@ class SidebarPage extends StatelessWidget {
       home: Builder(
         builder: (context) {
           //! if screensize < 600 then sidebar will be hidden
-          final isSmallScreen = MediaQuery.of(context).size.width < 600;
+          final isSmallScreen = MediaQuery.of(context).size.width < 800;
           return Scaffold(
             key: _key,
             appBar: isSmallScreen

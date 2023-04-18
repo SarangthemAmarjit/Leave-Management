@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -505,159 +506,78 @@ class _BranchPageState extends State<DesignationPage> {
                         ),
                         Expanded(
                           flex: 8,
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding:
-                                      MediaQuery.of(context).size.width > 1040
-                                          ? const EdgeInsets.only(
-                                              left: 100, right: 100, top: 20)
-                                          : const EdgeInsets.only(
-                                              left: 10, right: 10, top: 20),
-                                  child: SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: SingleChildScrollView(
-                                      child: DataTable(
-                                        columnSpacing:
-                                            MediaQuery.of(context).size.width <
-                                                    900
-                                                ? MediaQuery.of(context)
-                                                            .size
-                                                            .width <
-                                                        500
-                                                    ? 70
-                                                    : 100
-                                                : 120,
-                                        dividerThickness: 2,
-                                        headingTextStyle: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                        headingRowColor:
-                                            MaterialStateProperty.resolveWith(
-                                                (states) => Colors.grey
-                                                    .withOpacity(0.2)),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.3),
-                                              spreadRadius: 3,
-                                              blurRadius: 4,
-                                              offset: const Offset(0,
-                                                  3), // changes position of shadow
-                                            ),
-                                          ],
-                                        ),
-                                        // border: TableBorder.all(
-                                        //     color: const Color.fromARGB(255, 159, 154, 154)),
-                                        rows: <DataRow>[
-                                          for (int i = 0;
-                                              i < displayedDataCell.length;
-                                              i += 4)
-                                            DataRow(cells: [
-                                              displayedDataCell[i],
-                                              displayedDataCell[i + 1],
-                                              displayedDataCell[i + 2],
-                                              displayedDataCell[i + 3],
-                                            ])
-                                        ],
-                                        columns: const <DataColumn>[
-                                          DataColumn(
-                                            label: Text(
-                                              'Sl.no',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Flexible(
-                                              child: Text(
-                                                'Designation',
-                                              ),
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'IsActive',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Action',
-                                            ),
-                                          ),
-                                        ],
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: MediaQuery.of(context).size.width > 1040
+                                  ? const EdgeInsets.only(
+                                      left: 100, right: 100, top: 20)
+                                  : const EdgeInsets.only(
+                                      left: 10, right: 10, top: 20),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: DataTable2(
+                                  fixedTopRows: 1,
+
+                                  dividerThickness: 2,
+                                  headingTextStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                  headingRowColor:
+                                      MaterialStateProperty.resolveWith(
+                                          (states) =>
+                                              Colors.grey.withOpacity(0.2)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        spreadRadius: 3,
+                                        blurRadius: 4,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  // border: TableBorder.all(
+                                  //     color: const Color.fromARGB(255, 159, 154, 154)),
+                                  rows: <DataRow>[
+                                    for (int i = 0;
+                                        i < displayedDataCell.length;
+                                        i += 4)
+                                      DataRow(cells: [
+                                        displayedDataCell[i],
+                                        displayedDataCell[i + 1],
+                                        displayedDataCell[i + 2],
+                                        displayedDataCell[i + 3],
+                                      ])
+                                  ],
+                                  columns: const <DataColumn>[
+                                    DataColumn(
+                                      label: Text(
+                                        'Sl.no',
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding:
-                                      MediaQuery.of(context).size.width > 1040
-                                          ? const EdgeInsets.only(
-                                              left: 100, right: 100, top: 20)
-                                          : const EdgeInsets.only(
-                                              left: 10, right: 10, top: 20),
-                                  child: SizedBox(
-                                    width: MediaQuery.of(context).size.width,
-                                    child: DataTable(
-                                      dividerThickness: 2,
-                                      headingTextStyle: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                      headingRowColor:
-                                          MaterialStateProperty.resolveWith(
-                                              (states) =>
-                                                  Colors.grey.withOpacity(0.2)),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.3),
-                                            spreadRadius: 3,
-                                            blurRadius: 4,
-                                            offset: const Offset(0,
-                                                3), // changes position of shadow
-                                          ),
-                                        ],
+                                    DataColumn(
+                                      label: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        'Designation',
                                       ),
-                                      // border: TableBorder.all(
-                                      //     color: const Color.fromARGB(255, 159, 154, 154)),
-                                      rows: [],
-                                      columns: const <DataColumn>[
-                                        DataColumn(
-                                          label: Text(
-                                            'Sl.no',
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Flexible(
-                                            child: Text(
-                                              'Designation',
-                                            ),
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'IsActive',
-                                          ),
-                                        ),
-                                        DataColumn(
-                                          label: Text(
-                                            'Action',
-                                          ),
-                                        ),
-                                      ],
                                     ),
-                                  ),
+                                    DataColumn(
+                                      label: Text(
+                                        'IsActive',
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Action',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ]),
