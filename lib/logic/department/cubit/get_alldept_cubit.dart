@@ -14,9 +14,7 @@ class GetAlldeptCubit extends Cubit<GetAlldeptState> {
             alldeptlist: [],
             deptidwithname: {},
             deptStatus: DeptStatus.initial,
-            alldeptnamelist: [])) {
-    getalldept();
-  }
+            alldeptnamelist: []));
 
   API api = API();
   void getalldept() async {

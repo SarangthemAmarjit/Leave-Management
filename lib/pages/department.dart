@@ -243,7 +243,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                               ],
                             )
                           ],
-                          title: Text("Are you sure to delete"),
+                          title: const Text("Are you sure to delete"),
                         );
                       },
                     );

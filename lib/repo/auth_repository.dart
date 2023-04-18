@@ -245,6 +245,7 @@ class AuthRepository {
     }
   }
 
+<<<<<<< HEAD
   // UPDATE DESIGNATION
   Future<dynamic> updatedesign({
     required int id,
@@ -295,13 +296,18 @@ class AuthRepository {
   }
 
   // GET BRANCH
+=======
+  // GET Employee List
+>>>>>>> eb89cbe7c45ca27883a4db15f25338180204df81
 
-  Future<List<EmployeeListModel>?> fetchPosts() async {
+  Future<List<Employee>?> fetchPosts(int pagenumber) async {
     try {
-      final response = await dio.get("/api/admin/employees");
+      final response = await dio.get("/api/admin/employees",
+          queryParameters: {"limit": 10, "page_no": pagenumber});
       if (response.statusCode == 200) {
-        List<dynamic> postMaps = response.data;
-        return postMaps.map((e) => EmployeeListModel.fromJson(e)).toList();
+        log(response.data.toString());
+        List<dynamic> postMaps = response.data['employees'];
+        return postMaps.map((e) => Employee.fromJson(e)).toList();
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }
@@ -354,5 +360,19 @@ class AuthRepository {
     } catch (e) {
       log(e.toString());
     }
+  }
+
+  Future<bool?> checkempcode(String empcode) async {
+    try {
+      final response = await dio.get("/api/admin/employee/check/$empcode");
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        EasyLoading.showError('Cannot fetch Data');
+      }
+    } catch (ex) {
+      rethrow;
+    }
+    return null;
   }
 }

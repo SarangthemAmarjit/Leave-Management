@@ -7,6 +7,7 @@ import 'package:leavemanagementadmin/pages/branch.dart';
 import 'package:leavemanagementadmin/pages/department.dart';
 import 'package:leavemanagementadmin/pages/designation.dart';
 import 'package:leavemanagementadmin/pages/homepage.dart';
+
 import 'package:leavemanagementadmin/widget/logoutPage.dart';
 import 'package:sidebarx/sidebarx.dart';
 
@@ -131,7 +132,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.codeBranch,
-            color: Colors.red,
+            color: Colors.redAccent,
             size: 15,
           ),
         ),
@@ -142,7 +143,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.buildingUser,
-            color: Colors.red,
+            color: Colors.redAccent,
             size: 15,
           ),
         ),
@@ -153,7 +154,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.addressCard,
-            color: Colors.red,
+            color: Colors.redAccent,
             size: 15,
           ),
         ),
@@ -172,19 +173,19 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
   List<SidebarXItem> get _generateItems {
     return [
       SidebarXItem(
-        icon: Icons.home,
+        icon: Icons.dashboard,
         label: 'Dashboard',
         onTap: () {
           debugPrint('Dashboard');
         },
       ),
       const SidebarXItem(
-        icon: Icons.home,
+        icon: Icons.account_box_rounded,
         label: 'Employee',
       ),
       SidebarXItem(
         icon: Icons.settings,
-        label: 'Setting',
+        label: 'Setting                🔻',
         onTap: () {
           if (_items.length > 4) {
             int i;
@@ -205,7 +206,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
         },
       ),
       SidebarXItem(
-        icon: Icons.logout_rounded,
+        icon: Icons.logout,
         label: 'Log out',
         onTap: () {
           log('log out');
@@ -438,7 +439,9 @@ class _ScreensExampleState extends State<_ScreensExample> {
 
         switch (widget.controller.selectedIndex) {
           case 0:
-            return const Text('Dashboard');
+            return FittedBox(
+                fit: BoxFit.fill,
+                child: Image.asset('assets/images/dashboard.png'));
           case 1:
             return const HomePage();
 
@@ -459,13 +462,13 @@ class _ScreensExampleState extends State<_ScreensExample> {
                                         : const LogOutPage()
                                     : const HomePage();
           case 3:
-            return const BranchPage();
+            return isselectedsetting ? const BranchPage() : const LogOutPage();
           case 4:
             return const DepartmentPage();
           case 5:
             return const DesignationPage();
           case 6:
-            return isselectedsetting ? const LogOutPage() : const LogOutPage();
+            return const LogOutPage();
           default:
             return Text(
               pageTitle,
