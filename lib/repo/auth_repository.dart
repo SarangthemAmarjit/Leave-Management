@@ -362,10 +362,16 @@ class AuthRepository {
 
   Future<bool?> checkempcode(String empcode) async {
     try {
+      bool resultbool;
       final response = await dio.get("/api/admin/employee/check/$empcode");
       if (response.statusCode == 200) {
-        var data = bool.fromEnvironment(response.data);
-        return data;
+        if (response.data == 'false') {
+          resultbool = false;
+        } else {
+          resultbool = true;
+        }
+
+        return resultbool;
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }

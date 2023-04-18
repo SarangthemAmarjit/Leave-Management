@@ -993,8 +993,7 @@ class _HomePageState extends State<HomePage> {
                                                                     await AuthRepository()
                                                                         .checkempcode(
                                                                             value);
-                                                                log(isempcodeexist
-                                                                    .toString());
+                                                                log('onchange$isempcodeexist');
                                                               },
                                                               keyboardType:
                                                                   TextInputType
