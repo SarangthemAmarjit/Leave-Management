@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -495,7 +497,6 @@ class _BranchPageState extends State<BranchPage> {
                             width: MediaQuery.of(context).size.width,
                             child: DataTable2(
                               fixedTopRows: 1,
-                              headingRowHeight: 86,
 
                               dataRowHeight: 43,
                               columnSpacing:
@@ -523,7 +524,6 @@ class _BranchPageState extends State<BranchPage> {
                               ),
                               // border: TableBorder.all(
                               //     color: const Color.fromARGB(255, 159, 154, 154)),
-
                               rows: <DataRow>[
                                 for (int i = 0;
                                     i < displayedDataCell.length;
@@ -535,147 +535,29 @@ class _BranchPageState extends State<BranchPage> {
                                     displayedDataCell[i + 3],
                                   ])
                               ],
-
-                              columns: <DataColumn>[
+                              columns: const <DataColumn>[
                                 DataColumn(
-                                  label: Column(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          'Sl.no',
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 26, vertical: 8),
-                                        child: Container(
-                                          height: 42,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              color: Colors.grey[200],
-                                              border: Border.all(
-                                                  color: Colors.grey)),
-                                          child: const TextField(
-                                            decoration: InputDecoration(
-                                              suffixIcon: Icon(Icons.search),
-                                              border: InputBorder.none,
-                                              // hintText: ""
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  label: Text(
+                                    'Sl.no',
                                   ),
                                 ),
                                 DataColumn(
-                                  label: Column(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          overflow: TextOverflow.ellipsis,
-                                          'Branch Name',
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 26, vertical: 8),
-                                        child: Container(
-                                          height: 42,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              color: Colors.grey[200],
-                                              border: Border.all(
-                                                  color: Colors.grey)),
-                                          child: const TextField(
-                                            decoration: InputDecoration(
-                                              suffixIcon: Icon(Icons.search),
-                                              border: InputBorder.none,
-                                              // hintText: ""
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  label: Text(
+                                    overflow: TextOverflow.ellipsis,
+                                    'Branch Name',
                                   ),
                                 ),
                                 DataColumn(
-                                  label: Column(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          'Status',
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 26, vertical: 8),
-                                        child: Container(
-                                          height: 42,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              color: Colors.grey[200],
-                                              border: Border.all(
-                                                  color: Colors.grey)),
-                                          child: const TextField(
-                                            decoration: InputDecoration(
-                                              suffixIcon: Icon(Icons.search),
-                                              border: InputBorder.none,
-                                              // hintText: ""
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  label: Text(
+                                    'IsActive',
                                   ),
                                 ),
                                 DataColumn(
-                                  label: Column(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          'Action',
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 26, vertical: 8),
-                                        child: Container(
-                                          height: 42,
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              color: Colors.grey[200],
-                                              border: Border.all(
-                                                  color: Colors.grey)),
-                                          child: const TextField(
-                                            decoration: InputDecoration(
-                                              suffixIcon: Icon(Icons.search),
-                                              border: InputBorder.none,
-                                              // hintText: ""
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                  label: Text(
+                                    'Action',
                                   ),
                                 ),
                               ],
-                              //!
                             ),
                           ),
                         ),
