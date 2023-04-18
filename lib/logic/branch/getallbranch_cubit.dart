@@ -14,9 +14,8 @@ class GetallbranchCubit extends Cubit<GetallbranchState> {
           allbranchlist: [],
           branchidwithname: {},
           allbranchnamelist: [],
-        )) {
-    getallbranch();
-  }
+        ));
+
   List allbranchIdlist = [];
   List<String> allbranchNamelist = [];
   API api = API();

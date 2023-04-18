@@ -14,9 +14,7 @@ class GetAlldesignCubit extends Cubit<GetAlldesignState> {
       : super(const GetAlldesignState(
             alldesignlist: [],
             designidwithname: {},
-            alldesignationnamelist: [])) {
-    getalldesign();
-  }
+            alldesignationnamelist: []));
 
   API api = API();
   void getalldesign() async {

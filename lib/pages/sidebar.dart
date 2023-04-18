@@ -7,6 +7,7 @@ import 'package:leavemanagementadmin/pages/branch.dart';
 import 'package:leavemanagementadmin/pages/department.dart';
 import 'package:leavemanagementadmin/pages/designation.dart';
 import 'package:leavemanagementadmin/pages/homepage.dart';
+
 import 'package:leavemanagementadmin/widget/logoutPage.dart';
 import 'package:sidebarx/sidebarx.dart';
 
@@ -39,7 +40,7 @@ class SidebarPage extends StatelessWidget {
       home: Builder(
         builder: (context) {
           //! if screensize < 600 then sidebar will be hidden
-          final isSmallScreen = MediaQuery.of(context).size.width < 600;
+          final isSmallScreen = MediaQuery.of(context).size.width < 800;
           return Scaffold(
             key: _key,
             appBar: isSmallScreen
@@ -187,7 +188,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
       ),
       SidebarXItem(
         icon: Icons.settings,
-        label: isCLicked ? "up" : "down",
+        label: isCLicked ? setup : setdown,
         onTap: () {
           if (_items.length > 4) {
             setState(() {
@@ -489,13 +490,13 @@ class _ScreensExampleState extends State<_ScreensExample> {
                                         : const LogOutPage()
                                     : const HomePage();
           case 3:
-            return const BranchPage();
+            return isselectedsetting ? const BranchPage() : const LogOutPage();
           case 4:
             return const DepartmentPage();
           case 5:
             return const DesignationPage();
           case 6:
-            return isselectedsetting ? const LogOutPage() : const LogOutPage();
+            return const LogOutPage();
           default:
             return Text(
               pageTitle,

@@ -13,9 +13,9 @@ import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.da
 import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit.dart';
 import 'package:leavemanagementadmin/logic/role/cubit/get_role_cubit.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
+import 'package:leavemanagementadmin/repo/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
@@ -30,7 +30,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Employee> employees = <Employee>[];
-  late EmployeeDataSource employeeDataSource;
 
   Widget _dataofbirth(String dob) {
     return Column(
@@ -87,11 +86,11 @@ class _HomePageState extends State<HomePage> {
     context.read<GetAlldeptCubit>().getalldept();
     context.read<GetAlldesignCubit>().getalldesign();
     context.read<GetRoleCubit>().getallrole();
-    context.read<GetemployeelistCubit>().getemployeelist();
+    context.read<GetemployeelistCubit>().getemployeelist(1);
   }
 
   void fetchdata(
-      {required List<EmployeeListModel> allemplist,
+      {required List<Employee> allemplist,
       required Map<dynamic, dynamic> branchidwithname,
       required Map<dynamic, dynamic> deptnamewithid,
       required Map<dynamic, dynamic> designidwithname}) {
@@ -113,30 +112,28 @@ class _HomePageState extends State<HomePage> {
         );
         displayedDataCell.add(
           DataCell(
-            Text(
-              item.name.toString(),
-            ),
+            Text(item.employeeName),
           ),
         );
         displayedDataCell.add(
           DataCell(
-            Text(designidwithname[item.designationId].toString()),
-          ),
-        );
-
-        displayedDataCell.add(
-          DataCell(
-            Text(deptnamewithid[item.departmentId].toString()),
+            Text(designidwithname[item.employeeDesignationId].toString()),
           ),
         );
 
         displayedDataCell.add(
-          DataCell(Text(item.role == null ? 'Employee' : item.role!)),
+          DataCell(
+            Text(deptnamewithid[item.employeeDepartmentId].toString()),
+          ),
+        );
+
+        displayedDataCell.add(
+          DataCell(Text(item.role ?? 'Employee')),
         );
         displayedDataCell.add(
           DataCell(
             Text(
-              branchidwithname[item.branchId].toString(),
+              branchidwithname[item.employeeBranchId].toString(),
             ),
           ),
         );
@@ -144,8 +141,8 @@ class _HomePageState extends State<HomePage> {
         displayedDataCell.add(
           DataCell(TextButton(
               onPressed: () {
-                empcode.text = item.id.toString();
-                _namefieldcontroller.text = item.name;
+                empcode.text = item.employeeId.toString();
+                _namefieldcontroller.text = item.employeeName;
 
                 showDialog(
                   context: context,
@@ -585,6 +582,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<FormFieldState> _keydep = GlobalKey();
   final GlobalKey<FormFieldState> _keydes = GlobalKey();
 
+  bool? isempcodeexist;
   String finaltoken = '';
   DateTime? initialdate = DateTime(2010);
   Future getdata() async {
@@ -701,7 +699,7 @@ class _HomePageState extends State<HomePage> {
                             context.read<GetAlldesignCubit>().getalldesign();
                             context
                                 .read<GetemployeelistCubit>()
-                                .getemployeelist();
+                                .getemployeelist(1);
                           });
 
                           break;
@@ -989,14 +987,33 @@ class _HomePageState extends State<HomePage> {
                                                       child: Column(
                                                         children: [
                                                           TextFormField(
+                                                              onChanged:
+                                                                  (value) async {
+                                                                isempcodeexist =
+                                                                    await AuthRepository()
+                                                                        .checkempcode(
+                                                                            value);
+                                                                log('onchange$isempcodeexist');
+                                                              },
                                                               keyboardType:
                                                                   TextInputType
                                                                       .number,
                                                               controller:
                                                                   empcode,
                                                               decoration:
-                                                                  const InputDecoration(
-                                                                hintStyle: TextStyle(
+                                                                  InputDecoration(
+                                                                suffixIcon: isempcodeexist ==
+                                                                        null
+                                                                    ? const SizedBox()
+                                                                    : isempcodeexist!
+                                                                        ? const Icon(
+                                                                            Icons.error)
+                                                                        : const Icon(
+                                                                            Icons.check,
+                                                                            color:
+                                                                                Colors.green,
+                                                                          ),
+                                                                hintStyle: const TextStyle(
                                                                     fontSize:
                                                                         15,
                                                                     color: Color
@@ -1589,65 +1606,65 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class Employee {
-  /// Creates the employee class with required details.
-  Employee(this.id, this.name, this.designation, this.role, this.button);
+// class Employee {
+//   /// Creates the employee class with required details.
+//   Employee(this.id, this.name, this.designation, this.role, this.button);
 
-  /// Id of an employee.
-  final int id;
+//   /// Id of an employee.
+//   final int id;
 
-  /// Name of an employee.
-  final String name;
+//   /// Name of an employee.
+//   final String name;
 
-  /// Designation of an employee.
-  final String designation;
+//   /// Designation of an employee.
+//   final String designation;
 
-  /// Salary of an employee.
-  final String role;
-  final TextButton button;
-}
+//   /// Salary of an employee.
+//   final String role;
+//   final TextButton button;
+// }
 
-/// An object to set the employee collection data source to the datagrid. This
-/// is used to map the employee data to the datagrid widget.
-class EmployeeDataSource extends DataGridSource {
-  EmployeeDataSource({required List<Employee> employees}) {
-    _employees = employees;
-    updateDataGridRows();
-  }
+// /// An object to set the employee collection data source to the datagrid. This
+// /// is used to map the employee data to the datagrid widget.
+// class EmployeeDataSource extends DataGridSource {
+//   EmployeeDataSource({required List<Employee> employees}) {
+//     _employees = employees;
+//     updateDataGridRows();
+//   }
 
-  List<DataGridRow> dataGridRow = [];
-  late List<Employee> _employees;
-  Color? rowBackgroundColor;
+//   List<DataGridRow> dataGridRow = [];
+//   late List<Employee> _employees;
+//   Color? rowBackgroundColor;
 
-  void updateDataGridRows() {
-    dataGridRow = _employees
-        .map<DataGridRow>((dataGridRow) => DataGridRow(cells: [
-              DataGridCell<int>(columnName: 'sl', value: dataGridRow.id),
-              DataGridCell<String>(columnName: 'name', value: dataGridRow.name),
-              DataGridCell<String>(
-                  columnName: 'branch', value: dataGridRow.designation),
-              DataGridCell<String>(columnName: 'role', value: dataGridRow.role),
-              DataGridCell(columnName: 'action', value: dataGridRow.button),
-            ]))
-        .toList();
-  }
+//   void updateDataGridRows() {
+//     dataGridRow = _employees
+//         .map<DataGridRow>((dataGridRow) => DataGridRow(cells: [
+//               DataGridCell<int>(columnName: 'sl', value: dataGridRow.id),
+//               DataGridCell<String>(columnName: 'name', value: dataGridRow.name),
+//               DataGridCell<String>(
+//                   columnName: 'branch', value: dataGridRow.designation),
+//               DataGridCell<String>(columnName: 'role', value: dataGridRow.role),
+//               DataGridCell(columnName: 'action', value: dataGridRow.button),
+//             ]))
+//         .toList();
+//   }
 
-  @override
-  List<DataGridRow> get rows => dataGridRow;
+//   @override
+//   List<DataGridRow> get rows => dataGridRow;
 
-  @override
-  DataGridRowAdapter buildRow(DataGridRow row) {
-    return DataGridRowAdapter(
-        cells: row.getCells().map<Widget>((e) {
-      return Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Text(e.value.toString()),
-      );
-    }).toList());
-  }
+//   @override
+//   DataGridRowAdapter buildRow(DataGridRow row) {
+//     return DataGridRowAdapter(
+//         cells: row.getCells().map<Widget>((e) {
+//       return Container(
+//         alignment: Alignment.center,
+//         padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//         child: Text(e.value.toString()),
+//       );
+//     }).toList());
+//   }
 
-  void updateDataGridSource() {
-    notifyListeners();
-  }
-}
+//   void updateDataGridSource() {
+//     notifyListeners();
+//   }
+// }
