@@ -92,38 +92,70 @@ class ExampleSidebarX extends StatefulWidget {
 
 class _ExampleSidebarXState extends State<ExampleSidebarX> {
   List<SidebarXItem> _items = [];
+  bool isexpanded = true;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    widget._controller.addListener(() {
+      setState(() {
+        isexpanded = widget._controller.extended;
+      });
+      if (isexpanded) {
+        if (_items.length > 4) {
+          int i;
+          for (i = 1; i < 5; i++) {
+            _items.removeAt(_items.length - 1);
+          }
+          _items.addAll(settingsubitems);
+        }
+      } else {
+        if (_items.length > 4) {
+          int i;
+          for (i = 1; i < 5; i++) {
+            _items.removeAt(_items.length - 1);
+          }
+          _items.addAll(settingsubitems);
+        }
+      }
+    });
     _items = _generateItems;
   }
 
-  bool isclicksetting = false;
   List<SidebarXItem> get settingsubitems {
+    log('sub items$isexpanded');
     return [
-      const SidebarXItem(
-        iconWidget: Icon(
-          FontAwesomeIcons.codeBranch,
-          color: Colors.blue,
-          size: 15,
+      SidebarXItem(
+        iconWidget: Padding(
+          padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
+          child: const Icon(
+            FontAwesomeIcons.codeBranch,
+            color: Colors.red,
+            size: 15,
+          ),
         ),
         label: 'Branch',
       ),
-      const SidebarXItem(
-        iconWidget: Icon(
-          FontAwesomeIcons.buildingUser,
-          color: Colors.blue,
-          size: 15,
+      SidebarXItem(
+        iconWidget: Padding(
+          padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
+          child: const Icon(
+            FontAwesomeIcons.buildingUser,
+            color: Colors.red,
+            size: 15,
+          ),
         ),
         label: 'Department',
       ),
-      const SidebarXItem(
-        iconWidget: Icon(
-          FontAwesomeIcons.addressCard,
-          color: Colors.blue,
-          size: 15,
+      SidebarXItem(
+        iconWidget: Padding(
+          padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
+          child: const Icon(
+            FontAwesomeIcons.addressCard,
+            color: Colors.red,
+            size: 15,
+          ),
         ),
         label: 'Designation',
       ),
@@ -143,20 +175,29 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
         icon: Icons.home,
         label: 'Dashboard',
         onTap: () {
-          debugPrint('Home');
+          debugPrint('Dashboard');
         },
+      ),
+      const SidebarXItem(
+        icon: Icons.home,
+        label: 'Employee',
       ),
       SidebarXItem(
         icon: Icons.settings,
         label: 'Setting',
         onTap: () {
-          if (_items.length > 3) {
+          if (_items.length > 4) {
             int i;
             for (i = 1; i < 4; i++) {
               _items.removeAt(_items.length - 2);
             }
           } else {
-            _items.removeAt(2);
+            widget._controller.addListener(() {
+              setState(() {
+                isexpanded = widget._controller.extended;
+              });
+            });
+            _items.removeAt(3);
             _items.addAll(settingsubitems);
           }
 
@@ -176,8 +217,13 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
   @override
   Widget build(BuildContext context) {
     return SidebarX(
+        headerDivider: const Divider(
+          thickness: 1,
+          color: Color.fromARGB(255, 231, 231, 231),
+        ),
         controller: widget._controller,
         theme: SidebarXTheme(
+          width: 82,
           margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: canvasColor,
@@ -186,8 +232,8 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           hoverColor: scaffoldBackgroundColor,
           textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
           selectedTextStyle: const TextStyle(color: Colors.black),
-          itemTextPadding: const EdgeInsets.only(left: 30),
-          selectedItemTextPadding: const EdgeInsets.only(left: 30),
+          itemTextPadding: const EdgeInsets.only(left: 20),
+          selectedItemTextPadding: const EdgeInsets.only(left: 20),
           itemDecoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: canvasColor),
@@ -225,7 +271,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
         ),
         footerDivider: divider,
         headerBuilder: (context, extended) {
-          //todo -> ternary operation on Glogo
+          log(extended.toString());
 
           return FittedBox(
             child: Row(
@@ -237,21 +283,23 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
                     child: Image.asset('assets/images/G-png-only.png'),
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "Leave",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Management",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                )
+                extended
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            "Leave",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Management",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )
+                    : const SizedBox()
               ],
             ),
           );
@@ -261,11 +309,12 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
 }
 
 bool isselectedsetting = false;
-bool isselected0 = false;
-bool isselected2 = false;
+bool isselected0 = true;
+bool isselected1 = false;
 bool isselected3 = false;
 bool isselected4 = false;
 bool isselected5 = false;
+bool isselected6 = false;
 
 class _ScreensExample extends StatefulWidget {
   const _ScreensExample({
@@ -280,45 +329,48 @@ class _ScreensExample extends StatefulWidget {
 }
 
 class _ScreensExampleState extends State<_ScreensExample> {
-  void check() {}
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     widget.controller.addListener(() {
+      log(widget.controller.selectedIndex.toString());
       switch (widget.controller.selectedIndex) {
         case 0:
           setState(
             () {
               isselected0 = true;
-              isselected2 = false;
+              isselected1 = false;
               isselected3 = false;
               isselected4 = false;
               isselected5 = false;
+              isselected6 = false;
             },
           );
           break;
         case 1:
           setState(
             () {
-              isselectedsetting = !isselectedsetting;
-              isselected0 = isselected0 ? true : false;
-              isselected2 = isselected2 ? true : false;
-              isselected3 = isselected3 ? true : false;
-              isselected4 = isselected4 ? true : false;
-              isselected5 = isselected5 ? true : false;
+              isselected0 = false;
+
+              isselected1 = true;
+              isselected3 = false;
+              isselected4 = false;
+              isselected5 = false;
+              isselected6 = false;
             },
           );
           break;
         case 2:
           setState(
             () {
-              isselected0 = false;
-              isselected2 = true;
-              isselected3 = false;
-              isselected4 = false;
-              isselected5 = false;
+              isselectedsetting = !isselectedsetting;
+              isselected0 = isselected0 ? true : false;
+              isselected1 = isselected1 ? true : false;
+              isselected3 = isselected3 ? true : false;
+              isselected4 = isselected4 ? true : false;
+              isselected5 = isselected5 ? true : false;
+              isselected6 = isselected6 ? true : false;
             },
           );
           break;
@@ -326,10 +378,11 @@ class _ScreensExampleState extends State<_ScreensExample> {
           setState(
             () {
               isselected0 = false;
-              isselected2 = false;
+              isselected1 = false;
               isselected3 = true;
               isselected4 = false;
               isselected5 = false;
+              isselected6 = false;
             },
           );
           break;
@@ -337,10 +390,11 @@ class _ScreensExampleState extends State<_ScreensExample> {
           setState(
             () {
               isselected0 = false;
-              isselected2 = false;
+              isselected1 = false;
               isselected3 = false;
               isselected4 = true;
               isselected5 = false;
+              isselected6 = false;
             },
           );
           break;
@@ -348,10 +402,23 @@ class _ScreensExampleState extends State<_ScreensExample> {
           setState(
             () {
               isselected0 = false;
-              isselected2 = false;
+              isselected1 = false;
               isselected3 = false;
               isselected4 = false;
               isselected5 = true;
+              isselected6 = false;
+            },
+          );
+          break;
+        case 6:
+          setState(
+            () {
+              isselected0 = false;
+              isselected1 = false;
+              isselected3 = false;
+              isselected4 = false;
+              isselected5 = false;
+              isselected6 = true;
             },
           );
           break;
@@ -371,30 +438,33 @@ class _ScreensExampleState extends State<_ScreensExample> {
 
         switch (widget.controller.selectedIndex) {
           case 0:
+            return const Text('Dashboard');
+          case 1:
             return const HomePage();
 
-          case 1:
-            return isselected0
-                ? const HomePage()
-                : isselected2
-                    ? const BranchPage()
-                    : isselected3
-                        ? const DepartmentPage()
-                        : isselected4
-                            ? const DesignationPage()
-                            : isselected5
-                                ? isselectedsetting
-                                    ? const LogOutPage()
-                                    : const LogOutPage()
-                                : const HomePage();
-
           case 2:
-            return isselectedsetting ? const BranchPage() : const LogOutPage();
+            return isselected0
+                ? const Text('Dashboard')
+                : isselected1
+                    ? const HomePage()
+                    : isselected3
+                        ? const BranchPage()
+                        : isselected4
+                            ? const DepartmentPage()
+                            : isselected5
+                                ? const DesignationPage()
+                                : isselected6
+                                    ? isselectedsetting
+                                        ? const LogOutPage()
+                                        : const LogOutPage()
+                                    : const HomePage();
           case 3:
-            return const DepartmentPage();
+            return const BranchPage();
           case 4:
-            return const DesignationPage();
+            return const DepartmentPage();
           case 5:
+            return const DesignationPage();
+          case 6:
             return isselectedsetting ? const LogOutPage() : const LogOutPage();
           default:
             return Text(
