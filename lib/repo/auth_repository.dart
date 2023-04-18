@@ -166,6 +166,56 @@ class AuthRepository {
     }
   }
 
+  // Update Department
+
+  Future<dynamic> updatedept({
+    required int id,
+    required String branchname,
+    required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.patch(
+        "https://staging.leave.globizs.com/api/department/$id",
+        data: {
+          "name": branchname,
+          "is_active": isactive
+          //"is_activ": isactive
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Update Department data");
+        authLoginListener.loaded();
+      } else {}
+    } catch (e) {
+      authLoginListener.error();
+      log(e.toString());
+    }
+  }
+
+  // Delete DEPARTMENT
+  Future<dynamic> deletedept({
+    required int id,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.delete(
+        "https://staging.leave.globizs.com/api/department/$id",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Delete Deparment data");
+        authLoginListener.loaded();
+      } else {}
+    } catch (e) {
+      authLoginListener.error();
+      log(e.toString());
+    }
+  }
+
   /// ADD DESIGNATION
 
   Future<dynamic> postdesignation({
@@ -196,6 +246,57 @@ class AuthRepository {
   }
 
   // GET Employee List
+
+  // UPDATE DESIGNATION
+  Future<dynamic> updatedesign({
+    required int id,
+    required String designname,
+    required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.patch(
+        "https://staging.leave.globizs.com/api/designation/$id",
+        data: {
+          "name": designname,
+          "is_active": isactive
+          //"is_activ": isactive
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Update Designation data");
+        authLoginListener.loaded();
+      } else {}
+    } catch (e) {
+      authLoginListener.error();
+      log(e.toString());
+    }
+  }
+
+  // Delete DESIGNATION
+  Future<dynamic> deletedesign({
+    required int id,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.delete(
+        "https://staging.leave.globizs.com/api/designation/$id",
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully Update Designation data");
+        authLoginListener.loaded();
+      } else {}
+    } catch (e) {
+      authLoginListener.error();
+      log(e.toString());
+    }
+  }
+
+  // GET BRANCH
 
   Future<List<Employee>?> fetchPosts(int pagenumber) async {
     try {
@@ -263,7 +364,8 @@ class AuthRepository {
     try {
       final response = await dio.get("/api/admin/employee/check/$empcode");
       if (response.statusCode == 200) {
-        return response.data;
+        var data = bool.fromEnvironment(response.data);
+        return data;
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }

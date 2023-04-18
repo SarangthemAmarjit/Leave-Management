@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -24,10 +27,6 @@ class _BranchPageState extends State<BranchPage> {
   bool isactive = false;
   final String avtive = "";
 
-  // List<Map<String, dynamic>> allbranch = [
-  //   {"slno.": "1", "branchname": "Imphal East", "is_active": true},
-  //   {"slno.": "2", "branchname": "Imphal west", "is_active": false}
-  // ];
   List<DataCell> displayedDataCell = [];
 
   @override
@@ -53,7 +52,10 @@ class _BranchPageState extends State<BranchPage> {
       );
 
       displayedDataCell.add(
-        DataCell(Text(item.isActive == "1" ? "Active" : "Not Active")),
+        DataCell(Text(item.isActive == "1" ? "Active" : "Inactive",
+            style: item.isActive == "1"
+                ? const TextStyle(color: Color.fromARGB(255, 91, 203, 95))
+                : TextStyle(color: Colors.red[200]))),
       );
 
       displayedDataCell.add(
@@ -62,6 +64,15 @@ class _BranchPageState extends State<BranchPage> {
             TextButton(
                 onPressed: () {
                   namecontroller.text = item.name;
+                  if (item.isActive == "1") {
+                    setState(() {
+                      isactive = true;
+                    });
+                  } else {
+                    setState(() {
+                      isactive = false;
+                    });
+                  }
 
                   showDialog(
                     context: context,
@@ -77,9 +88,10 @@ class _BranchPageState extends State<BranchPage> {
                                 children: [
                                   ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.grey,
-                                          side: const BorderSide(
-                                              color: Colors.red)),
+                                        backgroundColor: Colors.grey[400],
+                                        // side: const BorderSide(
+                                        //     color: Colors.grey)
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -94,19 +106,24 @@ class _BranchPageState extends State<BranchPage> {
                                           EasyLoading.showError(
                                               'Name field is empty');
                                         } else {
-                                          context
-                                              .read<UpdateBranchCubit>()
-                                              .updatebranch(
-                                                  branchname:
-                                                      namecontroller.text,
-                                                  id: item.id,
-                                                  isactive: isactive == true
-                                                      ? "1"
-                                                      : "0");
+                                          if (namecontroller.text.length < 5) {
+                                            EasyLoading.showToast(
+                                                "Name must be longer than or equal to 5 characters ");
+                                          } else {
+                                            context
+                                                .read<UpdateBranchCubit>()
+                                                .updatebranch(
+                                                    branchname:
+                                                        namecontroller.text,
+                                                    id: item.id,
+                                                    isactive: isactive == true
+                                                        ? "1"
+                                                        : "0");
 
-                                          namecontroller.clear();
-                                          isactive = false;
-                                          Navigator.pop(context);
+                                            namecontroller.clear();
+                                            isactive = false;
+                                            Navigator.pop(context);
+                                          }
                                         }
                                       },
                                       child: Material(
@@ -139,6 +156,7 @@ class _BranchPageState extends State<BranchPage> {
                               child: Column(
                                 children: [
                                   TextFormField(
+                                    autofocus: true,
                                     controller: namecontroller,
                                     decoration: const InputDecoration(
                                       hintText: "Department Name",
@@ -224,7 +242,7 @@ class _BranchPageState extends State<BranchPage> {
                               ],
                             )
                           ],
-                          title: const Text("Are you sure to delete"),
+                          title: Text("Are you sure to delete"),
                         );
                       },
                     );
@@ -291,12 +309,12 @@ class _BranchPageState extends State<BranchPage> {
                     break;
                 }
               },
-              builder: (context, state) {
+              builder: (context, state2) {
                 return Scaffold(
                   backgroundColor: const Color.fromARGB(255, 245, 245, 245),
                   body: Column(children: [
                     const SizedBox(
-                      height: 50,
+                      height: 35,
                     ),
                     Padding(
                       padding: MediaQuery.of(context).size.width > 1040
@@ -317,8 +335,8 @@ class _BranchPageState extends State<BranchPage> {
                     ),
                     Padding(
                       padding: MediaQuery.of(context).size.width > 1040
-                          ? const EdgeInsets.only(left: 100, top: 15)
-                          : const EdgeInsets.only(left: 10, top: 15),
+                          ? const EdgeInsets.only(left: 100, top: 13)
+                          : const EdgeInsets.only(left: 10, top: 13),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: InkWell(
@@ -356,21 +374,6 @@ class _BranchPageState extends State<BranchPage> {
                                               const SizedBox(
                                                 height: 30,
                                               ),
-                                              // Row(
-                                              //   children: [
-                                              //     const Text("Active : "),
-                                              //     Switch(
-                                              //       value: isactive,
-                                              //       activeColor: const Color.fromARGB(
-                                              //           255, 72, 217, 77),
-                                              //       onChanged: (bool value) {
-                                              //         setState(() {
-                                              //           isactive = value;
-                                              //         });
-                                              //       },
-                                              //     ),
-                                              //   ],
-                                              // )
                                             ],
                                           ),
                                         ),
@@ -482,84 +485,82 @@ class _BranchPageState extends State<BranchPage> {
                       ),
                     ),
                     Expanded(
-                      flex: 8,
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Padding(
-                              padding: MediaQuery.of(context).size.width > 1040
-                                  ? const EdgeInsets.only(
-                                      left: 100, right: 100, top: 20)
-                                  : const EdgeInsets.only(
-                                      left: 10, right: 10, top: 20),
-                              child: SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: DataTable(
-                                  dividerThickness: 2,
-                                  headingTextStyle: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                  headingRowColor:
-                                      MaterialStateProperty.resolveWith(
-                                          (states) =>
-                                              Colors.grey.withOpacity(0.2)),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.3),
-                                        spreadRadius: 3,
-                                        blurRadius: 4,
-                                        offset: const Offset(
-                                            0, 3), // changes position of shadow
-                                      ),
-                                    ],
-                                  ),
-                                  // border: TableBorder.all(
-                                  //     color: const Color.fromARGB(255, 159, 154, 154)),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: MediaQuery.of(context).size.width > 1040
+                              ? const EdgeInsets.only(
+                                  left: 100, right: 100, top: 20)
+                              : const EdgeInsets.only(
+                                  left: 10, right: 10, top: 20),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: DataTable2(
+                              fixedTopRows: 1,
 
-                                  rows: <DataRow>[
-                                    for (int i = 0;
-                                        i < displayedDataCell.length;
-                                        i += 4)
-                                      DataRow(cells: [
-                                        displayedDataCell[i],
-                                        displayedDataCell[i + 1],
-                                        displayedDataCell[i + 2],
-                                        displayedDataCell[i + 3],
-                                      ])
-                                  ],
-                                  columns: const <DataColumn>[
-                                    DataColumn(
-                                      label: Text(
-                                        'Sl.no',
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Flexible(
-                                        child: Text(
-                                          'Branch Name',
-                                        ),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Is_Active',
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Text(
-                                        'Action',
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              dataRowHeight: 43,
+                              columnSpacing:
+                                  MediaQuery.of(context).size.width < 900
+                                      ? 0
+                                      : 132,
+                              dividerThickness: 2,
+                              headingTextStyle:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              headingRowColor:
+                                  MaterialStateProperty.resolveWith(
+                                      (states) => Colors.grey.withOpacity(0.2)),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 3,
+                                    blurRadius: 4,
+                                    offset: const Offset(
+                                        0, 3), // changes position of shadow
+                                  ),
+                                ],
                               ),
+                              // border: TableBorder.all(
+                              //     color: const Color.fromARGB(255, 159, 154, 154)),
+                              rows: <DataRow>[
+                                for (int i = 0;
+                                    i < displayedDataCell.length;
+                                    i += 4)
+                                  DataRow(cells: [
+                                    displayedDataCell[i],
+                                    displayedDataCell[i + 1],
+                                    displayedDataCell[i + 2],
+                                    displayedDataCell[i + 3],
+                                  ])
+                              ],
+                              columns: const <DataColumn>[
+                                DataColumn(
+                                  label: Text(
+                                    'Sl.no',
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    overflow: TextOverflow.ellipsis,
+                                    'Branch Name',
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    'IsActive',
+                                  ),
+                                ),
+                                DataColumn(
+                                  label: Text(
+                                    'Action',
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ]),
