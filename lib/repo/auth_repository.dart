@@ -245,6 +245,8 @@ class AuthRepository {
     }
   }
 
+  // GET Employee List
+
   // UPDATE DESIGNATION
   Future<dynamic> updatedesign({
     required int id,
@@ -364,7 +366,8 @@ class AuthRepository {
     try {
       final response = await dio.get("/api/admin/employee/check/$empcode");
       if (response.statusCode == 200) {
-        return response.data;
+        var data = bool.fromEnvironment(response.data);
+        return data;
       } else {
         EasyLoading.showError('Cannot fetch Data');
       }
