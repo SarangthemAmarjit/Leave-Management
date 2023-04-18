@@ -298,6 +298,8 @@ class AuthRepository {
 
   // GET BRANCH
 
+  // GET Employee List
+
   Future<List<Employee>?> fetchPosts(int pagenumber) async {
     try {
       final response = await dio.get("/api/admin/employees",
