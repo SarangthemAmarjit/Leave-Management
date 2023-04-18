@@ -23,7 +23,6 @@ class DesignationPage extends StatefulWidget {
 class _BranchPageState extends State<DesignationPage> {
   TextEditingController namecontroller = TextEditingController();
   bool isactive = false;
-  String active = "";
 
   List<DataCell> displayedDataCell = [];
 
@@ -52,7 +51,10 @@ class _BranchPageState extends State<DesignationPage> {
 
       displayedDataCell.add(
         DataCell(
-          Text(item.isActive == "1" ? "Active" : "Not Active"),
+          Text(item.isActive == "1" ? "Active" : "Inactive",
+              style: item.isActive == "1"
+                  ? const TextStyle(color: Color.fromARGB(255, 91, 203, 95))
+                  : TextStyle(color: Colors.red[200])),
         ),
       );
 
@@ -62,7 +64,15 @@ class _BranchPageState extends State<DesignationPage> {
             TextButton(
                 onPressed: () {
                   namecontroller.text = item.name;
-                  active = item.isActive;
+                  if (item.isActive == "1") {
+                    setState(() {
+                      isactive = true;
+                    });
+                  } else {
+                    setState(() {
+                      isactive = false;
+                    });
+                  }
                   showDialog(
                     context: context,
                     builder: (cnt) {
@@ -79,6 +89,7 @@ class _BranchPageState extends State<DesignationPage> {
                               child: Column(
                                 children: [
                                   TextFormField(
+                                    autofocus: true,
                                     controller: namecontroller,
                                     decoration: const InputDecoration(
                                       hintText: "Designation",
@@ -114,7 +125,7 @@ class _BranchPageState extends State<DesignationPage> {
                                       style: ButtonStyle(
                                         backgroundColor:
                                             MaterialStateProperty.all(
-                                                Colors.red),
+                                                Colors.grey[400]),
                                       ),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -367,6 +378,7 @@ class _BranchPageState extends State<DesignationPage> {
                                               child: Column(
                                                 children: [
                                                   TextFormField(
+                                                    autofocus: true,
                                                     controller: namecontroller,
                                                     decoration:
                                                         const InputDecoration(
@@ -382,21 +394,6 @@ class _BranchPageState extends State<DesignationPage> {
                                                   const SizedBox(
                                                     height: 30,
                                                   ),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     const Text("Active : "),
-                                                  //     Switch(
-                                                  //       value: isactive,
-                                                  //       activeColor: const Color.fromARGB(
-                                                  //           255, 72, 217, 77),
-                                                  //       onChanged: (bool value) {
-                                                  //         setState(() {
-                                                  //           isactive = value;
-                                                  //         });
-                                                  //       },
-                                                  //     ),
-                                                  //   ],
-                                                  // )
                                                 ],
                                               ),
                                             ),
@@ -508,9 +505,95 @@ class _BranchPageState extends State<DesignationPage> {
                         ),
                         Expanded(
                           flex: 8,
-                          child: ListView(
-                            shrinkWrap: true,
+                          child: Stack(
                             children: [
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding:
+                                      MediaQuery.of(context).size.width > 1040
+                                          ? const EdgeInsets.only(
+                                              left: 100, right: 100, top: 20)
+                                          : const EdgeInsets.only(
+                                              left: 10, right: 10, top: 20),
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: SingleChildScrollView(
+                                      child: DataTable(
+                                        columnSpacing:
+                                            MediaQuery.of(context).size.width <
+                                                    900
+                                                ? MediaQuery.of(context)
+                                                            .size
+                                                            .width <
+                                                        500
+                                                    ? 70
+                                                    : 100
+                                                : 120,
+                                        dividerThickness: 2,
+                                        headingTextStyle: const TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                        headingRowColor:
+                                            MaterialStateProperty.resolveWith(
+                                                (states) => Colors.grey
+                                                    .withOpacity(0.2)),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.3),
+                                              spreadRadius: 3,
+                                              blurRadius: 4,
+                                              offset: const Offset(0,
+                                                  3), // changes position of shadow
+                                            ),
+                                          ],
+                                        ),
+                                        // border: TableBorder.all(
+                                        //     color: const Color.fromARGB(255, 159, 154, 154)),
+                                        rows: <DataRow>[
+                                          for (int i = 0;
+                                              i < displayedDataCell.length;
+                                              i += 4)
+                                            DataRow(cells: [
+                                              displayedDataCell[i],
+                                              displayedDataCell[i + 1],
+                                              displayedDataCell[i + 2],
+                                              displayedDataCell[i + 3],
+                                            ])
+                                        ],
+                                        columns: const <DataColumn>[
+                                          DataColumn(
+                                            label: Text(
+                                              'Sl.no',
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Flexible(
+                                              child: Text(
+                                                'Designation',
+                                              ),
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'IsActive',
+                                            ),
+                                          ),
+                                          DataColumn(
+                                            label: Text(
+                                              'Action',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Padding(
@@ -545,17 +628,7 @@ class _BranchPageState extends State<DesignationPage> {
                                       ),
                                       // border: TableBorder.all(
                                       //     color: const Color.fromARGB(255, 159, 154, 154)),
-                                      rows: <DataRow>[
-                                        for (int i = 0;
-                                            i < displayedDataCell.length;
-                                            i += 4)
-                                          DataRow(cells: [
-                                            displayedDataCell[i],
-                                            displayedDataCell[i + 1],
-                                            displayedDataCell[i + 2],
-                                            displayedDataCell[i + 3],
-                                          ])
-                                      ],
+                                      rows: [],
                                       columns: const <DataColumn>[
                                         DataColumn(
                                           label: Text(
@@ -571,7 +644,7 @@ class _BranchPageState extends State<DesignationPage> {
                                         ),
                                         DataColumn(
                                           label: Text(
-                                            'Is_Active',
+                                            'IsActive',
                                           ),
                                         ),
                                         DataColumn(

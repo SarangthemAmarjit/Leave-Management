@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,11 +25,8 @@ class DepartmentPage extends StatefulWidget {
 class _DepartmentPageState extends State<DepartmentPage> {
   TextEditingController namecontroller = TextEditingController();
   bool isactive = false;
+  String active = "";
 
-  List<Map<String, dynamic>> allbranch = [
-    {"slno.": "1", "branchname": "Imphal East", "is_active": true},
-    {"slno.": "2", "branchname": "Imphal west", "is_active": false}
-  ];
   List<DataCell> displayedDataCell = [];
 
   @override
@@ -52,7 +51,10 @@ class _DepartmentPageState extends State<DepartmentPage> {
       );
       displayedDataCell.add(
         DataCell(
-          Text(item.isActive == "1" ? "Active" : "Not Active"),
+          Text(item.isActive == "1" ? "Active" : "Inactive",
+              style: item.isActive == "1"
+                  ? const TextStyle(color: Color.fromARGB(255, 91, 203, 95))
+                  : TextStyle(color: Colors.red[200])),
         ),
       );
 
@@ -62,6 +64,16 @@ class _DepartmentPageState extends State<DepartmentPage> {
             TextButton(
                 onPressed: () {
                   namecontroller.text = item.name;
+
+                  if (item.isActive == "1") {
+                    setState(() {
+                      isactive = true;
+                    });
+                  } else {
+                    setState(() {
+                      isactive = false;
+                    });
+                  }
 
                   showDialog(
                     context: context,
@@ -78,6 +90,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                               child: Column(
                                 children: [
                                   TextFormField(
+                                    autofocus: true,
                                     controller: namecontroller,
                                     decoration: const InputDecoration(
                                       hintText: "Department Name",
@@ -111,9 +124,10 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                 children: [
                                   ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.grey,
-                                          side: const BorderSide(
-                                              color: Colors.red)),
+                                        backgroundColor: Colors.grey[400],
+                                        // side: const BorderSide(
+                                        //     color: Colors.red)
+                                      ),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
@@ -371,6 +385,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                               child: Column(
                                                 children: [
                                                   TextFormField(
+                                                    autofocus: true,
                                                     controller: namecontroller,
                                                     decoration:
                                                         const InputDecoration(
@@ -559,7 +574,7 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                         ),
                                         DataColumn(
                                           label: Text(
-                                            'Is_Active',
+                                            'IsActive',
                                           ),
                                         ),
                                         DataColumn(
