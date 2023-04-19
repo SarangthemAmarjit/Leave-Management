@@ -18,15 +18,15 @@ class SearchButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 6),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.grey[200],
+              color: Colors.white70,
               border: Border.all(color: Colors.grey)),
-          child: const TextField(
-            decoration: InputDecoration(
-              // hoverColor: Colors.red,
-
-              suffixIcon: Icon(Icons.search),
-              border: InputBorder.none,
-              // hintText: ""
+          child: const Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                suffixIcon: Icon(Icons.search),
+                border: InputBorder.none,
+              ),
             ),
           ),
         ),
