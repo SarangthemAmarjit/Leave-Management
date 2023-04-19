@@ -15,9 +15,10 @@ class PostinitialState extends PostState {
 }
 
 class PostLoadedState extends PostState {
+  final bool isloading;
   final List<Employee> allemployeelist;
 
-  PostLoadedState({required this.allemployeelist});
+  PostLoadedState({required this.isloading, required this.allemployeelist});
 }
 
 class PostErrorState extends PostState {

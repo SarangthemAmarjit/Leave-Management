@@ -7,6 +7,8 @@ import 'package:geolocator/geolocator.dart';
 
 import 'package:intl/intl.dart';
 import 'package:leavemanagementadmin/constant.dart';
+import 'package:leavemanagementadmin/logic/Employee/cubit/check_empcode_cubit.dart';
+import 'package:leavemanagementadmin/logic/Employee/cubit/checkemailexist_cubit.dart';
 import 'package:leavemanagementadmin/logic/Employee/cubit/create_employee_cubit.dart';
 import 'package:leavemanagementadmin/logic/Employee/cubit/getemployeelist_cubit.dart';
 import 'package:leavemanagementadmin/logic/branch/getallbranch_cubit.dart';
@@ -14,11 +16,12 @@ import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.da
 import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit.dart';
 import 'package:leavemanagementadmin/logic/role/cubit/get_role_cubit.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
-import 'package:leavemanagementadmin/repo/auth_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
+import '../logic/Employee/cubit/updateemployee_cubit.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -31,6 +34,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<Employee> employees = <Employee>[];
+  DateTime? updatetime;
 
   Widget _dataofbirth(String dob) {
     return Column(
@@ -51,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                 return showDatePicker(
                         context: context,
                         initialDate: initialdate!,
-                        firstDate: DateTime(2010),
+                        firstDate: DateTime(2023),
                         lastDate: DateTime(2025),
                         helpText: "SELECT DATE OF JOINING",
                         cancelText: "CANCEL",
@@ -64,7 +68,9 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     datetime = "${value!.year}-${value.month}-${value.day}";
                     datetime2 = "${value.year}-${value.month}-${value.day}";
+                    updatetime = value;
                   });
+                  log(datetime);
 
                   return value;
                 });
@@ -74,11 +80,43 @@ class _HomePageState extends State<HomePage> {
         ]);
   }
 
+  bool? ismoreloading;
+  int pagenumber = 1;
+  int datalimit = 15;
+  ScrollController datatablescrollcontroller = ScrollController();
   @override
   void initState() {
     super.initState();
 
     readall();
+    _selectedRadioTile = 1;
+    datatablescrollcontroller.addListener(() {
+      if (datatablescrollcontroller.position.pixels ==
+          datatablescrollcontroller.position.maxScrollExtent) {
+        if (ismoreloading == false) {
+          log('Item reach its limit');
+        } else {
+          setState(() {
+            datalimit = datalimit + 15;
+            // pagenumber = pagenumber + 1;
+          });
+          displayedDataCell.clear();
+          context
+              .read<GetemployeelistCubit>()
+              .getemployeelist(ismoredata: true, datalimit: datalimit);
+
+          log('reach buttom');
+        }
+      }
+    });
+  }
+
+  int? _selectedRadioTile;
+
+  setSelectedRadioTile(int val) {
+    setState(() {
+      _selectedRadioTile = val;
+    });
   }
 
   void readall() {
@@ -87,7 +125,9 @@ class _HomePageState extends State<HomePage> {
     context.read<GetAlldeptCubit>().getalldept();
     context.read<GetAlldesignCubit>().getalldesign();
     context.read<GetRoleCubit>().getallrole();
-    context.read<GetemployeelistCubit>().getemployeelist(1);
+    context
+        .read<GetemployeelistCubit>()
+        .getemployeelist(datalimit: datalimit, ismoredata: true);
   }
 
   void fetchdata(
@@ -96,6 +136,7 @@ class _HomePageState extends State<HomePage> {
       required Map<dynamic, dynamic> deptnamewithid,
       required Map<dynamic, dynamic> designidwithname}) {
     log('Not empty');
+    log('All employee List Length :${allemplist.length}');
 
     for (var item in allemplist) {
       // context
@@ -107,7 +148,10 @@ class _HomePageState extends State<HomePage> {
         displayedDataCell.add(
           DataCell(
             Text(
-              (allemplist.indexOf(item) + 1).toString(),
+              (ismoreloading!
+                      ? allemplist.lastIndexOf(item) + 1
+                      : allemplist.indexOf(item) + 1)
+                  .toString(),
             ),
           ),
         );
@@ -129,7 +173,7 @@ class _HomePageState extends State<HomePage> {
         );
 
         displayedDataCell.add(
-          DataCell(Text(item.role ?? 'Employee')),
+          DataCell(Text(item.role)),
         );
         displayedDataCell.add(
           DataCell(
@@ -142,328 +186,956 @@ class _HomePageState extends State<HomePage> {
         displayedDataCell.add(
           DataCell(TextButton(
               onPressed: () {
-                empcode.text = item.employeeId.toString();
+                empcode.text = item.employeeEmpCode.toString();
                 _namefieldcontroller.text = item.employeeName;
+                numbercontroller.text = item.employeePhone;
+                emailcontroller.text = item.email;
+                datetime2 =
+                    "${item.employeeDateOfJoining.year}-${item.employeeDateOfJoining.month}-${item.employeeDateOfJoining.day}";
 
+                setState(() {
+                  dropdownvalue1 =
+                      designidwithname[item.employeeDesignationId].toString();
+
+                  dropdownvalue2 =
+                      deptnamewithid[item.employeeDepartmentId].toString();
+                  dropdownvalue3 = item.role;
+                  dropdownvalue4 =
+                      branchidwithname[item.employeeBranchId].toString();
+                });
+
+                // _namefieldcontroller.clear();
+                // usernamecontroller.clear();
+                // emailcontroller.clear();
+                // numbercontroller.clear();
+                // empcode.clear();
+                // dropdownvalue1 = null;
+                // dropdownvalue2 = null;
+                // dropdownvalue3 = null;
+                // dropdownvalue4 = null;
                 showDialog(
                   context: context,
                   builder: (cnt) {
-                    return StatefulBuilder(
-                      builder: (BuildContext context,
-                          void Function(void Function()) setState) {
-                        return AlertDialog(
-                          actions: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.grey,
-                                        side: const BorderSide(
-                                            color: Colors.red)),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      setState(() {
-                                        _namefieldcontroller.clear();
-                                        datetime2 = '';
-
-                                        dropdownvalue1 = null;
-                                        dropdownvalue2 = null;
-                                        _position = null;
-                                      });
-                                    },
-                                    child: const Text("CANCEL")),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green),
-                                      onPressed: () async {
-                                        EasyLoading.show(status: 'Adding..');
-                                        if (_namefieldcontroller.text.isEmpty ||
-                                                empcode.text.isEmpty ||
-                                                emailcontroller.text.isEmpty ||
-                                                empcode.text.isEmpty
-                                            // dropdownvalue11 == null ||
-                                            // dropdownvalue22 == null ||
-                                            // dropdownvalue33==null
-                                            ) {
-                                          EasyLoading.dismiss();
-                                          Navigator.of(context).pop();
-                                          CustomSnackBar(
-                                              context,
-                                              const Text(
-                                                'All Fields Are Mandatory',
-                                              ),
-                                              Colors.red);
-                                        } else {
-                                          // await ServiceApi()
-                                          //     .create_employee(
-                                          //         name: _namefieldcontroller.text,
-                                          //         desId: dropdownvalue11!,
-                                          //         depId: dropdownvalue22!,
-                                          //         dob: datetime,
-                                          //         token: finaltoken,
-                                          //         image: profileimage,
-                                          //         location: finallocation!)
-                                          //     .whenComplete(() {
-                                          //   getdata2().whenComplete(() {
-                                          //     _namefieldcontroller.clear();
-                                          //     all_desid = [];
-                                          //     all_depid = [];
-                                          //     all_dep = [];
-                                          //     all_des = [];
-                                          //     _position = null;
-                                          //     datetime2 = '';
-
-                                          //     dropdownvalue1 = null;
-                                          //     dropdownvalue2 = null;
-                                          //     setState(() {});
-
-                                          //     getcreate_status();
-                                          //     getdata();
-                                          //     EasyLoading.dismiss();
-                                          //     context.router.pop();
-                                          //   });
-                                          // });
-
-                                          // employeeDataSource._employees.add(
-                                          //     Employee(
-                                          //         index++,
-                                          //         _namefieldcontroller.text,
-                                          //         'Production',
-                                          //         'Developer',
-                                          //         TextButton(
-                                          //             onPressed: () {},
-                                          //             child:
-                                          //                 const Text('Edit'))));
-                                          // employeeDataSource.updateDataGridRows();
-                                          // employeeDataSource
-                                          //     .updateDataGridSource();
-
-                                          // allemployee.add({
-                                          //   'name': _namefieldcontroller.text,
-                                          //   'branch': "Production",
-                                          //   "role": "Developer",
-                                          //   "department": "Production"
-                                          // });
-                                          // log(create_statuscode.toString());
-                                          // //     getcreate_status();
-                                          // getdata();
-                                          // EasyLoading.dismiss();
-                                          // _namefieldcontroller.clear();
-                                          // emailcontroller.clear();
-                                          // numbercontroller.clear();
-                                          // empcode.clear();
-                                          // Navigator.of(context).pop();
-                                        }
+                    return BlocConsumer<GetallbranchCubit, GetallbranchState>(
+                      listener: (context, branchstate) {
+                        // TODO: implement listener
+                      },
+                      builder: (context, branchstate) {
+                        return BlocConsumer<GetAlldeptCubit, GetAlldeptState>(
+                          listener: (context, deptstate) {
+                            // TODO: implement listener
+                          },
+                          builder: (context, deptstate) {
+                            return BlocConsumer<GetAlldesignCubit,
+                                GetAlldesignState>(
+                              listener: (context, designstate) {
+                                // TODO: implement listener
+                              },
+                              builder: (context, designstate) {
+                                return BlocConsumer<GetRoleCubit, GetRoleState>(
+                                  listener: (context, rolestate) {
+                                    // TODO: implement listener
+                                  },
+                                  builder: (context, rolestate) {
+                                    return BlocConsumer<CheckemailexistCubit,
+                                        CheckemailexistState>(
+                                      listener: (context, emailcheck) {
+                                        // TODO: implement listener
                                       },
-                                      child: const Text("ADD")),
-                                )
-                              ],
-                            ),
-                          ],
-                          title: const Text(
-                            "Add new Employee",
-                          ),
-                          content: SingleChildScrollView(
-                            child: Form(
-                              child: SizedBox(
-                                width: 300,
-                                height: 425,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: const [
-                                        SizedBox(
-                                          width: 30,
-                                        ),
-                                        // const ProfileImagepicker(),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        keyboardType: TextInputType.number,
-                                        controller: empcode,
-                                        decoration: const InputDecoration(
-                                          hintText: 'Employee Code',
-                                        )),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        keyboardType: TextInputType.text,
-                                        controller: _namefieldcontroller,
-                                        decoration: const InputDecoration(
-                                          hintText: 'Name',
-                                        )),
-                                    // _dataofbirth(datetime2),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        keyboardType: TextInputType.text,
-                                        controller: emailcontroller,
-                                        decoration: const InputDecoration(
-                                          hintText: 'Email',
-                                        )),
-                                    // _dataofbirth(datetime2),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                        keyboardType: TextInputType.text,
-                                        controller: numbercontroller,
-                                        decoration: const InputDecoration(
-                                          hintText: 'Phone Number',
-                                        )),
-                                    // _dataofbirth(datetime2),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 13),
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 240, 237, 237),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: const Color.fromARGB(
-                                                  255, 225, 222, 222))),
-                                      child: DropdownSearch<String>(
-                                        popupProps: PopupProps.menu(
-                                          searchFieldProps:
-                                              const TextFieldProps(
-                                                  decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                              maxHeight: 40))),
-                                          constraints: BoxConstraints.tight(
-                                              const Size(250, 250)),
-                                          showSearchBox: true,
-                                          showSelectedItems: true,
-                                        ),
-                                        items: all_des,
-                                        dropdownDecoratorProps:
-                                            const DropDownDecoratorProps(
-                                          dropdownSearchDecoration:
-                                              InputDecoration(
-                                            labelText: "Designation :",
-                                            hintText: "Choose Your Designation",
-                                          ),
-                                        ),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            dropdownvalue1 = newValue as String;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 13),
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 240, 237, 237),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: const Color.fromARGB(
-                                                  255, 225, 222, 222))),
-                                      child: DropdownSearch<String>(
-                                        popupProps: PopupProps.menu(
-                                          searchFieldProps:
-                                              const TextFieldProps(
-                                                  decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                              maxHeight: 40))),
-                                          constraints: BoxConstraints.tight(
-                                              const Size(250, 250)),
-                                          showSearchBox: true,
-                                          showSelectedItems: true,
-                                        ),
-                                        items: all_dep,
-                                        dropdownDecoratorProps:
-                                            const DropDownDecoratorProps(
-                                          dropdownSearchDecoration:
-                                              InputDecoration(
-                                            labelText: "Department :",
-                                            hintText: "Choose Your Department",
-                                          ),
-                                        ),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            dropdownvalue2 = newValue as String;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 13),
-                                      decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                              255, 240, 237, 237),
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: const Color.fromARGB(
-                                                  255, 225, 222, 222))),
-                                      child: DropdownSearch<String>(
-                                        popupProps: PopupProps.menu(
-                                          searchFieldProps:
-                                              const TextFieldProps(
-                                                  decoration: InputDecoration(
-                                                      border:
-                                                          OutlineInputBorder(),
-                                                      constraints:
-                                                          BoxConstraints(
-                                                              maxHeight: 40))),
-                                          constraints: BoxConstraints.tight(
-                                              const Size(250, 250)),
-                                          showSearchBox: true,
-                                          showSelectedItems: true,
-                                        ),
-                                        items: all_des,
-                                        dropdownDecoratorProps:
-                                            const DropDownDecoratorProps(
-                                          dropdownSearchDecoration:
-                                              InputDecoration(
-                                            labelText: "Role :",
-                                            hintText: "Choose Your Role",
-                                          ),
-                                        ),
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            dropdownvalue3 = newValue as String;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                                      builder: (context, emailcheck) {
+                                        return BlocConsumer<CheckEmpcodeCubit,
+                                            CheckEmpcodeState>(
+                                          listener:
+                                              (context, checkempStatefinal) {
+                                            // TODO: implement listener
+                                          },
+                                          builder:
+                                              (context, checkempStatefinal) {
+                                            return StatefulBuilder(builder:
+                                                (BuildContext context,
+                                                    void Function(
+                                                            void Function())
+                                                        setState) {
+                                              return AlertDialog(
+                                                actions: [
+                                                  Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      ElevatedButton(
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .grey[300],
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            setState(() {
+                                                              _namefieldcontroller
+                                                                  .clear();
+                                                              datetime2 = '';
+
+                                                              dropdownvalue1 =
+                                                                  null;
+                                                              dropdownvalue2 =
+                                                                  null;
+                                                              _position = null;
+                                                            });
+                                                          },
+                                                          child: const Text(
+                                                            "Cancel",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .blueGrey),
+                                                          )),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(left: 10),
+                                                        child: InkWell(
+                                                            onTap: () {
+                                                              dropdownvalue11 = designstate
+                                                                  .designidwithname
+                                                                  .keys
+                                                                  .firstWhere(
+                                                                      (k) =>
+                                                                          designstate.designidwithname[
+                                                                              k] ==
+                                                                          dropdownvalue1,
+                                                                      orElse: () =>
+                                                                          null);
+                                                              dropdownvalue22 = deptstate
+                                                                  .deptidwithname
+                                                                  .keys
+                                                                  .firstWhere(
+                                                                      (k) =>
+                                                                          deptstate.deptidwithname[
+                                                                              k] ==
+                                                                          dropdownvalue2,
+                                                                      orElse: () =>
+                                                                          null);
+                                                              dropdownvalue33 =
+                                                                  rolestate
+                                                                          .rolenamewithid[
+                                                                      dropdownvalue3];
+                                                              dropdownvalue44 = branchstate
+                                                                  .branchidwithname
+                                                                  .keys
+                                                                  .firstWhere(
+                                                                      (k) =>
+                                                                          branchstate.branchidwithname[
+                                                                              k] ==
+                                                                          dropdownvalue4,
+                                                                      orElse: () =>
+                                                                          null);
+                                                              context.read<UpdateemployeeCubit>().updateemployee(
+                                                                  id: item
+                                                                      .employeeId,
+                                                                  empname:
+                                                                      _namefieldcontroller
+                                                                          .text,
+                                                                  empcode:
+                                                                      int.parse(empcode
+                                                                          .text),
+                                                                  phonenumber:
+                                                                      numbercontroller
+                                                                          .text,
+                                                                  deptid:
+                                                                      dropdownvalue22!,
+                                                                  designid:
+                                                                      dropdownvalue11!,
+                                                                  branchid:
+                                                                      dropdownvalue44!,
+                                                                  roleid:
+                                                                      dropdownvalue33!,
+                                                                  dateofjoining:
+                                                                      datetime2,
+                                                                  emptype:
+                                                                      _selectedRadioTile
+                                                                          .toString(),
+                                                                  email:
+                                                                      emailcontroller
+                                                                          .text);
+                                                              // await ServiceApi()
+                                                              //     .create_employee(
+                                                              //         name: _namefieldcontroller.text,
+                                                              //         desId: dropdownvalue11!,
+                                                              //         depId: dropdownvalue22!,
+                                                              //         dob: datetime,
+                                                              //         token: finaltoken,
+                                                              //         image: profileimage,
+                                                              //         location: finallocation!)
+                                                              //     .whenComplete(() {
+                                                              //   getdata2().whenComplete(() {
+                                                              //     _namefieldcontroller.clear();
+                                                              //     all_desid = [];
+                                                              //     all_depid = [];
+                                                              //     all_dep = [];
+                                                              //     all_des = [];
+                                                              //     _position = null;
+                                                              //     datetime2 = '';
+
+                                                              //     dropdownvalue1 = null;
+                                                              //     dropdownvalue2 = null;
+                                                              //     setState(() {});
+
+                                                              //     getcreate_status();
+                                                              //     getdata();
+                                                              EasyLoading
+                                                                  .dismiss();
+                                                              context.router
+                                                                  .pop();
+                                                              //   });
+                                                              // });
+
+                                                              // allemployee.add({
+                                                              //   'name': _namefieldcontroller.text,
+                                                              //   'branch': "Imphal West",
+                                                              //   "role": "Developer",
+                                                              //   "department": "Production"
+                                                              // });
+                                                              // log(create_statuscode.toString());
+                                                              // //     getcreate_status();
+                                                              // getdata();
+                                                              // EasyLoading.dismiss();
+                                                              // _namefieldcontroller.clear();
+                                                              // emailcontroller.clear();
+                                                              // numbercontroller.clear();
+                                                              // empcode.clear();
+                                                              // Navigator.of(context).pop();
+                                                            },
+                                                            child: Material(
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            13),
+                                                              ),
+                                                              elevation: 15,
+                                                              child:
+                                                                  const CardWidget(
+                                                                      color: Colors
+                                                                          .green,
+                                                                      width: 70,
+                                                                      height:
+                                                                          30,
+                                                                      borderRadius:
+                                                                          5,
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Text(
+                                                                          'Update',
+                                                                          style:
+                                                                              TextStyle(color: Colors.white),
+                                                                        ),
+                                                                      )),
+                                                            )),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ],
+                                                title: const Text(
+                                                  "Update Employee",
+                                                  style: TextStyle(
+                                                      fontSize: 17,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                content: SingleChildScrollView(
+                                                  child: Form(
+                                                    child: SizedBox(
+                                                      width: 300,
+                                                      height: 670,
+                                                      child: Column(
+                                                        children: [
+                                                          TextFormField(
+                                                              onChanged:
+                                                                  (value) {
+                                                                context
+                                                                    .read<
+                                                                        CheckEmpcodeCubit>()
+                                                                    .checkempcode(
+                                                                        value);
+                                                              },
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              controller:
+                                                                  empcode,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                suffix: checkempStatefinal
+                                                                            .isexist
+                                                                            .isEmpty ||
+                                                                        empcode
+                                                                            .value
+                                                                            .text
+                                                                            .isEmpty
+                                                                    ? const SizedBox()
+                                                                    : checkempStatefinal.isexist ==
+                                                                            'false'
+                                                                        ? Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.end,
+                                                                            children: const [
+                                                                              Text(
+                                                                                'available',
+                                                                                style: TextStyle(color: Colors.green),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 3,
+                                                                              ),
+                                                                              Icon(
+                                                                                Icons.check,
+                                                                                color: Colors.green,
+                                                                              )
+                                                                            ],
+                                                                          )
+                                                                        : Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.end,
+                                                                            children: const [
+                                                                              Text(
+                                                                                'already exist',
+                                                                                style: TextStyle(color: Colors.red),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 3,
+                                                                              ),
+                                                                              Icon(
+                                                                                Icons.error,
+                                                                                color: Colors.red,
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                hintStyle: const TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            212,
+                                                                            211,
+                                                                            211)),
+                                                                hintText:
+                                                                    'Employee Code',
+                                                              )),
+                                                          const SizedBox(
+                                                            height: 5,
+                                                          ),
+
+                                                          TextFormField(
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .text,
+                                                              controller:
+                                                                  _namefieldcontroller,
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                hintStyle: TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            212,
+                                                                            211,
+                                                                            211)),
+                                                                hintText:
+                                                                    'Name',
+                                                              )),
+                                                          // _dataofbirth(datetime2),
+                                                          const SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          TextFormField(
+                                                              onChanged:
+                                                                  (value) {
+                                                                context
+                                                                    .read<
+                                                                        CheckemailexistCubit>()
+                                                                    .checkemailexist(
+                                                                        value);
+                                                              },
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .text,
+                                                              controller:
+                                                                  emailcontroller,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                suffix: emailcheck
+                                                                            .isexist
+                                                                            .isEmpty ||
+                                                                        emailcontroller
+                                                                            .value
+                                                                            .text
+                                                                            .isEmpty
+                                                                    ? const SizedBox()
+                                                                    : emailcheck.isexist ==
+                                                                            'false'
+                                                                        ? Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.end,
+                                                                            children: const [
+                                                                              Text(
+                                                                                'available',
+                                                                                style: TextStyle(color: Colors.green),
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 3,
+                                                                              ),
+                                                                              Icon(
+                                                                                Icons.check,
+                                                                                color: Colors.green,
+                                                                              )
+                                                                            ],
+                                                                          )
+                                                                        : emailcheck.isexist ==
+                                                                                'invalid'
+                                                                            ? Row(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                                                children: const [
+                                                                                  Text(
+                                                                                    'invalid email',
+                                                                                    style: TextStyle(color: Colors.red),
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: 3,
+                                                                                  ),
+                                                                                  Icon(
+                                                                                    Icons.error,
+                                                                                    color: Colors.red,
+                                                                                  )
+                                                                                ],
+                                                                              )
+                                                                            : Row(
+                                                                                mainAxisSize: MainAxisSize.min,
+                                                                                mainAxisAlignment: MainAxisAlignment.end,
+                                                                                children: const [
+                                                                                  Text(
+                                                                                    'already exist',
+                                                                                    style: TextStyle(color: Colors.red),
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: 3,
+                                                                                  ),
+                                                                                  Icon(
+                                                                                    Icons.error,
+                                                                                    color: Colors.red,
+                                                                                  )
+                                                                                ],
+                                                                              ),
+                                                                hintStyle: const TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            212,
+                                                                            211,
+                                                                            211)),
+                                                                hintText:
+                                                                    'Email',
+                                                              )),
+                                                          _dataofbirth(
+                                                              datetime2),
+                                                          const SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          TextFormField(
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .text,
+                                                              controller:
+                                                                  numbercontroller,
+                                                              decoration:
+                                                                  const InputDecoration(
+                                                                hintStyle: TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            212,
+                                                                            211,
+                                                                            211)),
+                                                                hintText:
+                                                                    'Phone Number',
+                                                              )),
+
+                                                          const SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          _dataofbirth(
+                                                              datetime2),
+                                                          const SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          const Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Text(
+                                                                'Employee Type :'),
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Expanded(
+                                                                child:
+                                                                    RadioListTile(
+                                                                  contentPadding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  title: const Text(
+                                                                      'Employee'),
+                                                                  value: 1,
+                                                                  groupValue:
+                                                                      _selectedRadioTile,
+                                                                  onChanged:
+                                                                      (val) {
+                                                                    print(
+                                                                        'Selected value: $val');
+                                                                    log(val
+                                                                        .toString());
+                                                                    setState(
+                                                                        () {
+                                                                      _selectedRadioTile =
+                                                                          val;
+                                                                    });
+                                                                  },
+                                                                  activeColor:
+                                                                      Colors
+                                                                          .green,
+                                                                  selected:
+                                                                      _selectedRadioTile ==
+                                                                          1,
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                child:
+                                                                    RadioListTile(
+                                                                  contentPadding:
+                                                                      EdgeInsets
+                                                                          .zero,
+                                                                  title: const Text(
+                                                                      'Probation Period'),
+                                                                  value: 2,
+                                                                  groupValue:
+                                                                      _selectedRadioTile,
+                                                                  onChanged:
+                                                                      (val) {
+                                                                    print(
+                                                                        'Selected value: $val');
+                                                                    setState(
+                                                                        () {
+                                                                      _selectedRadioTile =
+                                                                          val;
+                                                                    });
+                                                                  },
+                                                                  activeColor:
+                                                                      Colors
+                                                                          .green,
+                                                                  selected:
+                                                                      _selectedRadioTile ==
+                                                                          2,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+
+                                                          Container(
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        13),
+                                                            decoration: BoxDecoration(
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    240,
+                                                                    237,
+                                                                    237),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                border: Border.all(
+                                                                    color: const Color
+                                                                            .fromARGB(
+                                                                        255,
+                                                                        225,
+                                                                        222,
+                                                                        222))),
+                                                            child:
+                                                                DropdownSearch<
+                                                                    String>(
+                                                              selectedItem:
+                                                                  dropdownvalue1,
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                searchFieldProps: const TextFieldProps(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        constraints:
+                                                                            BoxConstraints(maxHeight: 40))),
+                                                                constraints:
+                                                                    BoxConstraints.tight(
+                                                                        const Size(
+                                                                            250,
+                                                                            250)),
+                                                                showSearchBox:
+                                                                    true,
+                                                                showSelectedItems:
+                                                                    true,
+                                                              ),
+                                                              items: designstate
+                                                                  .alldesignationnamelist,
+                                                              dropdownDecoratorProps:
+                                                                  const DropDownDecoratorProps(
+                                                                dropdownSearchDecoration:
+                                                                    InputDecoration(
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  labelText:
+                                                                      "Designation :",
+                                                                  hintText:
+                                                                      "Choose Your Designation",
+                                                                ),
+                                                              ),
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  dropdownvalue1 =
+                                                                      newValue
+                                                                          as String;
+                                                                });
+
+                                                                dropdownvalue11 = designstate
+                                                                    .designidwithname
+                                                                    .keys
+                                                                    .firstWhere(
+                                                                        (k) =>
+                                                                            designstate.designidwithname[k] ==
+                                                                            dropdownvalue1,
+                                                                        orElse: () =>
+                                                                            null);
+                                                              },
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        13),
+                                                            decoration: BoxDecoration(
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    240,
+                                                                    237,
+                                                                    237),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                border: Border.all(
+                                                                    color: const Color
+                                                                            .fromARGB(
+                                                                        255,
+                                                                        225,
+                                                                        222,
+                                                                        222))),
+                                                            child:
+                                                                DropdownSearch<
+                                                                    String>(
+                                                              selectedItem:
+                                                                  dropdownvalue2,
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                searchFieldProps: const TextFieldProps(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        constraints:
+                                                                            BoxConstraints(maxHeight: 40))),
+                                                                constraints:
+                                                                    BoxConstraints.tight(
+                                                                        const Size(
+                                                                            250,
+                                                                            250)),
+                                                                showSearchBox:
+                                                                    true,
+                                                                showSelectedItems:
+                                                                    true,
+                                                              ),
+                                                              items: deptstate
+                                                                  .alldeptnamelist,
+                                                              dropdownDecoratorProps:
+                                                                  const DropDownDecoratorProps(
+                                                                dropdownSearchDecoration:
+                                                                    InputDecoration(
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  labelText:
+                                                                      "Department :",
+                                                                  hintText:
+                                                                      "Choose Your Department",
+                                                                ),
+                                                              ),
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  dropdownvalue2 =
+                                                                      newValue
+                                                                          as String;
+                                                                });
+
+                                                                dropdownvalue22 = deptstate
+                                                                    .deptidwithname
+                                                                    .keys
+                                                                    .firstWhere(
+                                                                        (k) =>
+                                                                            deptstate.deptidwithname[k] ==
+                                                                            dropdownvalue2,
+                                                                        orElse: () =>
+                                                                            null);
+                                                              },
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Container(
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        13),
+                                                            decoration: BoxDecoration(
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    240,
+                                                                    237,
+                                                                    237),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                border: Border.all(
+                                                                    color: const Color
+                                                                            .fromARGB(
+                                                                        255,
+                                                                        225,
+                                                                        222,
+                                                                        222))),
+                                                            child:
+                                                                DropdownSearch<
+                                                                    String>(
+                                                              selectedItem:
+                                                                  dropdownvalue3,
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                searchFieldProps: const TextFieldProps(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        constraints:
+                                                                            BoxConstraints(maxHeight: 40))),
+                                                                constraints:
+                                                                    BoxConstraints.tight(
+                                                                        const Size(
+                                                                            250,
+                                                                            250)),
+                                                                showSearchBox:
+                                                                    true,
+                                                                showSelectedItems:
+                                                                    true,
+                                                              ),
+                                                              items: rolestate
+                                                                  .allrolenamelist,
+                                                              dropdownDecoratorProps:
+                                                                  const DropDownDecoratorProps(
+                                                                dropdownSearchDecoration:
+                                                                    InputDecoration(
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  labelText:
+                                                                      "Role :",
+                                                                  hintText:
+                                                                      "Choose Your Role",
+                                                                ),
+                                                              ),
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  dropdownvalue3 =
+                                                                      newValue
+                                                                          as String;
+                                                                });
+                                                                dropdownvalue33 =
+                                                                    rolestate
+                                                                            .rolenamewithid[
+                                                                        dropdownvalue3];
+                                                              },
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        13),
+                                                            decoration: BoxDecoration(
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    240,
+                                                                    237,
+                                                                    237),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                border: Border.all(
+                                                                    color: const Color
+                                                                            .fromARGB(
+                                                                        255,
+                                                                        225,
+                                                                        222,
+                                                                        222))),
+                                                            child:
+                                                                DropdownSearch<
+                                                                    String>(
+                                                              selectedItem:
+                                                                  dropdownvalue4,
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                searchFieldProps: const TextFieldProps(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        constraints:
+                                                                            BoxConstraints(maxHeight: 40))),
+                                                                constraints:
+                                                                    BoxConstraints.tight(
+                                                                        const Size(
+                                                                            250,
+                                                                            250)),
+                                                                showSearchBox:
+                                                                    true,
+                                                                showSelectedItems:
+                                                                    true,
+                                                              ),
+                                                              items: branchstate
+                                                                  .allbranchnamelist,
+                                                              dropdownDecoratorProps:
+                                                                  const DropDownDecoratorProps(
+                                                                dropdownSearchDecoration:
+                                                                    InputDecoration(
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  labelText:
+                                                                      "Branch :",
+                                                                  hintText:
+                                                                      "Choose Your Branch",
+                                                                ),
+                                                              ),
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  dropdownvalue4 =
+                                                                      newValue
+                                                                          as String;
+                                                                });
+                                                                dropdownvalue44 = branchstate
+                                                                    .branchidwithname
+                                                                    .keys
+                                                                    .firstWhere(
+                                                                        (k) =>
+                                                                            branchstate.branchidwithname[k] ==
+                                                                            dropdownvalue4,
+                                                                        orElse: () =>
+                                                                            null);
+                                                                log(dropdownvalue44!
+                                                                    .toString());
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
                         );
                       },
                     );
@@ -487,7 +1159,8 @@ class _HomePageState extends State<HomePage> {
 
   final TextEditingController empcode = TextEditingController();
   final TextEditingController _namefieldcontroller = TextEditingController();
-  final TextEditingController namecontroller = TextEditingController();
+
+  final TextEditingController usernamecontroller = TextEditingController();
   final TextEditingController emailcontroller = TextEditingController();
   final TextEditingController numbercontroller = TextEditingController();
 
@@ -516,12 +1189,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void setState(fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
-
   int del_statuscode = 0;
   int update_statuscode = 0;
   int create_statuscode = 0;
@@ -583,9 +1250,8 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<FormFieldState> _keydep = GlobalKey();
   final GlobalKey<FormFieldState> _keydes = GlobalKey();
 
-  bool? isempcodeexist;
   String finaltoken = '';
-  DateTime? initialdate = DateTime(2010);
+  DateTime? initialdate = DateTime(2023);
   Future getdata() async {
     final prefs = await SharedPreferences.getInstance();
     String tokken = prefs.getString('tokken')!;
@@ -641,861 +1307,810 @@ class _HomePageState extends State<HomePage> {
     var dept = context.watch<GetAlldeptCubit>();
     var design = context.watch<GetAlldesignCubit>();
     var role = context.watch<GetRoleCubit>();
+
     // var branchidwithname = branch.state.branchidwithname;
     // var deptname = dept.state.deptidwithname;
     // var designidwithname = design.state.designidwithname;
     var roleidwithname = role.state.rolenamewithid;
+
     // All name that should be used for dropdown
     var alldesignationname = design.state.alldesignationnamelist;
     var alldeptname = dept.state.alldeptnamelist;
     var allbranchname = branch.state.allbranchnamelist;
     var allrolename = role.state.allrolenamelist;
 
-    return BlocConsumer<GetallbranchCubit, GetallbranchState>(
-      listener: (context, allbranchState) {},
-      builder: (context, allbranchState) {
-        return BlocConsumer<GetAlldeptCubit, GetAlldeptState>(
-          listener: (context, alldeptState) {},
-          builder: (context, alldeptState) {
-            return BlocConsumer<GetAlldesignCubit, GetAlldesignState>(
-              listener: (context, alldesignstate) {},
-              builder: (context, alldesignstate) {
-                return BlocConsumer<GetemployeelistCubit, PostState>(
-                    listener: (context, state) {
-                  if (state is PostErrorState) {
-                    SnackBar snackBar = SnackBar(
-                      content: Text(state.error),
-                      backgroundColor: Colors.red,
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } else if (state is PostinitialState) {
-                  } else if (state is PostLoadingState) {
-                    EasyLoading.show(status: state.loading);
-                  } else if (state is PostLoadedState) {
-                    log('All Branch :${allbranchState.branchidwithname}');
-                    log('All Dept :${alldeptState.deptidwithname}');
-                    log('All Design :${alldesignstate.designidwithname}');
-                    fetchdata(
-                        allemplist: state.allemployeelist,
-                        branchidwithname: allbranchState.branchidwithname,
-                        deptnamewithid: alldeptState.deptidwithname,
-                        designidwithname: alldesignstate.designidwithname);
-                  }
-                }, builder: (context, state) {
-                  return BlocConsumer<CreateEmployeeCubit,
-                      CreateEmployeeStatus>(
-                    listener: (context, state) {
-                      switch (state) {
-                        case CreateEmployeeStatus.initial:
-                          break;
-                        case CreateEmployeeStatus.loading:
-                          EasyLoading.show(status: 'Adding Employee..');
-                          break;
-                        case CreateEmployeeStatus.loaded:
-                          EasyLoading.showToast('Added Successfully')
-                              .whenComplete(() {
-                            displayedDataCell.clear();
-                            context.read<GetallbranchCubit>().getallbranch();
-                            context.read<GetAlldeptCubit>().getalldept();
-                            context.read<GetAlldesignCubit>().getalldesign();
-                            context
-                                .read<GetemployeelistCubit>()
-                                .getemployeelist(1);
-                          });
+    return BlocConsumer<UpdateemployeeCubit, UpdateEmployeeStatus>(
+      listener: (context, updatestatus) {
+        switch (updatestatus) {
+          case UpdateEmployeeStatus.initial:
+            break;
+          case UpdateEmployeeStatus.loading:
+            EasyLoading.show(status: 'Updating Employee..');
+            break;
+          case UpdateEmployeeStatus.loaded:
+            EasyLoading.showToast('Updated Successfully').whenComplete(() {
+              displayedDataCell.clear();
+              context.read<GetallbranchCubit>().getallbranch();
+              context.read<GetAlldeptCubit>().getalldept();
+              context.read<GetAlldesignCubit>().getalldesign();
+              context
+                  .read<GetemployeelistCubit>()
+                  .getemployeelist(datalimit: datalimit, ismoredata: true);
+            });
 
-                          break;
-                        case CreateEmployeeStatus.error:
-                          EasyLoading.showError('Error');
-                          break;
-                      }
-                    },
-                    builder: (context, state) {
-                      return Scaffold(
-                        backgroundColor:
-                            const Color.fromARGB(255, 245, 245, 245),
-                        // appBar: AppBar(
-                        //   backgroundColor: const Color.fromARGB(255, 249, 119, 109),
-                        //   title: const Text(
-                        //     'Globizs Emp Leave Management Admin',
-                        //   ),
-                        // ),
-                        body: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Center(
-                              //   child: Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.center,
-                              //     children: [
-                              //       Image.asset(
-                              //         'assets/images/G.png',
-                              //         height: 70,
-                              //       ),
-                              //       const Text(
-                              //         'Leave Management System',
-                              //         style: TextStyle(fontSize: 20),
-                              //       ),
-                              //       const SizedBox(
-                              //         height: 5,
-                              //       ),
-                              //       const Text(
-                              //         'Admin Panel',
-                              //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
+            break;
+          case UpdateEmployeeStatus.error:
+            EasyLoading.showError('Error');
+            break;
+        }
+      },
+      builder: (context, updatestatus) {
+        return BlocConsumer<CheckEmpcodeCubit, CheckEmpcodeState>(
+          listener: (context, checkempState) {
+            log('From Build${checkempState.isexist}');
+          },
+          builder: (context, checkempState) {
+            log('From Build2 ${checkempState.isexist}');
+            return BlocConsumer<GetallbranchCubit, GetallbranchState>(
+              listener: (context, allbranchState) {},
+              builder: (context, allbranchState) {
+                return BlocConsumer<GetAlldeptCubit, GetAlldeptState>(
+                  listener: (context, alldeptState) {},
+                  builder: (context, alldeptState) {
+                    return BlocConsumer<GetAlldesignCubit, GetAlldesignState>(
+                      listener: (context, alldesignstate) {},
+                      builder: (context, alldesignstate) {
+                        return BlocConsumer<GetemployeelistCubit, PostState>(
+                            listener: (context, state) {
+                          if (state is PostErrorState) {
+                            SnackBar snackBar = SnackBar(
+                              content: Text(state.error),
+                              backgroundColor: Colors.red,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                          } else if (state is PostinitialState) {
+                          } else if (state is PostLoadingState) {
+                          } else if (state is PostLoadedState) {
+                            log('All Branch :${allbranchState.branchidwithname}');
+                            log('All Dept :${alldeptState.deptidwithname}');
+                            log('All Design :${alldesignstate.designidwithname}');
+                            ismoreloading = state.isloading;
+                            fetchdata(
+                                allemplist: state.allemployeelist,
+                                branchidwithname:
+                                    allbranchState.branchidwithname,
+                                deptnamewithid: alldeptState.deptidwithname,
+                                designidwithname:
+                                    alldesignstate.designidwithname);
+                          }
+                        }, builder: (context, state) {
+                          return BlocConsumer<CreateEmployeeCubit,
+                              CreateEmployeeStatus>(
+                            listener: (context, state) {
+                              switch (state) {
+                                case CreateEmployeeStatus.initial:
+                                  break;
+                                case CreateEmployeeStatus.loading:
+                                  EasyLoading.show(status: 'Adding Employee..');
+                                  break;
+                                case CreateEmployeeStatus.loaded:
+                                  EasyLoading.showToast('Added Successfully')
+                                      .whenComplete(() {
+                                    displayedDataCell.clear();
+                                    context
+                                        .read<GetallbranchCubit>()
+                                        .getallbranch();
+                                    context
+                                        .read<GetAlldeptCubit>()
+                                        .getalldept();
+                                    context
+                                        .read<GetAlldesignCubit>()
+                                        .getalldesign();
+                                    context
+                                        .read<GetemployeelistCubit>()
+                                        .getemployeelist(
+                                            datalimit: datalimit,
+                                            ismoredata: true);
+                                  });
 
-                              const SizedBox(
-                                height: 50,
-                              ),
-                              Padding(
-                                padding:
-                                    MediaQuery.of(context).size.width > 1040
-                                        ? const EdgeInsets.only(
-                                            left: 100,
-                                          )
-                                        : const EdgeInsets.only(
-                                            left: 10,
-                                          ),
-                                child: const Text(
-                                  'Employee ',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                              ),
-                              Padding(
-                                padding: MediaQuery.of(context).size.width >
-                                        1040
-                                    ? const EdgeInsets.only(left: 100, top: 15)
-                                    : const EdgeInsets.only(left: 10, top: 15),
-                                child: InkWell(
-                                    onTap: () {
-                                      _namefieldcontroller.clear();
-                                      emailcontroller.clear();
-                                      numbercontroller.clear();
-                                      empcode.clear();
-                                      showDialog(
-                                        context: context,
-                                        builder: (cnt) {
-                                          return StatefulBuilder(
-                                            builder: (BuildContext context,
-                                                void Function(void Function())
-                                                    setState) {
-                                              return AlertDialog(
-                                                actions: [
-                                                  Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      ElevatedButton(
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .grey[300],
-                                                          ),
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                            setState(() {
-                                                              _namefieldcontroller
-                                                                  .clear();
-                                                              datetime2 = '';
+                                  break;
+                                case CreateEmployeeStatus.error:
+                                  EasyLoading.showError('Error');
+                                  break;
+                              }
+                            },
+                            builder: (context, state) {
+                              log(checkempState.isexist);
+                              return Scaffold(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 245, 245, 245),
+                                // appBar: AppBar(
+                                //   backgroundColor: const Color.fromARGB(255, 249, 119, 109),
+                                //   title: const Text(
+                                //     'Globizs Emp Leave Management Admin',
+                                //   ),
+                                // ),
+                                body: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Center(
+                                      //   child: Column(
+                                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                                      //     children: [
+                                      //       Image.asset(
+                                      //         'assets/images/G.png',
+                                      //         height: 70,
+                                      //       ),
+                                      //       const Text(
+                                      //         'Leave Management System',
+                                      //         style: TextStyle(fontSize: 20),
+                                      //       ),
+                                      //       const SizedBox(
+                                      //         height: 5,
+                                      //       ),
+                                      //       const Text(
+                                      //         'Admin Panel',
+                                      //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                                      //       ),
+                                      //     ],
+                                      //   ),
+                                      // ),
 
-                                                              dropdownvalue1 =
-                                                                  null;
-                                                              dropdownvalue2 =
-                                                                  null;
-                                                              _position = null;
-                                                            });
-                                                          },
-                                                          child: const Text(
-                                                            "Cancel",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .blueGrey),
-                                                          )),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(left: 10),
-                                                        child: InkWell(
-                                                            onTap: () async {
-                                                              EasyLoading.show(
-                                                                  status:
-                                                                      'Adding..');
-                                                              if (_namefieldcontroller.text.isEmpty ||
-                                                                      empcode
-                                                                          .text
-                                                                          .isEmpty ||
-                                                                      emailcontroller
-                                                                          .text
-                                                                          .isEmpty ||
-                                                                      empcode
-                                                                          .text
-                                                                          .isEmpty
-                                                                  // dropdownvalue11 == null ||
-                                                                  // dropdownvalue22 == null ||
-                                                                  // dropdownvalue33==null
-                                                                  ) {
-                                                                EasyLoading
-                                                                    .dismiss();
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                                CustomSnackBar(
-                                                                    context,
-                                                                    const Text(
-                                                                      'All Fields Are Mandatory',
-                                                                    ),
-                                                                    Colors.red);
-                                                              } else {
-                                                                DateTime
-                                                                    joiningdate =
-                                                                    DateTime.parse(
-                                                                        datetime);
-                                                                context.read<CreateEmployeeCubit>().createemployee(
-                                                                    empname:
-                                                                        namecontroller
-                                                                            .text,
-                                                                    empusername:
-                                                                        '',
-                                                                    email: emailcontroller
-                                                                        .text,
-                                                                    empcode: empcode
-                                                                        .text,
-                                                                    phonenumber:
-                                                                        numbercontroller
-                                                                            .text,
-                                                                    deptid:
-                                                                        dropdownvalue22!,
-                                                                    designid:
-                                                                        dropdownvalue11!,
-                                                                    branchid:
-                                                                        dropdownvalue44!,
-                                                                    roleid:
-                                                                        dropdownvalue33!,
-                                                                    dateofjoining:
-                                                                        joiningdate,
-                                                                    emptype:
-                                                                        "1");
-                                                                // await ServiceApi()
-                                                                //     .create_employee(
-                                                                //         name: _namefieldcontroller.text,
-                                                                //         desId: dropdownvalue11!,
-                                                                //         depId: dropdownvalue22!,
-                                                                //         dob: datetime,
-                                                                //         token: finaltoken,
-                                                                //         image: profileimage,
-                                                                //         location: finallocation!)
-                                                                //     .whenComplete(() {
-                                                                //   getdata2().whenComplete(() {
-                                                                //     _namefieldcontroller.clear();
-                                                                //     all_desid = [];
-                                                                //     all_depid = [];
-                                                                //     all_dep = [];
-                                                                //     all_des = [];
-                                                                //     _position = null;
-                                                                //     datetime2 = '';
-
-                                                                //     dropdownvalue1 = null;
-                                                                //     dropdownvalue2 = null;
-                                                                //     setState(() {});
-
-                                                                //     getcreate_status();
-                                                                //     getdata();
-                                                                //     EasyLoading.dismiss();
-                                                                //     context.router.pop();
-                                                                //   });
-                                                                // });
-
-                                                                // employeeDataSource._employees.add(
-                                                                //     Employee(
-                                                                //         index++,
-                                                                //         _namefieldcontroller.text,
-                                                                //         'Production',
-                                                                //         'Developer',
-                                                                //         TextButton(
-                                                                //             onPressed: () {},
-                                                                //             child:
-                                                                //                 const Text('Edit'))));
-                                                                // employeeDataSource.updateDataGridRows();
-                                                                // employeeDataSource
-                                                                //     .updateDataGridSource();
-
-                                                                // allemployee.add({
-                                                                //   'name': _namefieldcontroller.text,
-                                                                //   'branch': "Imphal West",
-                                                                //   "role": "Developer",
-                                                                //   "department": "Production"
-                                                                // });
-                                                                // log(create_statuscode.toString());
-                                                                // //     getcreate_status();
-                                                                // getdata();
-                                                                // EasyLoading.dismiss();
-                                                                // _namefieldcontroller.clear();
-                                                                // emailcontroller.clear();
-                                                                // numbercontroller.clear();
-                                                                // empcode.clear();
-                                                                // Navigator.of(context).pop();
-                                                              }
-                                                            },
-                                                            child: Material(
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            13),
-                                                              ),
-                                                              elevation: 15,
-                                                              child:
-                                                                  const CardWidget(
-                                                                      color: Colors
-                                                                          .green,
-                                                                      width: 70,
-                                                                      height:
-                                                                          30,
-                                                                      borderRadius:
-                                                                          5,
-                                                                      child:
-                                                                          Center(
-                                                                        child:
-                                                                            Text(
-                                                                          'Add',
-                                                                          style:
-                                                                              TextStyle(color: Colors.white),
+                                      const SizedBox(
+                                        height: 50,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            MediaQuery.of(context).size.width >
+                                                    1040
+                                                ? const EdgeInsets.only(
+                                                    left: 100,
+                                                  )
+                                                : const EdgeInsets.only(
+                                                    left: 10,
+                                                  ),
+                                        child: const Text(
+                                          'Employee ',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            MediaQuery.of(context).size.width >
+                                                    1040
+                                                ? const EdgeInsets.only(
+                                                    left: 100, top: 15)
+                                                : const EdgeInsets.only(
+                                                    left: 10, top: 15),
+                                        child: InkWell(
+                                            onTap: () {
+                                              _namefieldcontroller.clear();
+                                              usernamecontroller.clear();
+                                              emailcontroller.clear();
+                                              numbercontroller.clear();
+                                              empcode.clear();
+                                              setState(() {
+                                                datetime2 = '';
+                                              });
+                                              dropdownvalue1 = null;
+                                              dropdownvalue2 = null;
+                                              dropdownvalue3 = null;
+                                              dropdownvalue4 = null;
+                                              showDialog(
+                                                context: context,
+                                                builder: (cnt) {
+                                                  log('From Showdialog :${checkempState.isexist}');
+                                                  return BlocConsumer<
+                                                      CheckemailexistCubit,
+                                                      CheckemailexistState>(
+                                                    listener:
+                                                        (context, emailcheck) {
+                                                      // TODO: implement listener
+                                                    },
+                                                    builder:
+                                                        (context, emailcheck) {
+                                                      return BlocConsumer<
+                                                          CheckEmpcodeCubit,
+                                                          CheckEmpcodeState>(
+                                                        listener: (context,
+                                                            checkempStatefinal) {
+                                                          // TODO: implement listener
+                                                        },
+                                                        builder: (context,
+                                                            checkempStatefinal) {
+                                                          return StatefulBuilder(
+                                                              builder: (BuildContext
+                                                                      context,
+                                                                  void Function(
+                                                                          void
+                                                                              Function())
+                                                                      setState) {
+                                                            return AlertDialog(
+                                                              actions: [
+                                                                Row(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    ElevatedButton(
+                                                                        style: ElevatedButton
+                                                                            .styleFrom(
+                                                                          backgroundColor:
+                                                                              Colors.grey[300],
                                                                         ),
-                                                                      )),
-                                                            )),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                                title: const Text(
-                                                  "Add new Employee",
-                                                  style: TextStyle(
-                                                      fontSize: 17,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                content: SingleChildScrollView(
-                                                  child: Form(
-                                                    child: SizedBox(
-                                                      width: 300,
-                                                      height: 550,
-                                                      child: Column(
-                                                        children: [
-                                                          TextFormField(
-                                                              onChanged:
-                                                                  (value) async {
-                                                                isempcodeexist =
-                                                                    await AuthRepository()
-                                                                        .checkempcode(
-                                                                            value);
-                                                                log('onchange$isempcodeexist');
-                                                              },
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .number,
-                                                              controller:
-                                                                  empcode,
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                suffixIcon: isempcodeexist ==
-                                                                        null
-                                                                    ? const SizedBox()
-                                                                    : isempcodeexist!
-                                                                        ? const Icon(
-                                                                            Icons.error)
-                                                                        : const Icon(
-                                                                            Icons.check,
-                                                                            color:
-                                                                                Colors.green,
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          setState(
+                                                                              () {
+                                                                            _namefieldcontroller.clear();
+                                                                            datetime2 =
+                                                                                '';
+
+                                                                            dropdownvalue1 =
+                                                                                null;
+                                                                            dropdownvalue2 =
+                                                                                null;
+                                                                            _position =
+                                                                                null;
+                                                                          });
+                                                                        },
+                                                                        child:
+                                                                            const Text(
+                                                                          "Cancel",
+                                                                          style:
+                                                                              TextStyle(color: Colors.blueGrey),
+                                                                        )),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          left:
+                                                                              10),
+                                                                      child: InkWell(
+                                                                          onTap: () {
+                                                                            if (_namefieldcontroller.text.isEmpty || empcode.text.isEmpty || emailcontroller.text.isEmpty || empcode.text.isEmpty
+                                                                                // dropdownvalue11 == null ||
+                                                                                // dropdownvalue22 == null ||
+                                                                                // dropdownvalue33==null
+                                                                                ) {
+                                                                              CustomSnackBar(
+                                                                                  context,
+                                                                                  const Text(
+                                                                                    'All Fields Are Mandatory',
+                                                                                  ),
+                                                                                  Colors.red);
+                                                                            } else {
+                                                                              context.read<CreateEmployeeCubit>().createemployee(empname: _namefieldcontroller.text, empusername: usernamecontroller.text, email: emailcontroller.text, empcode: int.parse(empcode.text), phonenumber: numbercontroller.text, deptid: dropdownvalue22!, designid: dropdownvalue11!, branchid: dropdownvalue44!, roleid: dropdownvalue33!, dateofjoining: datetime, emptype: _selectedRadioTile.toString());
+                                                                              // await ServiceApi()
+                                                                              //     .create_employee(
+                                                                              //         name: _namefieldcontroller.text,
+                                                                              //         desId: dropdownvalue11!,
+                                                                              //         depId: dropdownvalue22!,
+                                                                              //         dob: datetime,
+                                                                              //         token: finaltoken,
+                                                                              //         image: profileimage,
+                                                                              //         location: finallocation!)
+                                                                              //     .whenComplete(() {
+                                                                              //   getdata2().whenComplete(() {
+                                                                              //     _namefieldcontroller.clear();
+                                                                              //     all_desid = [];
+                                                                              //     all_depid = [];
+                                                                              //     all_dep = [];
+                                                                              //     all_des = [];
+                                                                              //     _position = null;
+                                                                              //     datetime2 = '';
+
+                                                                              //     dropdownvalue1 = null;
+                                                                              //     dropdownvalue2 = null;
+                                                                              //     setState(() {});
+
+                                                                              //     getcreate_status();
+                                                                              //     getdata();
+                                                                              EasyLoading.dismiss();
+                                                                              context.router.pop();
+                                                                              //   });
+                                                                              // });
+
+                                                                              // allemployee.add({
+                                                                              //   'name': _namefieldcontroller.text,
+                                                                              //   'branch': "Imphal West",
+                                                                              //   "role": "Developer",
+                                                                              //   "department": "Production"
+                                                                              // });
+                                                                              // log(create_statuscode.toString());
+                                                                              // //     getcreate_status();
+                                                                              // getdata();
+                                                                              // EasyLoading.dismiss();
+                                                                              // _namefieldcontroller.clear();
+                                                                              // emailcontroller.clear();
+                                                                              // numbercontroller.clear();
+                                                                              // empcode.clear();
+                                                                              // Navigator.of(context).pop();
+                                                                            }
+                                                                          },
+                                                                          child: Material(
+                                                                            shape:
+                                                                                RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(13),
+                                                                            ),
+                                                                            elevation:
+                                                                                15,
+                                                                            child: const CardWidget(
+                                                                                color: Colors.green,
+                                                                                width: 70,
+                                                                                height: 30,
+                                                                                borderRadius: 5,
+                                                                                child: Center(
+                                                                                  child: Text(
+                                                                                    'Add',
+                                                                                    style: TextStyle(color: Colors.white),
+                                                                                  ),
+                                                                                )),
+                                                                          )),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                              title: const Text(
+                                                                "Add new Employee",
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        17,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                              content:
+                                                                  SingleChildScrollView(
+                                                                child: Form(
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width: 300,
+                                                                    height: 652,
+                                                                    child:
+                                                                        Column(
+                                                                      children: [
+                                                                        TextFormField(
+                                                                            onChanged:
+                                                                                (value) {
+                                                                              context.read<CheckEmpcodeCubit>().checkempcode(value);
+                                                                            },
+                                                                            keyboardType: TextInputType
+                                                                                .number,
+                                                                            controller:
+                                                                                empcode,
+                                                                            decoration:
+                                                                                InputDecoration(
+                                                                              suffix: checkempStatefinal.isexist.isEmpty || empcode.value.text.isEmpty
+                                                                                  ? const SizedBox()
+                                                                                  : checkempStatefinal.isexist == 'false'
+                                                                                      ? Row(
+                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                                                          children: const [
+                                                                                            Text(
+                                                                                              'available',
+                                                                                              style: TextStyle(color: Colors.green),
+                                                                                            ),
+                                                                                            SizedBox(
+                                                                                              width: 3,
+                                                                                            ),
+                                                                                            Icon(
+                                                                                              Icons.check,
+                                                                                              color: Colors.green,
+                                                                                            )
+                                                                                          ],
+                                                                                        )
+                                                                                      : Row(
+                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                                                          children: const [
+                                                                                            Text(
+                                                                                              'already exist',
+                                                                                              style: TextStyle(color: Colors.red),
+                                                                                            ),
+                                                                                            SizedBox(
+                                                                                              width: 3,
+                                                                                            ),
+                                                                                            Icon(
+                                                                                              Icons.error,
+                                                                                              color: Colors.red,
+                                                                                            )
+                                                                                          ],
+                                                                                        ),
+                                                                              hintStyle: const TextStyle(fontSize: 15, color: Color.fromARGB(255, 212, 211, 211)),
+                                                                              hintText: 'Employee Code',
+                                                                            )),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              5,
+                                                                        ),
+                                                                        TextFormField(
+                                                                            keyboardType: TextInputType
+                                                                                .text,
+                                                                            controller:
+                                                                                usernamecontroller,
+                                                                            decoration:
+                                                                                const InputDecoration(
+                                                                              hintStyle: TextStyle(fontSize: 15, color: Color.fromARGB(255, 212, 211, 211)),
+                                                                              hintText: 'Username',
+                                                                            )),
+                                                                        // _dataofbirth(datetime2),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              5,
+                                                                        ),
+                                                                        TextFormField(
+                                                                            keyboardType: TextInputType
+                                                                                .text,
+                                                                            controller:
+                                                                                _namefieldcontroller,
+                                                                            decoration:
+                                                                                const InputDecoration(
+                                                                              hintStyle: TextStyle(fontSize: 15, color: Color.fromARGB(255, 212, 211, 211)),
+                                                                              hintText: 'Name',
+                                                                            )),
+                                                                        // _dataofbirth(datetime2),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              5,
+                                                                        ),
+                                                                        TextFormField(
+                                                                            onChanged:
+                                                                                (value) {
+                                                                              context.read<CheckemailexistCubit>().checkemailexist(value);
+                                                                            },
+                                                                            keyboardType: TextInputType
+                                                                                .text,
+                                                                            controller:
+                                                                                emailcontroller,
+                                                                            decoration:
+                                                                                InputDecoration(
+                                                                              suffix: emailcheck.isexist.isEmpty || emailcontroller.value.text.isEmpty
+                                                                                  ? const SizedBox()
+                                                                                  : emailcheck.isexist == 'false'
+                                                                                      ? Row(
+                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                                                          children: const [
+                                                                                            Text(
+                                                                                              'available',
+                                                                                              style: TextStyle(color: Colors.green),
+                                                                                            ),
+                                                                                            SizedBox(
+                                                                                              width: 3,
+                                                                                            ),
+                                                                                            Icon(
+                                                                                              Icons.check,
+                                                                                              color: Colors.green,
+                                                                                            )
+                                                                                          ],
+                                                                                        )
+                                                                                      : emailcheck.isexist == 'invalid'
+                                                                                          ? Row(
+                                                                                              mainAxisSize: MainAxisSize.min,
+                                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                                              children: const [
+                                                                                                Text(
+                                                                                                  'invalid email',
+                                                                                                  style: TextStyle(color: Colors.red),
+                                                                                                ),
+                                                                                                SizedBox(
+                                                                                                  width: 3,
+                                                                                                ),
+                                                                                                Icon(
+                                                                                                  Icons.error,
+                                                                                                  color: Colors.red,
+                                                                                                )
+                                                                                              ],
+                                                                                            )
+                                                                                          : Row(
+                                                                                              mainAxisSize: MainAxisSize.min,
+                                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                                              children: const [
+                                                                                                Text(
+                                                                                                  'already exist',
+                                                                                                  style: TextStyle(color: Colors.red),
+                                                                                                ),
+                                                                                                SizedBox(
+                                                                                                  width: 3,
+                                                                                                ),
+                                                                                                Icon(
+                                                                                                  Icons.error,
+                                                                                                  color: Colors.red,
+                                                                                                )
+                                                                                              ],
+                                                                                            ),
+                                                                              hintStyle: const TextStyle(fontSize: 15, color: Color.fromARGB(255, 212, 211, 211)),
+                                                                              hintText: 'Email',
+                                                                            )),
+                                                                        // _dataofbirth(datetime2),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              5,
+                                                                        ),
+                                                                        TextFormField(
+                                                                            keyboardType: TextInputType
+                                                                                .text,
+                                                                            controller:
+                                                                                numbercontroller,
+                                                                            decoration:
+                                                                                const InputDecoration(
+                                                                              hintStyle: TextStyle(fontSize: 15, color: Color.fromARGB(255, 212, 211, 211)),
+                                                                              hintText: 'Phone Number',
+                                                                            )),
+
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              5,
+                                                                        ),
+                                                                        _dataofbirth(
+                                                                            datetime2),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              5,
+                                                                        ),
+                                                                        const Align(
+                                                                          alignment:
+                                                                              Alignment.centerLeft,
+                                                                          child:
+                                                                              Text('Employee Type :'),
+                                                                        ),
+                                                                        Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              child: RadioListTile(
+                                                                                contentPadding: EdgeInsets.zero,
+                                                                                title: const Text('Employee'),
+                                                                                value: 1,
+                                                                                groupValue: _selectedRadioTile,
+                                                                                onChanged: (val) {
+                                                                                  print('Selected value: $val');
+                                                                                  log(val.toString());
+                                                                                  setState(() {
+                                                                                    _selectedRadioTile = val;
+                                                                                  });
+                                                                                },
+                                                                                activeColor: Colors.green,
+                                                                                selected: _selectedRadioTile == 1,
+                                                                              ),
+                                                                            ),
+                                                                            Expanded(
+                                                                              child: RadioListTile(
+                                                                                contentPadding: EdgeInsets.zero,
+                                                                                title: const Text('Probation Period'),
+                                                                                value: 2,
+                                                                                groupValue: _selectedRadioTile,
+                                                                                onChanged: (val) {
+                                                                                  print('Selected value: $val');
+                                                                                  setState(() {
+                                                                                    _selectedRadioTile = val;
+                                                                                  });
+                                                                                },
+                                                                                activeColor: Colors.green,
+                                                                                selected: _selectedRadioTile == 2,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+
+                                                                        Container(
+                                                                          width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width,
+                                                                          padding:
+                                                                              const EdgeInsets.symmetric(horizontal: 13),
+                                                                          decoration: BoxDecoration(
+                                                                              color: const Color.fromARGB(255, 240, 237, 237),
+                                                                              borderRadius: BorderRadius.circular(12),
+                                                                              border: Border.all(color: const Color.fromARGB(255, 225, 222, 222))),
+                                                                          child:
+                                                                              DropdownSearch<String>(
+                                                                            popupProps:
+                                                                                PopupProps.menu(
+                                                                              searchFieldProps: const TextFieldProps(decoration: InputDecoration(border: OutlineInputBorder(), constraints: BoxConstraints(maxHeight: 40))),
+                                                                              constraints: BoxConstraints.tight(const Size(250, 250)),
+                                                                              showSearchBox: true,
+                                                                              showSelectedItems: true,
+                                                                            ),
+                                                                            items:
+                                                                                alldesignationname,
+                                                                            dropdownDecoratorProps:
+                                                                                const DropDownDecoratorProps(
+                                                                              dropdownSearchDecoration: InputDecoration(
+                                                                                hintStyle: TextStyle(
+                                                                                  fontSize: 15,
+                                                                                ),
+                                                                                border: InputBorder.none,
+                                                                                labelText: "Designation :",
+                                                                                hintText: "Choose Your Designation",
+                                                                              ),
+                                                                            ),
+                                                                            onChanged:
+                                                                                (String? newValue) {
+                                                                              setState(() {
+                                                                                dropdownvalue1 = newValue as String;
+                                                                              });
+
+                                                                              dropdownvalue11 = alldesignstate.designidwithname.keys.firstWhere((k) => alldesignstate.designidwithname[k] == dropdownvalue1, orElse: () => null);
+                                                                            },
                                                                           ),
-                                                                hintStyle: const TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            212,
-                                                                            211,
-                                                                            211)),
-                                                                hintText:
-                                                                    'Employee Code',
-                                                              )),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          TextFormField(
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .text,
-                                                              controller:
-                                                                  _namefieldcontroller,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintStyle: TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            212,
-                                                                            211,
-                                                                            211)),
-                                                                hintText:
-                                                                    'Name',
-                                                              )),
-                                                          // _dataofbirth(datetime2),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          TextFormField(
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .text,
-                                                              controller:
-                                                                  emailcontroller,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintStyle: TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            212,
-                                                                            211,
-                                                                            211)),
-                                                                hintText:
-                                                                    'Email',
-                                                              )),
-                                                          // _dataofbirth(datetime2),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          TextFormField(
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .text,
-                                                              controller:
-                                                                  numbercontroller,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintStyle: TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            212,
-                                                                            211,
-                                                                            211)),
-                                                                hintText:
-                                                                    'Phone Number',
-                                                              )),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              10,
+                                                                        ),
+                                                                        Container(
+                                                                          padding:
+                                                                              const EdgeInsets.symmetric(horizontal: 13),
+                                                                          decoration: BoxDecoration(
+                                                                              color: const Color.fromARGB(255, 240, 237, 237),
+                                                                              borderRadius: BorderRadius.circular(12),
+                                                                              border: Border.all(color: const Color.fromARGB(255, 225, 222, 222))),
+                                                                          child:
+                                                                              DropdownSearch<String>(
+                                                                            popupProps:
+                                                                                PopupProps.menu(
+                                                                              searchFieldProps: const TextFieldProps(decoration: InputDecoration(border: OutlineInputBorder(), constraints: BoxConstraints(maxHeight: 40))),
+                                                                              constraints: BoxConstraints.tight(const Size(250, 250)),
+                                                                              showSearchBox: true,
+                                                                              showSelectedItems: true,
+                                                                            ),
+                                                                            items:
+                                                                                alldeptname,
+                                                                            dropdownDecoratorProps:
+                                                                                const DropDownDecoratorProps(
+                                                                              dropdownSearchDecoration: InputDecoration(
+                                                                                hintStyle: TextStyle(
+                                                                                  fontSize: 15,
+                                                                                ),
+                                                                                border: InputBorder.none,
+                                                                                labelText: "Department :",
+                                                                                hintText: "Choose Your Department",
+                                                                              ),
+                                                                            ),
+                                                                            onChanged:
+                                                                                (String? newValue) {
+                                                                              setState(() {
+                                                                                dropdownvalue2 = newValue as String;
+                                                                              });
 
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          _dataofbirth(
-                                                              datetime2),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Container(
-                                                            width:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        13),
-                                                            decoration: BoxDecoration(
-                                                                color: const Color
-                                                                        .fromARGB(
-                                                                    255,
-                                                                    240,
-                                                                    237,
-                                                                    237),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12),
-                                                                border: Border.all(
-                                                                    color: const Color
-                                                                            .fromARGB(
-                                                                        255,
-                                                                        225,
-                                                                        222,
-                                                                        222))),
-                                                            child:
-                                                                DropdownSearch<
-                                                                    String>(
-                                                              popupProps:
-                                                                  PopupProps
-                                                                      .menu(
-                                                                searchFieldProps: const TextFieldProps(
-                                                                    decoration: InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
-                                                                        constraints:
-                                                                            BoxConstraints(maxHeight: 40))),
-                                                                constraints:
-                                                                    BoxConstraints.tight(
-                                                                        const Size(
-                                                                            250,
-                                                                            250)),
-                                                                showSearchBox:
-                                                                    true,
-                                                                showSelectedItems:
-                                                                    true,
-                                                              ),
-                                                              items:
-                                                                  alldesignationname,
-                                                              dropdownDecoratorProps:
-                                                                  const DropDownDecoratorProps(
-                                                                dropdownSearchDecoration:
-                                                                    InputDecoration(
-                                                                  hintStyle:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        15,
+                                                                              dropdownvalue22 = alldeptState.deptidwithname.keys.firstWhere((k) => alldeptState.deptidwithname[k] == dropdownvalue2, orElse: () => null);
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              10,
+                                                                        ),
+                                                                        Container(
+                                                                          width: MediaQuery.of(context)
+                                                                              .size
+                                                                              .width,
+                                                                          padding:
+                                                                              const EdgeInsets.symmetric(horizontal: 13),
+                                                                          decoration: BoxDecoration(
+                                                                              color: const Color.fromARGB(255, 240, 237, 237),
+                                                                              borderRadius: BorderRadius.circular(12),
+                                                                              border: Border.all(color: const Color.fromARGB(255, 225, 222, 222))),
+                                                                          child:
+                                                                              DropdownSearch<String>(
+                                                                            popupProps:
+                                                                                PopupProps.menu(
+                                                                              searchFieldProps: const TextFieldProps(decoration: InputDecoration(border: OutlineInputBorder(), constraints: BoxConstraints(maxHeight: 40))),
+                                                                              constraints: BoxConstraints.tight(const Size(250, 250)),
+                                                                              showSearchBox: true,
+                                                                              showSelectedItems: true,
+                                                                            ),
+                                                                            items:
+                                                                                allrolename,
+                                                                            dropdownDecoratorProps:
+                                                                                const DropDownDecoratorProps(
+                                                                              dropdownSearchDecoration: InputDecoration(
+                                                                                hintStyle: TextStyle(
+                                                                                  fontSize: 15,
+                                                                                ),
+                                                                                border: InputBorder.none,
+                                                                                labelText: "Role :",
+                                                                                hintText: "Choose Your Role",
+                                                                              ),
+                                                                            ),
+                                                                            onChanged:
+                                                                                (String? newValue) {
+                                                                              setState(() {
+                                                                                dropdownvalue3 = newValue as String;
+                                                                              });
+                                                                              dropdownvalue33 = roleidwithname[dropdownvalue3];
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              10,
+                                                                        ),
+                                                                        Container(
+                                                                          padding:
+                                                                              const EdgeInsets.symmetric(horizontal: 13),
+                                                                          decoration: BoxDecoration(
+                                                                              color: const Color.fromARGB(255, 240, 237, 237),
+                                                                              borderRadius: BorderRadius.circular(12),
+                                                                              border: Border.all(color: const Color.fromARGB(255, 225, 222, 222))),
+                                                                          child:
+                                                                              DropdownSearch<String>(
+                                                                            popupProps:
+                                                                                PopupProps.menu(
+                                                                              searchFieldProps: const TextFieldProps(decoration: InputDecoration(border: OutlineInputBorder(), constraints: BoxConstraints(maxHeight: 40))),
+                                                                              constraints: BoxConstraints.tight(const Size(250, 250)),
+                                                                              showSearchBox: true,
+                                                                              showSelectedItems: true,
+                                                                            ),
+                                                                            items:
+                                                                                allbranchname,
+                                                                            dropdownDecoratorProps:
+                                                                                const DropDownDecoratorProps(
+                                                                              dropdownSearchDecoration: InputDecoration(
+                                                                                hintStyle: TextStyle(
+                                                                                  fontSize: 15,
+                                                                                ),
+                                                                                border: InputBorder.none,
+                                                                                labelText: "Branch :",
+                                                                                hintText: "Choose Your Branch",
+                                                                              ),
+                                                                            ),
+                                                                            onChanged:
+                                                                                (String? newValue) {
+                                                                              setState(() {
+                                                                                dropdownvalue4 = newValue as String;
+                                                                              });
+                                                                              dropdownvalue44 = allbranchState.branchidwithname.keys.firstWhere((k) => allbranchState.branchidwithname[k] == dropdownvalue4, orElse: () => null);
+                                                                              log(dropdownvalue44!.toString());
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
                                                                   ),
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  labelText:
-                                                                      "Designation :",
-                                                                  hintText:
-                                                                      "Choose Your Designation",
                                                                 ),
                                                               ),
-                                                              onChanged: (String?
-                                                                  newValue) {
-                                                                setState(() {
-                                                                  dropdownvalue1 =
-                                                                      newValue
-                                                                          as String;
-                                                                });
-
-                                                                dropdownvalue11 = alldesignstate
-                                                                    .designidwithname
-                                                                    .keys
-                                                                    .firstWhere(
-                                                                        (k) =>
-                                                                            alldesignstate.designidwithname[k] ==
-                                                                            dropdownvalue1,
-                                                                        orElse: () =>
-                                                                            null);
-                                                              },
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        13),
-                                                            decoration: BoxDecoration(
-                                                                color: const Color
-                                                                        .fromARGB(
-                                                                    255,
-                                                                    240,
-                                                                    237,
-                                                                    237),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12),
-                                                                border: Border.all(
-                                                                    color: const Color
-                                                                            .fromARGB(
-                                                                        255,
-                                                                        225,
-                                                                        222,
-                                                                        222))),
-                                                            child:
-                                                                DropdownSearch<
-                                                                    String>(
-                                                              popupProps:
-                                                                  PopupProps
-                                                                      .menu(
-                                                                searchFieldProps: const TextFieldProps(
-                                                                    decoration: InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
-                                                                        constraints:
-                                                                            BoxConstraints(maxHeight: 40))),
-                                                                constraints:
-                                                                    BoxConstraints.tight(
-                                                                        const Size(
-                                                                            250,
-                                                                            250)),
-                                                                showSearchBox:
-                                                                    true,
-                                                                showSelectedItems:
-                                                                    true,
-                                                              ),
-                                                              items:
-                                                                  alldeptname,
-                                                              dropdownDecoratorProps:
-                                                                  const DropDownDecoratorProps(
-                                                                dropdownSearchDecoration:
-                                                                    InputDecoration(
-                                                                  hintStyle:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                  ),
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  labelText:
-                                                                      "Department :",
-                                                                  hintText:
-                                                                      "Choose Your Department",
-                                                                ),
-                                                              ),
-                                                              onChanged: (String?
-                                                                  newValue) {
-                                                                setState(() {
-                                                                  dropdownvalue2 =
-                                                                      newValue
-                                                                          as String;
-                                                                });
-
-                                                                dropdownvalue22 = alldeptState
-                                                                    .deptidwithname
-                                                                    .keys
-                                                                    .firstWhere(
-                                                                        (k) =>
-                                                                            alldeptState.deptidwithname[k] ==
-                                                                            dropdownvalue2,
-                                                                        orElse: () =>
-                                                                            null);
-                                                              },
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          Container(
-                                                            width:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width,
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        13),
-                                                            decoration: BoxDecoration(
-                                                                color: const Color
-                                                                        .fromARGB(
-                                                                    255,
-                                                                    240,
-                                                                    237,
-                                                                    237),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12),
-                                                                border: Border.all(
-                                                                    color: const Color
-                                                                            .fromARGB(
-                                                                        255,
-                                                                        225,
-                                                                        222,
-                                                                        222))),
-                                                            child:
-                                                                DropdownSearch<
-                                                                    String>(
-                                                              popupProps:
-                                                                  PopupProps
-                                                                      .menu(
-                                                                searchFieldProps: const TextFieldProps(
-                                                                    decoration: InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
-                                                                        constraints:
-                                                                            BoxConstraints(maxHeight: 40))),
-                                                                constraints:
-                                                                    BoxConstraints.tight(
-                                                                        const Size(
-                                                                            250,
-                                                                            250)),
-                                                                showSearchBox:
-                                                                    true,
-                                                                showSelectedItems:
-                                                                    true,
-                                                              ),
-                                                              items:
-                                                                  allrolename,
-                                                              dropdownDecoratorProps:
-                                                                  const DropDownDecoratorProps(
-                                                                dropdownSearchDecoration:
-                                                                    InputDecoration(
-                                                                  hintStyle:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                  ),
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  labelText:
-                                                                      "Role :",
-                                                                  hintText:
-                                                                      "Choose Your Role",
-                                                                ),
-                                                              ),
-                                                              onChanged: (String?
-                                                                  newValue) {
-                                                                setState(() {
-                                                                  dropdownvalue3 =
-                                                                      newValue
-                                                                          as String;
-                                                                });
-                                                                dropdownvalue33 =
-                                                                    roleidwithname[
-                                                                        dropdownvalue3];
-                                                              },
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 10,
-                                                          ),
-                                                          Container(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        13),
-                                                            decoration: BoxDecoration(
-                                                                color: const Color
-                                                                        .fromARGB(
-                                                                    255,
-                                                                    240,
-                                                                    237,
-                                                                    237),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12),
-                                                                border: Border.all(
-                                                                    color: const Color
-                                                                            .fromARGB(
-                                                                        255,
-                                                                        225,
-                                                                        222,
-                                                                        222))),
-                                                            child:
-                                                                DropdownSearch<
-                                                                    String>(
-                                                              popupProps:
-                                                                  PopupProps
-                                                                      .menu(
-                                                                searchFieldProps: const TextFieldProps(
-                                                                    decoration: InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
-                                                                        constraints:
-                                                                            BoxConstraints(maxHeight: 40))),
-                                                                constraints:
-                                                                    BoxConstraints.tight(
-                                                                        const Size(
-                                                                            250,
-                                                                            250)),
-                                                                showSearchBox:
-                                                                    true,
-                                                                showSelectedItems:
-                                                                    true,
-                                                              ),
-                                                              items:
-                                                                  allbranchname,
-                                                              dropdownDecoratorProps:
-                                                                  const DropDownDecoratorProps(
-                                                                dropdownSearchDecoration:
-                                                                    InputDecoration(
-                                                                  hintStyle:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        15,
-                                                                  ),
-                                                                  border:
-                                                                      InputBorder
-                                                                          .none,
-                                                                  labelText:
-                                                                      "Branch :",
-                                                                  hintText:
-                                                                      "Choose Your Branch",
-                                                                ),
-                                                              ),
-                                                              onChanged: (String?
-                                                                  newValue) {
-                                                                setState(() {
-                                                                  dropdownvalue4 =
-                                                                      newValue
-                                                                          as String;
-                                                                });
-                                                                dropdownvalue44 = allbranchState
-                                                                    .branchidwithname
-                                                                    .keys
-                                                                    .firstWhere(
-                                                                        (k) =>
-                                                                            allbranchState.branchidwithname[k] ==
-                                                                            dropdownvalue4,
-                                                                        orElse: () =>
-                                                                            null);
-                                                                log(dropdownvalue44!
-                                                                    .toString());
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                            );
+                                                          });
+                                                        },
+                                                      );
+                                                    },
+                                                  );
+                                                },
                                               );
                                             },
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Material(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(13),
+                                            child: Material(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(13),
+                                              ),
+                                              elevation: 15,
+                                              child: const CardWidget(
+                                                  gradient: [
+                                                    Color.fromARGB(
+                                                        255, 211, 32, 39),
+                                                    Color.fromARGB(
+                                                        255, 164, 92, 95)
+                                                  ],
+                                                  width: 120,
+                                                  height: 40,
+                                                  borderRadius: 13,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Add Employee',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  )),
+                                            )),
                                       ),
-                                      elevation: 15,
-                                      child: const CardWidget(
-                                          gradient: [
-                                            Color.fromARGB(255, 211, 32, 39),
-                                            Color.fromARGB(255, 164, 92, 95)
-                                          ],
-                                          width: 120,
-                                          height: 40,
-                                          borderRadius: 13,
-                                          child: Center(
-                                            child: Text(
-                                              'Add Employee',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          )),
-                                    )),
-                              ),
 
                               Expanded(
                                 child: Align(
@@ -1510,9 +2125,7 @@ class _HomePageState extends State<HomePage> {
                                     child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       child: DataTable2(
-                                        headingRowHeight: 86,
                                         fixedTopRows: 1,
-                                        columnSpacing: 6,
                                         dividerThickness: 2,
                                         headingRowColor:
                                             MaterialStateProperty.all(
@@ -1546,263 +2159,41 @@ class _HomePageState extends State<HomePage> {
                                               displayedDataCell[i + 6]
                                             ])
                                         ],
-                                        columns: <DataColumn>[
+                                        columns: const <DataColumn>[
                                           DataColumn(
-                                            label: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: const [
-                                                Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
-                                                  child: Text(
-                                                    'Sl.no',
-                                                  ),
-                                                ),
-                                              ],
+                                            label: Text(
+                                              'Sl.no',
                                             ),
                                           ),
                                           DataColumn(
-                                            label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
-                                                  child: Text(
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    'Employee Name',
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            label: Text(
+                                              overflow: TextOverflow.ellipsis,
+                                              'Employee Name',
                                             ),
                                           ),
                                           DataColumn(
-                                            label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
-                                                  child: Text(
-                                                    'Designation',
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            label: Text(
+                                              'Designation',
                                             ),
                                           ),
                                           DataColumn(
-                                            label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
-                                                  child: Text(
-                                                    'Department',
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            label: Text(
+                                              'Department',
                                             ),
                                           ),
                                           DataColumn(
-                                            label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
-                                                  child: Text(
-                                                    'Role',
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            label: Text(
+                                              'Role',
                                             ),
                                           ),
                                           DataColumn(
-                                            label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
-                                                  child: Text(
-                                                    'Branch',
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: TextField(
-                                                      onChanged: (value) {
-                                                        // context
-                                                        //     .read<
-                                                        //         GetemployeelistCubit>()
-                                                        //     .getemployeelist(1);
-                                                      },
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            label: Text(
+                                              'Branch',
                                             ),
                                           ),
                                           DataColumn(
-                                            label: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: const [
-                                                Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
-                                                  child: Text(
-                                                    'Action',
-                                                  ),
-                                                ),
-                                              ],
+                                            label: Text(
+                                              'Action',
                                             ),
                                           ),
                                         ],
