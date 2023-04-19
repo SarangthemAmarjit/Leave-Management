@@ -15,6 +15,7 @@ import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit
 import 'package:leavemanagementadmin/logic/role/cubit/get_role_cubit.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:leavemanagementadmin/repo/auth_repository.dart';
+import 'package:leavemanagementadmin/widget/searchFilter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -1510,9 +1511,9 @@ class _HomePageState extends State<HomePage> {
                                     child: SizedBox(
                                       width: MediaQuery.of(context).size.width,
                                       child: DataTable2(
-                                        headingRowHeight: 86,
+                                        headingRowHeight: 80,
                                         fixedTopRows: 1,
-                                        columnSpacing: 6,
+                                        columnSpacing: 16,
                                         dividerThickness: 2,
                                         headingRowColor:
                                             MaterialStateProperty.all(
@@ -1553,8 +1554,8 @@ class _HomePageState extends State<HomePage> {
                                                   MainAxisAlignment.start,
                                               children: const [
                                                 Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
+                                                  padding: EdgeInsets.only(
+                                                      top: 14.0),
                                                   child: Text(
                                                     'Sl.no',
                                                   ),
@@ -1564,223 +1565,73 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                           DataColumn(
                                             label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
+                                              children: const [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 14.0),
                                                   child: Text(
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     'Employee Name',
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                SearchButton(),
                                               ],
                                             ),
                                           ),
                                           DataColumn(
                                             label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
+                                              children: const [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 14.0),
                                                   child: Text(
                                                     'Designation',
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                SearchButton(),
                                               ],
                                             ),
                                           ),
                                           DataColumn(
                                             label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
+                                              children: const [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 14.0),
                                                   child: Text(
                                                     'Department',
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                SearchButton(),
                                               ],
                                             ),
                                           ),
                                           DataColumn(
                                             label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
+                                              children: const [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 14.0),
                                                   child: Text(
                                                     'Role',
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                SearchButton(),
                                               ],
                                             ),
                                           ),
                                           DataColumn(
                                             label: Column(
-                                              children: [
-                                                const Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
+                                              children: const [
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 14.0),
                                                   child: Text(
                                                     'Branch',
                                                   ),
                                                 ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      // horizontal: 26,
-                                                      vertical: 8),
-                                                  child: Container(
-                                                    height: 42,
-                                                    width: 320,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 6),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                        color: Colors.grey[200],
-                                                        border: Border.all(
-                                                            color:
-                                                                Colors.grey)),
-                                                    child: const TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        suffixIcon:
-                                                            Icon(Icons.search),
-                                                        border:
-                                                            InputBorder.none,
-                                                        // hintText: ""
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                SearchButton(),
                                               ],
                                             ),
                                           ),
@@ -1790,8 +1641,8 @@ class _HomePageState extends State<HomePage> {
                                                   MainAxisAlignment.start,
                                               children: const [
                                                 Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 8.0),
+                                                  padding: EdgeInsets.only(
+                                                      top: 14.0),
                                                   child: Text(
                                                     'Action',
                                                   ),
@@ -1821,6 +1672,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
 
 // class Employee {
 //   /// Creates the employee class with required details.
