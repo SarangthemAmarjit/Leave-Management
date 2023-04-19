@@ -1769,9 +1769,15 @@ class _HomePageState extends State<HomePage> {
                                                         border: Border.all(
                                                             color:
                                                                 Colors.grey)),
-                                                    child: const TextField(
+                                                    child: TextField(
+                                                      onChanged: (value) {
+                                                        // context
+                                                        //     .read<
+                                                        //         GetemployeelistCubit>()
+                                                        //     .getemployeelist(1);
+                                                      },
                                                       decoration:
-                                                          InputDecoration(
+                                                          const InputDecoration(
                                                         suffixIcon:
                                                             Icon(Icons.search),
                                                         border:
