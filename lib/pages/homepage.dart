@@ -22,6 +22,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import '../logic/Employee/cubit/updateemployee_cubit.dart';
+import '../widget/searchfilter.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -81,7 +82,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool? ismoreloading;
-  int pagenumber = 1;
   int datalimit = 15;
   ScrollController datatablescrollcontroller = ScrollController();
   @override
@@ -98,12 +98,11 @@ class _HomePageState extends State<HomePage> {
         } else {
           setState(() {
             datalimit = datalimit + 15;
-            // pagenumber = pagenumber + 1;
           });
-          displayedDataCell.clear();
+
           context
               .read<GetemployeelistCubit>()
-              .getemployeelist(ismoredata: true, datalimit: datalimit);
+              .getemployeelist(datalimit: datalimit, ismoredata: true);
 
           log('reach buttom');
         }
@@ -136,7 +135,6 @@ class _HomePageState extends State<HomePage> {
       required Map<dynamic, dynamic> deptnamewithid,
       required Map<dynamic, dynamic> designidwithname}) {
     log('Not empty');
-    log('All employee List Length :${allemplist.length}');
 
     for (var item in allemplist) {
       // context
@@ -148,10 +146,7 @@ class _HomePageState extends State<HomePage> {
         displayedDataCell.add(
           DataCell(
             Text(
-              (ismoreloading!
-                      ? allemplist.lastIndexOf(item) + 1
-                      : allemplist.indexOf(item) + 1)
-                  .toString(),
+              (allemplist.indexOf(item) + 1).toString(),
             ),
           ),
         );
@@ -1376,6 +1371,14 @@ class _HomePageState extends State<HomePage> {
                             log('All Dept :${alldeptState.deptidwithname}');
                             log('All Design :${alldesignstate.designidwithname}');
                             ismoreloading = state.isloading;
+                            if (allbranchState.branchidwithname.isEmpty) {
+                              context.read<GetallbranchCubit>().getallbranch();
+                            } else if (alldeptState.deptidwithname.isEmpty) {
+                              context.read<GetAlldeptCubit>().getalldept();
+                            } else if (alldesignstate
+                                .designidwithname.isEmpty) {
+                              context.read<GetAlldesignCubit>().getalldesign();
+                            }
                             fetchdata(
                                 allemplist: state.allemployeelist,
                                 branchidwithname:
@@ -2132,89 +2135,192 @@ class _HomePageState extends State<HomePage> {
                                               width: MediaQuery.of(context)
                                                   .size
                                                   .width,
-                                              child: DataTable2(
-                                                scrollController:
-                                                    datatablescrollcontroller,
-                                                fixedTopRows: 1,
-                                                dividerThickness: 2,
-                                                headingRowColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.grey
-                                                            .withOpacity(0.2)),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          color: Colors.grey
-                                                              .withOpacity(0.3),
-                                                          blurRadius: 4,
-                                                          spreadRadius: 3,
-                                                          offset: const Offset(
-                                                              0, 3))
-                                                    ]),
-                                                headingTextStyle:
-                                                    const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                rows: <DataRow>[
-                                                  for (int i = 0;
-                                                      i <
-                                                          displayedDataCell
-                                                              .length;
-                                                      i += 7)
-                                                    DataRow(cells: [
-                                                      displayedDataCell[i],
-                                                      displayedDataCell[i + 1],
-                                                      displayedDataCell[i + 2],
-                                                      displayedDataCell[i + 3],
-                                                      displayedDataCell[i + 4],
-                                                      displayedDataCell[i + 5],
-                                                      displayedDataCell[i + 6]
-                                                    ])
-                                                ],
-                                                columns: const <DataColumn>[
-                                                  DataColumn(
-                                                    label: Text(
-                                                      'Sl.no',
+                                              child: displayedDataCell.isEmpty
+                                                  ? const Center(
+                                                      child: SizedBox(
+                                                          height: 22,
+                                                          width: 22,
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                    )
+                                                  : DataTable2(
+                                                      headingRowHeight: 80,
+                                                      scrollController:
+                                                          datatablescrollcontroller,
+                                                      fixedTopRows: 1,
+                                                      dividerThickness: 2,
+                                                      headingRowColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors.grey
+                                                                  .withOpacity(
+                                                                      0.2)),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          color: Colors.white,
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.3),
+                                                                blurRadius: 4,
+                                                                spreadRadius: 3,
+                                                                offset:
+                                                                    const Offset(
+                                                                        0, 3))
+                                                          ]),
+                                                      headingTextStyle:
+                                                          const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      rows: <DataRow>[
+                                                        for (int i = 0;
+                                                            i <
+                                                                displayedDataCell
+                                                                    .length;
+                                                            i += 7)
+                                                          DataRow(cells: [
+                                                            displayedDataCell[
+                                                                i],
+                                                            displayedDataCell[
+                                                                i + 1],
+                                                            displayedDataCell[
+                                                                i + 2],
+                                                            displayedDataCell[
+                                                                i + 3],
+                                                            displayedDataCell[
+                                                                i + 4],
+                                                            displayedDataCell[
+                                                                i + 5],
+                                                            displayedDataCell[
+                                                                i + 6]
+                                                          ])
+                                                      ],
+                                                      columns: <DataColumn>[
+                                                        DataColumn(
+                                                          label: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: const [
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top:
+                                                                            14.0),
+                                                                child: Text(
+                                                                  'Sl.no',
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Column(
+                                                            children: const [
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top:
+                                                                            14.0),
+                                                                child: Text(
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  'Employee Name',
+                                                                ),
+                                                              ),
+                                                              SearchButton(),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Column(
+                                                            children: const [
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top:
+                                                                            14.0),
+                                                                child: Text(
+                                                                  'Designation',
+                                                                ),
+                                                              ),
+                                                              SearchButton(),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Column(
+                                                            children: const [
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top:
+                                                                            14.0),
+                                                                child: Text(
+                                                                  'Department',
+                                                                ),
+                                                              ),
+                                                              SearchButton(),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Column(
+                                                            children: const [
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top:
+                                                                            14.0),
+                                                                child: Text(
+                                                                  'Role',
+                                                                ),
+                                                              ),
+                                                              SearchButton(),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Column(
+                                                            children: const [
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top:
+                                                                            14.0),
+                                                                child: Text(
+                                                                  'Branch',
+                                                                ),
+                                                              ),
+                                                              SearchButton(),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: const [
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        top:
+                                                                            14.0),
+                                                                child: Text(
+                                                                  'Action',
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Text(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      'Employee Name',
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Text(
-                                                      'Designation',
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Text(
-                                                      'Department',
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Text(
-                                                      'Role',
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Text(
-                                                      'Branch',
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Text(
-                                                      'Action',
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
                                             ),
                                           ),
                                         ),
