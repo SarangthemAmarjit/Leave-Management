@@ -103,11 +103,21 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
     // TODO: implement initState
     super.initState();
     widget._controller.addListener(() {
+      if (_items.length > 4) {
+        setState(() {
+          isclicked = true;
+        });
+      } else {
+        setState(() {
+          isclicked = false;
+        });
+      }
       setState(() {
         isexpanded = widget._controller.extended;
       });
       if (isexpanded) {
         if (_items.length > 4) {
+          log(isclicked.toString());
           int i;
           for (i = 1; i < 5; i++) {
             _items.removeAt(_items.length - 1);
@@ -173,7 +183,9 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
     ];
   }
 
+  bool isclicked = false;
   List<SidebarXItem> get _generateItems {
+    log('Before return :$isclicked');
     return [
       SidebarXItem(
         icon: Icons.dashboard,
@@ -188,13 +200,9 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
       ),
       SidebarXItem(
         icon: Icons.settings,
-        label: isCLicked ? setup : setdown,
+        label: 'Setting                🔻',
         onTap: () {
           if (_items.length > 4) {
-            setState(() {
-              log("1$isCLicked");
-              isCLicked = !isCLicked;
-            });
             int i;
             for (i = 1; i < 4; i++) {
               _items.removeAt(_items.length - 2);
@@ -202,10 +210,12 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           } else {
             widget._controller.addListener(() {
               setState(() {
+                isclicked = false;
                 isexpanded = widget._controller.extended;
                 isCLicked = !isCLicked;
                 log("2$isCLicked");
               });
+              log(isclicked.toString());
             });
             _items.removeAt(3);
             _items.addAll(settingsubitems);
@@ -475,11 +485,31 @@ class _ScreensExampleState extends State<_ScreensExample> {
 
           case 2:
             return isselected0
-                ? const Text('Dashboard')
+                ? FittedBox(
+                    fit: BoxFit.fill,
+                    child: Column(
+                      children: const [
+                        Text(
+                          "Welcome",
+                          style: TextStyle(
+                              fontSize: 42, fontWeight: FontWeight.bold),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "Globizs web solution Pvt. Ltd.",
+                            style: TextStyle(
+                                color: Colors.redAccent, fontSize: 56),
+                          ),
+                        )
+                      ],
+                    ))
                 : isselected1
                     ? const HomePage()
                     : isselected3
-                        ? const BranchPage()
+                        ? isselectedsetting
+                            ? const LogOutPage()
+                            : const BranchPage()
                         : isselected4
                             ? const DepartmentPage()
                             : isselected5
