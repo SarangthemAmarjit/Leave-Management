@@ -497,87 +497,11 @@ class _BranchPageState extends State<BranchPage> {
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: displayedDataCell.isEmpty
-                                ? Column(
-                                    children: [
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Skeleton(
-                                        radius: 3,
-                                        height: 52,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                      ),
-                                    ],
+                                ? const Center(
+                                    child: SizedBox(
+                                        height: 22,
+                                        width: 22,
+                                        child: CircularProgressIndicator()),
                                   )
                                 : DataTable2(
                                     fixedTopRows: 1,

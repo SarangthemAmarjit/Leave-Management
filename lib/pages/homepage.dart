@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:intl/intl.dart';
+import 'package:leavemanagementadmin/Skeleton/skeleton.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/logic/Employee/cubit/check_empcode_cubit.dart';
 import 'package:leavemanagementadmin/logic/Employee/cubit/checkemailexist_cubit.dart';
@@ -2112,104 +2113,248 @@ class _HomePageState extends State<HomePage> {
                                             )),
                                       ),
 
-                              Expanded(
-                                child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding:
-                                        MediaQuery.of(context).size.width > 1040
-                                            ? const EdgeInsets.only(
-                                                left: 100, right: 100, top: 20)
-                                            : const EdgeInsets.only(
-                                                left: 10, right: 10, top: 20),
-                                    child: SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: DataTable2(
-                                        fixedTopRows: 1,
-                                        dividerThickness: 2,
-                                        headingRowColor:
-                                            MaterialStateProperty.all(
-                                                Colors.grey.withOpacity(0.2)),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: Colors.white,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  color: Colors.grey
-                                                      .withOpacity(0.3),
-                                                  blurRadius: 4,
-                                                  spreadRadius: 3,
-                                                  offset: const Offset(0, 3))
-                                            ]),
-                                        headingTextStyle: const TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Padding(
+                                            padding: MediaQuery.of(context)
+                                                        .size
+                                                        .width >
+                                                    1040
+                                                ? const EdgeInsets.only(
+                                                    left: 100,
+                                                    right: 100,
+                                                    top: 20)
+                                                : const EdgeInsets.only(
+                                                    left: 10,
+                                                    right: 10,
+                                                    top: 20),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: displayedDataCell.isEmpty
+                                                  ? const Center(
+                                                      child: SizedBox(
+                                                          height: 22,
+                                                          width: 22,
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                    )
+                                                  // Column(
+                                                  //     children: [
+                                                  //       Skeleton(
+                                                  //         radius: 3,
+                                                  //         height: 52,
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         height: 4,
+                                                  //       ),
+                                                  //       Skeleton(
+                                                  //         radius: 3,
+                                                  //         height: 52,
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         height: 4,
+                                                  //       ),
+                                                  //       Skeleton(
+                                                  //         radius: 3,
+                                                  //         height: 52,
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         height: 4,
+                                                  //       ),
+                                                  //       Skeleton(
+                                                  //         radius: 3,
+                                                  //         height: 52,
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         height: 4,
+                                                  //       ),
+                                                  //       Skeleton(
+                                                  //         radius: 3,
+                                                  //         height: 52,
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         height: 4,
+                                                  //       ),
+                                                  //       Skeleton(
+                                                  //         radius: 3,
+                                                  //         height: 52,
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         height: 4,
+                                                  //       ),
+                                                  //       Skeleton(
+                                                  //         radius: 3,
+                                                  //         height: 52,
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         height: 4,
+                                                  //       ),
+                                                  //       Skeleton(
+                                                  //         radius: 3,
+                                                  //         height: 52,
+                                                  //         width: MediaQuery.of(
+                                                  //                 context)
+                                                  //             .size
+                                                  //             .width,
+                                                  //       ),
+                                                  //       const SizedBox(
+                                                  //         height: 4,
+                                                  //       ),
+                                                  //       // Skeleton(
+                                                  //       //   radius: 3,
+                                                  //       //   height: 52,
+                                                  //       //   width: MediaQuery.of(
+                                                  //       //           context)
+                                                  //       //       .size
+                                                  //       //       .width,
+                                                  //       // ),
+                                                  //     ],
+                                                  //   )
+                                                  : DataTable2(
+                                                      scrollController:
+                                                          datatablescrollcontroller,
+                                                      fixedTopRows: 1,
+                                                      dividerThickness: 2,
+                                                      headingRowColor:
+                                                          MaterialStateProperty
+                                                              .all(Colors.grey
+                                                                  .withOpacity(
+                                                                      0.2)),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                          color: Colors.white,
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                                color: Colors
+                                                                    .grey
+                                                                    .withOpacity(
+                                                                        0.3),
+                                                                blurRadius: 4,
+                                                                spreadRadius: 3,
+                                                                offset:
+                                                                    const Offset(
+                                                                        0, 3))
+                                                          ]),
+                                                      headingTextStyle:
+                                                          const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      rows: <DataRow>[
+                                                        for (int i = 0;
+                                                            i <
+                                                                displayedDataCell
+                                                                    .length;
+                                                            i += 7)
+                                                          DataRow(cells: [
+                                                            displayedDataCell[
+                                                                i],
+                                                            displayedDataCell[
+                                                                i + 1],
+                                                            displayedDataCell[
+                                                                i + 2],
+                                                            displayedDataCell[
+                                                                i + 3],
+                                                            displayedDataCell[
+                                                                i + 4],
+                                                            displayedDataCell[
+                                                                i + 5],
+                                                            displayedDataCell[
+                                                                i + 6]
+                                                          ])
+                                                      ],
+                                                      columns: const <
+                                                          DataColumn>[
+                                                        DataColumn(
+                                                          label: Text(
+                                                            'Sl.no',
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            'Employee Name',
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text(
+                                                            'Designation',
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text(
+                                                            'Department',
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text(
+                                                            'Role',
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text(
+                                                            'Branch',
+                                                          ),
+                                                        ),
+                                                        DataColumn(
+                                                          label: Text(
+                                                            'Action',
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                            ),
+                                          ),
                                         ),
-                                        rows: <DataRow>[
-                                          for (int i = 0;
-                                              i < displayedDataCell.length;
-                                              i += 7)
-                                            DataRow(cells: [
-                                              displayedDataCell[i],
-                                              displayedDataCell[i + 1],
-                                              displayedDataCell[i + 2],
-                                              displayedDataCell[i + 3],
-                                              displayedDataCell[i + 4],
-                                              displayedDataCell[i + 5],
-                                              displayedDataCell[i + 6]
-                                            ])
-                                        ],
-                                        columns: const <DataColumn>[
-                                          DataColumn(
-                                            label: Text(
-                                              'Sl.no',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              overflow: TextOverflow.ellipsis,
-                                              'Employee Name',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Designation',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Department',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Role',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Branch',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Action',
-                                            ),
-                                          ),
-                                        ],
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 50,
-                              ),
-                            ]),
-                      );
-                    },
-                  );
-                });
+
+                                      const SizedBox(
+                                        height: 50,
+                                      ),
+                                    ]),
+                              );
+                            },
+                          );
+                        });
+                      },
+                    );
+                  },
+                );
               },
             );
           },
