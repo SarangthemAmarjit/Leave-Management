@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             datalimit = datalimit + 15;
           });
-
+          displayedDataCell.clear();
           context
               .read<GetemployeelistCubit>()
               .getemployeelist(datalimit: datalimit, ismoredata: true);
@@ -2135,6 +2135,7 @@ class _HomePageState extends State<HomePage> {
                                                   .size
                                                   .width,
                                               child: DataTable2(
+                                                headingRowHeight: 80,
                                                 scrollController:
                                                     datatablescrollcontroller,
                                                 fixedTopRows: 1,
