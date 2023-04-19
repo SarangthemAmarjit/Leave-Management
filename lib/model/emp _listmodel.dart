@@ -50,6 +50,7 @@ class Employee {
     required this.employeeDesignationId,
     required this.employeeEmployeeGradeId,
     required this.role,
+    required this.email,
   });
 
   final int employeeId;
@@ -68,6 +69,7 @@ class Employee {
   final int employeeDesignationId;
   final int employeeEmployeeGradeId;
   final String role;
+  final String email;
 
   factory Employee.fromJson(Map<String, dynamic> json) => Employee(
         employeeId: json["employee_id"],
@@ -86,6 +88,7 @@ class Employee {
         employeeDesignationId: json["employee_designation_id"],
         employeeEmployeeGradeId: json["employee_employee_grade_id"],
         role: json["role"],
+        email: json["email"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -105,5 +108,6 @@ class Employee {
         "employee_designation_id": employeeDesignationId,
         "employee_employee_grade_id": employeeEmployeeGradeId,
         "role": role,
+        "email": email,
       };
 }

@@ -1,20 +1,20 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:leavemanagementadmin/listener/auth_login_listener.dart';
 
-import '../../../listener/auth_login_listener.dart';
 import '../../../repo/auth_repository.dart';
 
-part 'create_employee_state.dart';
+part 'updateemployee_state.dart';
 
-class CreateEmployeeCubit extends Cubit<CreateEmployeeStatus>
+class UpdateemployeeCubit extends Cubit<UpdateEmployeeStatus>
     implements AuthLoginListioner {
   final _authRepository = AuthRepository();
-  CreateEmployeeCubit(CreateEmployeeStatus initialState) : super(initialState);
+  UpdateemployeeCubit(UpdateEmployeeStatus initialState) : super(initialState);
 
-  void createemployee({
-    required String empname,
-    required String empusername,
+  void updateemployee({
+    required int id,
     required String email,
+    required String empname,
     required int empcode,
     required String phonenumber,
     required int deptid,
@@ -25,10 +25,8 @@ class CreateEmployeeCubit extends Cubit<CreateEmployeeStatus>
     required String emptype,
     //required String isactive,
   }) {
-    _authRepository.createEmployee(
+    _authRepository.updateEmployee(
         empname: empname,
-        empusername: empusername,
-        email: email,
         empcode: empcode,
         phonenumber: phonenumber,
         deptid: deptid,
@@ -37,26 +35,28 @@ class CreateEmployeeCubit extends Cubit<CreateEmployeeStatus>
         roleid: roleid,
         dateofjoining: dateofjoining,
         emptype: emptype,
-        authLoginListener: this);
+        authLoginListener: this,
+        id: id,
+        email: email);
     //log("IS_Active : $isactive");
   }
 
   @override
   void error() {
     emit(
-      CreateEmployeeStatus.error,
+      UpdateEmployeeStatus.error,
     );
   }
 
   @override
   void loaded() {
     emit(
-      CreateEmployeeStatus.loaded,
+      UpdateEmployeeStatus.loaded,
     );
   }
 
   @override
   void loading() {
-    emit(CreateEmployeeStatus.loading);
+    emit(UpdateEmployeeStatus.loading);
   }
 }

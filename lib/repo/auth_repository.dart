@@ -298,13 +298,18 @@ class AuthRepository {
 
   // GET BRANCH
 
-  Future<List<Employee>?> fetchPosts(int pagenumber) async {
+  // GET Employee List
+
+  Future<List<Employee>?> getemployeeList({
+    required int datalimit,
+  }) async {
     try {
       final response = await dio.get("/api/admin/employees",
-          queryParameters: {"limit": 10, "page_no": pagenumber});
+          queryParameters: {"limit": datalimit, "page_no": 1});
       if (response.statusCode == 200) {
         log(response.data.toString());
         List<dynamic> postMaps = response.data['employees'];
+
         return postMaps.map((e) => Employee.fromJson(e)).toList();
       } else {
         EasyLoading.showError('Cannot fetch Data');
@@ -320,13 +325,13 @@ class AuthRepository {
     required String empname,
     required String empusername,
     required String email,
-    required String empcode,
+    required int empcode,
     required String phonenumber,
     required int deptid,
     required int designid,
     required int branchid,
     required int roleid,
-    required DateTime dateofjoining,
+    required String dateofjoining,
     required String emptype,
 
     // required String isactive,
@@ -335,23 +340,66 @@ class AuthRepository {
     authLoginListener.loading();
     try {
       var response = await dio.post(createempUrl, data: {
-        "username": "direct intern",
-        "email": "directintern@example.com",
-        "emp_code": 268,
-        "name": "direct intern",
-        "branch_id": 1,
-        "department_id": 2,
-        "designation_id": 3,
-        "date_of_joining": "2022-01-01",
-        "phone": "123456784",
-        "emp_type": "1",
-        "role": 1
+        "username": empusername,
+        "email": email,
+        "emp_code": empcode,
+        "name": empname,
+        "branch_id": branchid,
+        "department_id": deptid,
+        "designation_id": designid,
+        "date_of_joining": dateofjoining,
+        "phone": phonenumber,
+        "emp_type": emptype,
+        "role": roleid
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         log("Successfully added branch name");
         authLoginListener.loaded();
         EasyLoading.showToast("Successfully added Employee");
+      } else {
+        authLoginListener.error();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  void updateEmployee({
+    required int id,
+    required String email,
+    required String empname,
+    required int empcode,
+    required String phonenumber,
+    required int deptid,
+    required int designid,
+    required int branchid,
+    required int roleid,
+    required String dateofjoining,
+    required String emptype,
+
+    // required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      var response = await dio.patch('/api/admin/update/employee/$id', data: {
+        "emp_code": empcode,
+        "email": email,
+        "name": empname,
+        "branch_id": branchid,
+        "department_id": deptid,
+        "designation_id": designid,
+        "date_of_joining": dateofjoining,
+        "phone": phonenumber,
+        "emp_type": emptype,
+        "role": roleid
+      });
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully updated employee details");
+        authLoginListener.loaded();
+        EasyLoading.showToast("Successfully Updated Employee");
       } else {
         authLoginListener.error();
       }
