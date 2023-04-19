@@ -22,6 +22,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import '../logic/Employee/cubit/updateemployee_cubit.dart';
+import '../widget/searchfilter.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -2135,6 +2136,13 @@ class _HomePageState extends State<HomePage> {
                                                   .size
                                                   .width,
                                               child: DataTable2(
+                                                empty: const Center(
+                                                  child: SizedBox(
+                                                      height: 30,
+                                                      width: 30,
+                                                      child:
+                                                          CircularProgressIndicator()),
+                                                ),
                                                 headingRowHeight: 80,
                                                 scrollController:
                                                     datatablescrollcontroller,
@@ -2178,42 +2186,117 @@ class _HomePageState extends State<HomePage> {
                                                       displayedDataCell[i + 6]
                                                     ])
                                                 ],
-                                                columns: const <DataColumn>[
+                                                columns: <DataColumn>[
                                                   DataColumn(
-                                                    label: Text(
-                                                      'Sl.no',
+                                                    label: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: const [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 14.0),
+                                                          child: Text(
+                                                            'Sl.no',
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   DataColumn(
-                                                    label: Text(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      'Employee Name',
+                                                    label: Column(
+                                                      children: const [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 14.0),
+                                                          child: Text(
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            'Employee Name',
+                                                          ),
+                                                        ),
+                                                        SearchButton(),
+                                                      ],
                                                     ),
                                                   ),
                                                   DataColumn(
-                                                    label: Text(
-                                                      'Designation',
+                                                    label: Column(
+                                                      children: const [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 14.0),
+                                                          child: Text(
+                                                            'Designation',
+                                                          ),
+                                                        ),
+                                                        SearchButton(),
+                                                      ],
                                                     ),
                                                   ),
                                                   DataColumn(
-                                                    label: Text(
-                                                      'Department',
+                                                    label: Column(
+                                                      children: const [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 14.0),
+                                                          child: Text(
+                                                            'Department',
+                                                          ),
+                                                        ),
+                                                        SearchButton(),
+                                                      ],
                                                     ),
                                                   ),
                                                   DataColumn(
-                                                    label: Text(
-                                                      'Role',
+                                                    label: Column(
+                                                      children: const [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 14.0),
+                                                          child: Text(
+                                                            'Role',
+                                                          ),
+                                                        ),
+                                                        SearchButton(),
+                                                      ],
                                                     ),
                                                   ),
                                                   DataColumn(
-                                                    label: Text(
-                                                      'Branch',
+                                                    label: Column(
+                                                      children: const [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 14.0),
+                                                          child: Text(
+                                                            'Branch',
+                                                          ),
+                                                        ),
+                                                        SearchButton(),
+                                                      ],
                                                     ),
                                                   ),
                                                   DataColumn(
-                                                    label: Text(
-                                                      'Action',
+                                                    label: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: const [
+                                                        Padding(
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  top: 14.0),
+                                                          child: Text(
+                                                            'Action',
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ],
@@ -2243,8 +2326,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
 
 // class Employee {
 //   /// Creates the employee class with required details.

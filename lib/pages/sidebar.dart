@@ -92,9 +92,6 @@ class ExampleSidebarX extends StatefulWidget {
 }
 
 class _ExampleSidebarXState extends State<ExampleSidebarX> {
-  bool isCLicked = false;
-  String setup = 'Setting                ►';
-  String setdown = 'Setting                ▼';
   List<SidebarXItem> _items = [];
   bool isexpanded = true;
 
@@ -200,9 +197,15 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
       ),
       SidebarXItem(
         icon: Icons.settings,
-        label: 'Setting                🔻',
+        label: isclicked
+            ? 'Setting                🔻'
+            : 'Setting                ➡️',
         onTap: () {
           if (_items.length > 4) {
+            setState(() {
+              isclicked = true;
+            });
+            log(isclicked.toString());
             int i;
             for (i = 1; i < 4; i++) {
               _items.removeAt(_items.length - 2);
@@ -212,8 +215,6 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
               setState(() {
                 isclicked = false;
                 isexpanded = widget._controller.extended;
-                isCLicked = !isCLicked;
-                log("2$isCLicked");
               });
               log(isclicked.toString());
             });
@@ -471,11 +472,7 @@ class _ScreensExampleState extends State<_ScreensExample> {
                       padding: EdgeInsets.only(top: 8.0),
                       child: Text(
                         "Globizs web solution Pvt. Ltd.",
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontSize: 56,
-                          fontStyle: FontStyle.italic,
-                        ),
+                        style: TextStyle(color: Colors.redAccent, fontSize: 56),
                       ),
                     )
                   ],
