@@ -26,7 +26,7 @@ class SearchButton extends StatelessWidget {
             child: Center(
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: " Search          🔍",
+                  hintText: " Search           🔍",
                   // suffixIcon: Icon(Icons.search),
                   border: InputBorder.none,
                 ),
