@@ -126,6 +126,7 @@ class _HomePageState extends State<HomePage> {
     context.read<GetAlldeptCubit>().getalldept();
     context.read<GetAlldesignCubit>().getalldesign();
     context.read<GetRoleCubit>().getallrole();
+
     context
         .read<GetemployeelistCubit>()
         .getemployeelist(datalimit: datalimit, ismoredata: true);
@@ -142,9 +143,12 @@ class _HomePageState extends State<HomePage> {
       // context
       //     .read<GetspecificCubit>()
       //     .getspecificbrance(id: item.branchId.toString());
+      log("All emplist : $allemplist");
       if (branchidwithname.isNotEmpty &&
           deptnamewithid.isNotEmpty &&
           designidwithname.isNotEmpty) {
+        log("Display datacell $displayedDataCell");
+
         displayedDataCell.add(
           DataCell(
             Text(
@@ -1549,13 +1553,10 @@ class _HomePageState extends State<HomePage> {
                             } else if (alldesignstate
                                 .designidwithname.isEmpty) {
                               context.read<GetAlldesignCubit>().getalldesign();
-<<<<<<<<< Temporary merge branch 1
-=========
                             } else {
                               context.read<GetallbranchCubit>().getallbranch();
                               context.read<GetAlldeptCubit>().getalldept();
                               context.read<GetAlldesignCubit>().getalldesign();
->>>>>>>>> Temporary merge branch 2
                             }
                             fetchdata(
                                 allemplist: state.allemployeelist,
@@ -2421,14 +2422,8 @@ class _HomePageState extends State<HomePage> {
                                                                       color: Colors
                                                                           .grey)),
                                                               child: TextField(
-                                                                // controller:
-                                                                //     namecontroller,
                                                                 onChanged:
                                                                     (value) {
-                                                                  // namecontroller
-                                                                  //         .text =
-                                                                  //     value;
-
                                                                   displayedDataCell
                                                                       .clear();
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-<<<<<<< HEAD
-=======
 // class SearchButton extends StatelessWidget {
 //   // final TextEditingController searchcontroller;
 //    SearchButton({
@@ -44,7 +42,6 @@ import 'package:flutter/material.dart';
 //   }
 // }
 
->>>>>>> 31dc6776a3d883b741024ad9097bc50c6a690113
 class OnHoverButton extends StatefulWidget {
   final Widget child;
   const OnHoverButton({super.key, required this.child});
@@ -57,11 +54,7 @@ class _OnHoverButtonState extends State<OnHoverButton> {
   bool isHovered = false;
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    final hoveredTransform = Matrix4.identity()..scale(1.0);
-=======
-    final hoveredTransform = Matrix4.identity()..scale(1.02);
->>>>>>> 31dc6776a3d883b741024ad9097bc50c6a690113
+    final hoveredTransform = Matrix4.identity()..scale(1.1);
     final transform = isHovered ? hoveredTransform : Matrix4.identity();
     return MouseRegion(
       onEnter: (event) => onEntered(true),
