@@ -31,11 +31,17 @@ class GetemployeelistCubit extends Cubit<PostState> {
 
           log(emplist.length.toString());
           log(emplist.toString());
-          emit(PostLoadedState(allemployeelist: emplist, isloading: false));
+          if (emplist.isEmpty) {
+            emit(PostLoadedState(
+                allemployeelist: emplist, isloading: false, isempty: true));
+          } else {
+            emit(PostLoadedState(
+                allemployeelist: emplist, isloading: false, isempty: false));
+          }
         } else {
           log(emplist.length.toString());
-          emit(
-              PostLoadedState(allemployeelist: emplist, isloading: ismoredata));
+          emit(PostLoadedState(
+              allemployeelist: emplist, isloading: ismoredata, isempty: false));
         }
       }
     } on DioError catch (ex) {

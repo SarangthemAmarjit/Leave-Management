@@ -20,6 +20,7 @@ import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit
 import 'package:leavemanagementadmin/logic/designation/cubit/post_designation_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/update_design_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/update_design_state.dart';
+import 'package:leavemanagementadmin/logic/leave/cubit/cubit/createleave_cubit.dart';
 import 'package:leavemanagementadmin/logic/leave/cubit/getallleavetype_cubit.dart';
 
 import 'package:leavemanagementadmin/logic/loginCubit/cubit/login_bymail_cubit.dart';
@@ -88,6 +89,8 @@ class MultiproviderWrapper extends StatelessWidget {
           create: (context) =>
               UpdateemployeeCubit(UpdateEmployeeStatus.initial)),
       BlocProvider(create: (context) => GetallleavetypeCubit()),
+      BlocProvider(
+          create: (context) => CreateleaveCubit(CreateLeaveStatus.initial)),
     ], child: child);
   }
 }

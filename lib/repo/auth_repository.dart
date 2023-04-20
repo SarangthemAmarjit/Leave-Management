@@ -431,4 +431,42 @@ class AuthRepository {
     }
     return null;
   }
+
+  void createleave({
+    required int empid,
+    required int leavetypeid,
+    required String startdate,
+    required String enddate,
+    required String reasonforleave,
+    required int halfday,
+    required int daysection,
+
+    // required String isactive,
+    required AuthLoginListioner authLoginListener,
+  }) async {
+    authLoginListener.loading();
+    try {
+      final data = {
+        "leave_type_id": leavetypeid,
+        "reason_for_leave": reasonforleave,
+        "half_day": halfday,
+        "day_section": daysection,
+        "leave_apply_for": empid,
+        "from_date": startdate,
+        "to_date": enddate,
+      };
+      var response =
+          await dio.post(createleaveurl, data: FormData.fromMap(data));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Successfully added Leave");
+        authLoginListener.loaded();
+        EasyLoading.showToast("Successfully added Leave");
+      } else {
+        authLoginListener.error();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }

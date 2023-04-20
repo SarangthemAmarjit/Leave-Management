@@ -15,11 +15,11 @@ class GetallleavetypeCubit extends Cubit<GetallleavetypeState> {
             alleavetype: [],
             alleavetypeidwithname: {},
             allleavetypenamelist: [])) {
-    getalldesign();
+    getallleavetype();
   }
 
   API api = API();
-  void getalldesign() async {
+  void getallleavetype() async {
     List allleaveidlist = [];
     List<String> allleavenamelist = [];
 
@@ -27,6 +27,8 @@ class GetallleavetypeCubit extends Cubit<GetallleavetypeState> {
       final response = await api.sendRequest.get("/api/leavetype");
       if (response.statusCode == 200) {
         List<dynamic> postMaps = response.data['data']['leaves'];
+
+        log(postMaps.toString());
         var alldesign = postMaps.map((e) => Leaf.fromJson(e)).toList();
 
         for (var element in alldesign) {
@@ -35,7 +37,7 @@ class GetallleavetypeCubit extends Cubit<GetallleavetypeState> {
         }
 
         var result = Map.fromIterables(allleaveidlist, allleavenamelist);
-        log('From Cubit For Designatio :$result');
+        log('From Cubit For Leavetype :$result');
         emit(GetallleavetypeState(
             alleavetype: alldesign,
             alleavetypeidwithname: result,

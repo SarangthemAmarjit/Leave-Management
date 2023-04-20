@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 GetallLeavetypeModel getallLeavetypeModelFromJson(String str) =>
     GetallLeavetypeModel.fromJson(json.decode(str));
 
@@ -63,10 +65,10 @@ class Leaf {
 
   final int id;
   final String name;
-  final int balance;
+  final double balance;
   final String canApply;
   final bool hidden;
-  final dynamic icon;
+  final Icon? icon;
 
   factory Leaf.fromJson(Map<String, dynamic> json) => Leaf(
         id: json["id"],
