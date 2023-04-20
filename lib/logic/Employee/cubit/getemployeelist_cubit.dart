@@ -13,11 +13,16 @@ class GetemployeelistCubit extends Cubit<PostState> {
 
   AuthRepository postRepository = AuthRepository();
 
+
   void getemployeelist({
     required int datalimit,
     required bool ismoredata,
     String? name,
   }) async {
+
+  void getemployeelist(
+      {required int datalimit, required bool ismoredata}) async {
+
     emit(PostLoadingState('Fetching Data..'));
     try {
       if (ismoredata) {
@@ -25,7 +30,7 @@ class GetemployeelistCubit extends Cubit<PostState> {
             datalimit: datalimit, name: name);
 
         if (emplist!.length < datalimit) {
-          log('item is lesss than ${emplist.length}');
+          log('item is lesss than $datalimit');
           ismoredata = false;
 
           log(emplist.length.toString());
