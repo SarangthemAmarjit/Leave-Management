@@ -54,7 +54,10 @@ class SidebarPage extends StatelessWidget {
                         // }
                         _key.currentState?.openDrawer();
                       },
-                      icon: const Icon(Icons.menu),
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.grey,
+                      ),
                     ),
                   )
                 : null,
@@ -556,4 +559,34 @@ String _getTitleByIndex(int index) {
     default:
       return 'Not found page';
   }
+}
+
+class OnHoverButton2 extends StatefulWidget {
+  final Widget child;
+  const OnHoverButton2({super.key, required this.child});
+
+  @override
+  State<OnHoverButton2> createState() => _OnHoverButton2State();
+}
+
+class _OnHoverButton2State extends State<OnHoverButton2> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final hoveredTransform = Matrix4.identity()..scale(1.1);
+    final transform = isHovered ? hoveredTransform : Matrix4.identity();
+    return MouseRegion(
+      onEnter: (event) => onEntered(true),
+      onExit: (event) => onEntered(false),
+      child: AnimatedContainer(
+        transform: transform,
+        duration: const Duration(milliseconds: 200),
+        child: widget.child,
+      ),
+    );
+  }
+
+  void onEntered(bool isHovered) => setState(() {
+        this.isHovered = isHovered;
+      });
 }
