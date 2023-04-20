@@ -523,76 +523,73 @@ class _DepartmentPageState extends State<DepartmentPage> {
                                       left: 10, right: 10, top: 20),
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
-                                child: displayedDataCell.isEmpty
-                                    ? const Center(
-                                        child: SizedBox(
-                                            height: 22,
-                                            width: 22,
-                                            child: CircularProgressIndicator()),
-                                      )
-                                    : DataTable2(
-                                        fixedTopRows: 1,
-                                        showBottomBorder: true,
-                                        dataRowHeight: 43,
-                                        dividerThickness: 2,
-                                        headingTextStyle: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                        headingRowColor:
-                                            MaterialStateProperty.resolveWith(
-                                                (states) => Colors.grey
-                                                    .withOpacity(0.2)),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.3),
-                                              spreadRadius: 3,
-                                              blurRadius: 4,
-                                              offset: const Offset(0,
-                                                  3), // changes position of shadow
-                                            ),
-                                          ],
-                                        ),
-                                        // border: TableBorder.all(
-                                        //     color: const Color.fromARGB(255, 159, 154, 154)),
-                                        rows: <DataRow>[
-                                          for (int i = 0;
-                                              i < displayedDataCell.length;
-                                              i += 4)
-                                            DataRow(cells: [
-                                              displayedDataCell[i],
-                                              displayedDataCell[i + 1],
-                                              displayedDataCell[i + 2],
-                                              displayedDataCell[i + 3],
-                                            ])
-                                        ],
-                                        columns: const <DataColumn>[
-                                          DataColumn(
-                                            label: Text(
-                                              'Sl.no',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              overflow: TextOverflow.ellipsis,
-                                              'Department Name',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'IsActive',
-                                            ),
-                                          ),
-                                          DataColumn(
-                                            label: Text(
-                                              'Action',
-                                            ),
-                                          ),
-                                        ],
+                                child: DataTable2(
+                                  empty: const Center(
+                                    child: SizedBox(
+                                        height: 22,
+                                        width: 22,
+                                        child: CircularProgressIndicator()),
+                                  ),
+                                  fixedTopRows: 1,
+                                  showBottomBorder: true,
+                                  dataRowHeight: 43,
+                                  dividerThickness: 2,
+                                  headingTextStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                  headingRowColor:
+                                      MaterialStateProperty.resolveWith(
+                                          (states) =>
+                                              Colors.grey.withOpacity(0.2)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        spreadRadius: 3,
+                                        blurRadius: 4,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
                                       ),
+                                    ],
+                                  ),
+                                  // border: TableBorder.all(
+                                  //     color: const Color.fromARGB(255, 159, 154, 154)),
+                                  rows: <DataRow>[
+                                    for (int i = 0;
+                                        i < displayedDataCell.length;
+                                        i += 4)
+                                      DataRow(cells: [
+                                        displayedDataCell[i],
+                                        displayedDataCell[i + 1],
+                                        displayedDataCell[i + 2],
+                                        displayedDataCell[i + 3],
+                                      ])
+                                  ],
+                                  columns: const <DataColumn>[
+                                    DataColumn(
+                                      label: Text(
+                                        'Sl.no',
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        'Department Name',
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'IsActive',
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Text(
+                                        'Action',
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

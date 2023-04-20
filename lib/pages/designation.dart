@@ -517,91 +517,87 @@ class _BranchPageState extends State<DesignationPage> {
                                       left: 10, right: 10, top: 20),
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
-                                child: displayedDataCell.isEmpty
-                                    ? const Center(
-                                        child: SizedBox(
-                                            height: 22,
-                                            width: 22,
-                                            child: CircularProgressIndicator()),
-                                      )
-                                    : DataTable2(
-                                        fixedTopRows: 1,
-                                        showBottomBorder: true,
+                                child: DataTable2(
+                                  empty: const Center(
+                                    child: SizedBox(
+                                        height: 22,
+                                        width: 22,
+                                        child: CircularProgressIndicator()),
+                                  ),
+                                  fixedTopRows: 1,
+                                  showBottomBorder: true,
 
-                                        dividerThickness: 2,
-                                        headingTextStyle: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                        headingRowColor:
-                                            MaterialStateProperty.resolveWith(
-                                                (states) => Colors.grey
-                                                    .withOpacity(0.2)),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.3),
-                                              spreadRadius: 3,
-                                              blurRadius: 4,
-                                              offset: const Offset(0,
-                                                  3), // changes position of shadow
-                                            ),
-                                          ],
-                                        ),
-                                        // border: TableBorder.all(
-                                        //     color: const Color.fromARGB(255, 159, 154, 154)),
-                                        rows: <DataRow>[
-                                          for (int i = 0;
-                                              i < displayedDataCell.length;
-                                              i += 4)
-                                            DataRow(cells: [
-                                              displayedDataCell[i],
-                                              displayedDataCell[i + 1],
-                                              displayedDataCell[i + 2],
-                                              displayedDataCell[i + 3],
-                                            ])
-                                        ],
-                                        columns: <DataColumn>[
-                                          const DataColumn(
-                                            label: Text(
-                                              'Sl.no',
-                                            ),
+                                  dividerThickness: 2,
+                                  headingTextStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                  headingRowColor:
+                                      MaterialStateProperty.resolveWith(
+                                          (states) =>
+                                              Colors.grey.withOpacity(0.2)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.3),
+                                        spreadRadius: 3,
+                                        blurRadius: 4,
+                                        offset: const Offset(
+                                            0, 3), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  // border: TableBorder.all(
+                                  //     color: const Color.fromARGB(255, 159, 154, 154)),
+                                  rows: <DataRow>[
+                                    for (int i = 0;
+                                        i < displayedDataCell.length;
+                                        i += 4)
+                                      DataRow(cells: [
+                                        displayedDataCell[i],
+                                        displayedDataCell[i + 1],
+                                        displayedDataCell[i + 2],
+                                        displayedDataCell[i + 3],
+                                      ])
+                                  ],
+                                  columns: <DataColumn>[
+                                    const DataColumn(
+                                      label: Text(
+                                        'Sl.no',
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Row(
+                                        children: const [
+                                          Text(
+                                            overflow: TextOverflow.ellipsis,
+                                            'Designation',
                                           ),
-                                          DataColumn(
-                                            label: Row(
-                                              children: const [
-                                                Text(
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  'Designation',
-                                                ),
-                                                // SizedBox(
-                                                //     height: 20,
-                                                //     width: 100,
-                                                //     //color: Colors.amber,
-                                                //     child: TextField(
-                                                //       decoration: InputDecoration(
-                                                //           border:
-                                                //               OutlineInputBorder()),
-                                                // )
-                                                // )
-                                              ],
-                                            ),
-                                          ),
-                                          const DataColumn(
-                                            label: Text(
-                                              'IsActive',
-                                            ),
-                                          ),
-                                          const DataColumn(
-                                            label: Text(
-                                              'Action',
-                                            ),
-                                          ),
+                                          // SizedBox(
+                                          //     height: 20,
+                                          //     width: 100,
+                                          //     //color: Colors.amber,
+                                          //     child: TextField(
+                                          //       decoration: InputDecoration(
+                                          //           border:
+                                          //               OutlineInputBorder()),
+                                          // )
+                                          // )
                                         ],
                                       ),
+                                    ),
+                                    const DataColumn(
+                                      label: Text(
+                                        'IsActive',
+                                      ),
+                                    ),
+                                    const DataColumn(
+                                      label: Text(
+                                        'Action',
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

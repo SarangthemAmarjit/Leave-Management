@@ -1,39 +1,46 @@
 import 'package:flutter/material.dart';
 
-class SearchButton extends StatelessWidget {
-  const SearchButton({
-    Key? key,
-  }) : super(key: key);
+// class SearchButton extends StatelessWidget {
+//   // final TextEditingController searchcontroller;
+//    SearchButton({
+//     Key? key,
+//     // required this.searchcontroller,
+//   }) : super(key: key);
+//   TextEditingController searchcontroller = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          // horizontal: 26,
-          vertical: 8),
-      child: OnHoverButton(
-        child: Container(
-          height: 32,
-          width: 300,
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.grey[200],
-              border: Border.all(color: Colors.grey)),
-          child: const TextField(
-            decoration: InputDecoration(
-              // hoverColor: Colors.red,
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(
+//           // horizontal: 26,
+//           vertical: 8),
+//       child: OnHoverButton(
+//         child: Container(
+//           height: 32,
+//           width: 300,
+//           padding: const EdgeInsets.symmetric(horizontal: 6),
+//           decoration: BoxDecoration(
+//               borderRadius: BorderRadius.circular(12),
+//               color: Colors.grey[200],
+//               border: Border.all(color: Colors.grey)),
+//           child: TextField(
+//             onChanged: (value) {
 
-              suffixIcon: Icon(Icons.search),
-              border: InputBorder.none,
-              // hintText: ""
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//             },
+//             controller: searchcontroller,
+//             decoration: const InputDecoration(
+//               // hoverColor: Colors.red,
+
+//               suffixIcon: Icon(Icons.search),
+//               border: InputBorder.none,
+//               // hintText: ""
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class OnHoverButton extends StatefulWidget {
   final Widget child;
