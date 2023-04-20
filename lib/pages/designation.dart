@@ -10,7 +10,6 @@ import 'package:leavemanagementadmin/logic/designation/cubit/post_designation_cu
 import 'package:leavemanagementadmin/logic/designation/cubit/update_design_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/update_design_state.dart';
 import 'package:leavemanagementadmin/model/design_listmodel.dart';
-import 'package:leavemanagementadmin/widget/searchfilter.dart';
 
 class DesignationPage extends StatefulWidget {
   /// Creates the home page.
@@ -192,13 +191,15 @@ class _BranchPageState extends State<DesignationPage> {
                               children: [
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.grey,
-                                        side: const BorderSide(
-                                            color: Colors.red)),
+                                      backgroundColor: Colors.grey[300],
+                                    ),
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: const Text("CANCEL")),
+                                    child: const Text(
+                                      "CANCEL",
+                                      style: TextStyle(color: Colors.blueGrey),
+                                    )),
                                 const SizedBox(
                                   width: 10,
                                 ),
