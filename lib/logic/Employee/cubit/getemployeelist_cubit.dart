@@ -23,31 +23,30 @@ class GetemployeelistCubit extends Cubit<PostState> {
     try {
       if (ismoredata) {
         List<Employee>? emplist = await postRepository.getemployeeList(
-            datalimit: datalimit, name: name);
+            datalimit: datalimit, name: name, deptid: deptid);
 
-          if (emplist!.length < datalimit) {
-            log('item is lesss than $datalimit');
-            ismoredata = false;
+        if (emplist!.length < datalimit) {
+          log('item is lesss than $datalimit');
+          ismoredata = false;
 
-            log(emplist.length.toString());
-            log(emplist.toString());
-            emit(PostLoadedState(allemployeelist: emplist, isloading: false));
-          } else {
-            log(emplist.length.toString());
-            emit(PostLoadedState(
-                allemployeelist: emplist, isloading: ismoredata));
-          }
-        }
-      } on DioError catch (ex) {
-        if (ex.type == DioErrorType.connectionError) {
-          emit(PostErrorState(
-              "Can't fetch posts, please check your internet connection!"));
-          EasyLoading.showError(
-              "Can't fetch posts, please check your internet connection!");
+          log(emplist.length.toString());
+          log(emplist.toString());
+          emit(PostLoadedState(allemployeelist: emplist, isloading: false));
         } else {
-          EasyLoading.showError(
-              "Can't fetch posts, please check your internet connection!");
+          log(emplist.length.toString());
+          emit(
+              PostLoadedState(allemployeelist: emplist, isloading: ismoredata));
         }
+      }
+    } on DioError catch (ex) {
+      if (ex.type == DioErrorType.connectionError) {
+        emit(PostErrorState(
+            "Can't fetch posts, please check your internet connection!"));
+        EasyLoading.showError(
+            "Can't fetch posts, please check your internet connection!");
+      } else {
+        EasyLoading.showError(
+            "Can't fetch posts, please check your internet connection!");
       }
     }
   }

@@ -307,7 +307,7 @@ class AuthRepository {
         "limit": datalimit,
         "page_no": 1,
         "name": name,
-        "department_id": deptid
+        // "department_id": deptid
       });
       if (response.statusCode == 200) {
         log(response.data.toString());

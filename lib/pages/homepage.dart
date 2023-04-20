@@ -1188,6 +1188,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                               title: const Text(
                                 "Add new Leave",
+                                style: TextStyle(fontSize: 12),
                               ),
                               content: SingleChildScrollView(
                                 child: Form(
@@ -2426,14 +2427,17 @@ class _HomePageState extends State<HomePage> {
                                                                     (value) {
                                                                   displayedDataCell
                                                                       .clear();
-
-                                                                  context.read<GetemployeelistCubit>().getemployeelist(
-                                                                      name:
-                                                                          value,
-                                                                      datalimit:
-                                                                          datalimit,
-                                                                      ismoredata:
-                                                                          true);
+                                                                  if (value
+                                                                          .length >=
+                                                                      3) {
+                                                                    context.read<GetemployeelistCubit>().getemployeelist(
+                                                                        name:
+                                                                            value,
+                                                                        datalimit:
+                                                                            datalimit,
+                                                                        ismoredata:
+                                                                            true);
+                                                                  }
                                                                 },
                                                                 decoration:
                                                                     const InputDecoration(
