@@ -14,6 +14,7 @@ import 'package:leavemanagementadmin/logic/Employee/cubit/getemployeelist_cubit.
 import 'package:leavemanagementadmin/logic/branch/getallbranch_cubit.dart';
 import 'package:leavemanagementadmin/logic/department/cubit/get_alldept_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/get_alldesign_cubit.dart';
+import 'package:leavemanagementadmin/logic/leave/cubit/getallleavetype_cubit.dart';
 import 'package:leavemanagementadmin/logic/role/cubit/get_role_cubit.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1127,179 +1128,264 @@ class _HomePageState extends State<HomePage> {
                     showDialog(
                       context: context,
                       builder: (cnt) {
-                        return StatefulBuilder(
-                          builder: (BuildContext context,
-                              void Function(void Function()) setState) {
-                            return AlertDialog(
-                              actions: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.grey,
-                                            side: const BorderSide(
-                                                color: Colors.red)),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          setState(() {
-                                            _namefieldcontroller.clear();
-                                            datetime2 = '';
-
-                                            dropdownvalue1 = null;
-                                            dropdownvalue2 = null;
-                                            _position = null;
-                                          });
-                                        },
-                                        child: const Text("CANCEL")),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.green),
-                                          onPressed: () async {
-                                            EasyLoading.show(
-                                                status: 'Adding..');
-                                            if (_namefieldcontroller
-                                                    .text.isEmpty ||
-                                                dropdownvalue11 == null ||
-                                                dropdownvalue22 == null ||
-                                                datetime.isEmpty ||
-                                                profileimage.isEmpty ||
-                                                finallocation == null) {
-                                              EasyLoading.dismiss();
-                                              context.router.pop();
-                                              CustomSnackBar(
-                                                  context,
-                                                  const Text(
-                                                    'All Fields Are Mandatory',
-                                                  ),
-                                                  Colors.red);
-                                            } else {}
-                                          },
-                                          child: const Text("ADD")),
-                                    )
-                                  ],
-                                ),
-                              ],
-                              title: const Text(
-                                "Add new Leave",
-                              ),
-                              content: SingleChildScrollView(
-                                child: Form(
-                                  child: SizedBox(
-                                    width: 300,
-                                    height: 460,
-                                    child: Column(
+                        return BlocConsumer<GetallleavetypeCubit,
+                            GetallleavetypeState>(
+                          listener: (context, allleavetypestate) {
+                            // TODO: implement listener
+                          },
+                          builder: (context, allleavetypestate) {
+                            return StatefulBuilder(
+                              builder: (BuildContext context,
+                                  void Function(void Function()) setState) {
+                                return AlertDialog(
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller:
-                                                leaveappliedforcontroller,
-                                            decoration: const InputDecoration(
-                                              hintText: 'Leave Applied For :',
-                                            )),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            decoration: const InputDecoration(
-                                              hintText: 'Leave Type Id',
-                                            )),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        _dataofbirth(datetime2, 'From Date :'),
-                                        _dataofbirth(datetime2, 'To Date :'),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        TextFormField(
-                                            keyboardType: TextInputType.text,
-                                            controller: leavereasoncontroller,
-                                            decoration: const InputDecoration(
-                                              hintText: 'Reason For Leave',
-                                            )),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text("Half Day : "),
-                                            Switch(
-                                              value: isactive,
-                                              activeColor: const Color.fromARGB(
-                                                  255, 72, 217, 77),
-                                              onChanged: (bool value) {
-                                                setState(() {
-                                                  isactive = value;
-                                                });
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.grey,
+                                                side: const BorderSide(
+                                                    color: Colors.red)),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              setState(() {
+                                                _namefieldcontroller.clear();
+                                                datetime2 = '';
+
+                                                dropdownvalue1 = null;
+                                                dropdownvalue2 = null;
+                                                _position = null;
+                                              });
+                                            },
+                                            child: const Text("CANCEL")),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.green),
+                                              onPressed: () async {
+                                                EasyLoading.show(
+                                                    status: 'Adding..');
+                                                if (_namefieldcontroller
+                                                        .text.isEmpty ||
+                                                    dropdownvalue11 == null ||
+                                                    dropdownvalue22 == null ||
+                                                    datetime.isEmpty ||
+                                                    profileimage.isEmpty ||
+                                                    finallocation == null) {
+                                                  EasyLoading.dismiss();
+                                                  context.router.pop();
+                                                  CustomSnackBar(
+                                                      context,
+                                                      const Text(
+                                                        'All Fields Are Mandatory',
+                                                      ),
+                                                      Colors.red);
+                                                } else {}
                                               },
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        isactive
-                                            ? Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: RadioListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: const Text(
-                                                          'First Half'),
-                                                      value: 1,
-                                                      groupValue:
-                                                          selectedRadioTileforleave,
-                                                      onChanged: (val) {
-                                                        print(
-                                                            'Selected value: $val');
-                                                        log(val.toString());
-                                                        setState(() {
-                                                          selectedRadioTileforleave =
-                                                              val;
-                                                        });
-                                                      },
-                                                      activeColor: Colors.green,
-                                                      selected:
-                                                          selectedRadioTileforleave ==
-                                                              1,
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: RadioListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      title: const Text(
-                                                          'Second Half'),
-                                                      value: 2,
-                                                      groupValue:
-                                                          selectedRadioTileforleave,
-                                                      onChanged: (val) {
-                                                        print(
-                                                            'Selected value: $val');
-                                                        setState(() {
-                                                          selectedRadioTileforleave =
-                                                              val;
-                                                        });
-                                                      },
-                                                      activeColor: Colors.green,
-                                                      selected:
-                                                          selectedRadioTileforleave ==
-                                                              2,
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : const SizedBox(),
+                                              child: const Text("ADD")),
+                                        )
                                       ],
                                     ),
+                                  ],
+                                  title: const Text(
+                                    "Add new Leave",
                                   ),
-                                ),
-                              ),
+                                  content: SingleChildScrollView(
+                                    child: Form(
+                                      child: SizedBox(
+                                        width: 300,
+                                        height: 460,
+                                        child: Column(
+                                          children: [
+                                            TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    leaveappliedforcontroller,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText:
+                                                      'Leave Applied For :',
+                                                )),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 13),
+                                              decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      255, 240, 237, 237),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              225,
+                                                              222,
+                                                              222))),
+                                              child: DropdownSearch<String>(
+                                                popupProps: PopupProps.menu(
+                                                  searchFieldProps: const TextFieldProps(
+                                                      decoration: InputDecoration(
+                                                          border:
+                                                              OutlineInputBorder(),
+                                                          constraints:
+                                                              BoxConstraints(
+                                                                  maxHeight:
+                                                                      40))),
+                                                  constraints:
+                                                      BoxConstraints.tight(
+                                                          const Size(250, 250)),
+                                                  showSearchBox: true,
+                                                  showSelectedItems: true,
+                                                ),
+                                                items: allleavetypestate
+                                                    .allleavetypenamelist,
+                                                dropdownDecoratorProps:
+                                                    const DropDownDecoratorProps(
+                                                  dropdownSearchDecoration:
+                                                      InputDecoration(
+                                                    hintStyle: TextStyle(
+                                                      fontSize: 15,
+                                                    ),
+                                                    border: InputBorder.none,
+                                                    labelText: "Leave Type :",
+                                                    hintText:
+                                                        "Choose Leave Type",
+                                                  ),
+                                                ),
+                                                onChanged: (String? newValue) {
+                                                  setState(() {
+                                                    leavetypedropdown =
+                                                        newValue as String;
+                                                  });
+                                                  leavetypedropdownid =
+                                                      allleavetypestate
+                                                          .alleavetypeidwithname
+                                                          .keys
+                                                          .firstWhere(
+                                                              (k) =>
+                                                                  allleavetypestate
+                                                                          .alleavetypeidwithname[
+                                                                      k] ==
+                                                                  dropdownvalue4,
+                                                              orElse: () =>
+                                                                  null);
+                                                  log(dropdownvalue44!
+                                                      .toString());
+                                                },
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            _dataofbirth(
+                                                datetime2, 'From Date :'),
+                                            _dataofbirth(
+                                                datetime2, 'To Date :'),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            TextFormField(
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                controller:
+                                                    leavereasoncontroller,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  hintText: 'Reason For Leave',
+                                                )),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              children: [
+                                                const Text("Half Day : "),
+                                                Switch(
+                                                  value: isactive,
+                                                  activeColor:
+                                                      const Color.fromARGB(
+                                                          255, 72, 217, 77),
+                                                  onChanged: (bool value) {
+                                                    setState(() {
+                                                      isactive = value;
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            isactive
+                                                ? Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: RadioListTile(
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          title: const Text(
+                                                              'First Half'),
+                                                          value: 1,
+                                                          groupValue:
+                                                              selectedRadioTileforleave,
+                                                          onChanged: (val) {
+                                                            print(
+                                                                'Selected value: $val');
+                                                            log(val.toString());
+                                                            setState(() {
+                                                              selectedRadioTileforleave =
+                                                                  val;
+                                                            });
+                                                          },
+                                                          activeColor:
+                                                              Colors.green,
+                                                          selected:
+                                                              selectedRadioTileforleave ==
+                                                                  1,
+                                                        ),
+                                                      ),
+                                                      Expanded(
+                                                        child: RadioListTile(
+                                                          contentPadding:
+                                                              EdgeInsets.zero,
+                                                          title: const Text(
+                                                              'Second Half'),
+                                                          value: 2,
+                                                          groupValue:
+                                                              selectedRadioTileforleave,
+                                                          onChanged: (val) {
+                                                            print(
+                                                                'Selected value: $val');
+                                                            setState(() {
+                                                              selectedRadioTileforleave =
+                                                                  val;
+                                                            });
+                                                          },
+                                                          activeColor:
+                                                              Colors.green,
+                                                          selected:
+                                                              selectedRadioTileforleave ==
+                                                                  2,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : const SizedBox(),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             );
                           },
                         );
@@ -1322,7 +1408,8 @@ class _HomePageState extends State<HomePage> {
   int? dropdownvalue33;
   String? dropdownvalue4;
   int? dropdownvalue44;
-
+  String? leavetypedropdown;
+  int? leavetypedropdownid;
   final TextEditingController empcode = TextEditingController();
   final TextEditingController _namefieldcontroller = TextEditingController();
 
