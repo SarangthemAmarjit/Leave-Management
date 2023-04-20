@@ -4,6 +4,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:leavemanagementadmin/Skeleton/skeleton.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/logic/branch/create_branch_cubit.dart';
 import 'package:leavemanagementadmin/logic/branch/create_branch_state.dart';
@@ -242,7 +243,7 @@ class _BranchPageState extends State<BranchPage> {
                               ],
                             )
                           ],
-                          title: Text("Are you sure to delete"),
+                          title: const Text("Are you sure to delete"),
                         );
                       },
                     );
@@ -496,13 +497,17 @@ class _BranchPageState extends State<BranchPage> {
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: DataTable2(
+                              empty: const Center(
+                                child: SizedBox(
+                                    height: 22,
+                                    width: 22,
+                                    child: CircularProgressIndicator()),
+                              ),
                               fixedTopRows: 1,
+                              showBottomBorder: true,
 
                               dataRowHeight: 43,
-                              columnSpacing:
-                                  MediaQuery.of(context).size.width < 900
-                                      ? 0
-                                      : 132,
+
                               dividerThickness: 2,
                               headingTextStyle:
                                   const TextStyle(fontWeight: FontWeight.bold),

@@ -4,6 +4,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:leavemanagementadmin/Skeleton/skeleton.dart';
 import 'package:leavemanagementadmin/constant.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/delete_design_cubit.dart';
 import 'package:leavemanagementadmin/logic/designation/cubit/delete_design_state.dart';
@@ -517,7 +518,14 @@ class _BranchPageState extends State<DesignationPage> {
                               child: SizedBox(
                                 width: MediaQuery.of(context).size.width,
                                 child: DataTable2(
+                                  empty: const Center(
+                                    child: SizedBox(
+                                        height: 22,
+                                        width: 22,
+                                        child: CircularProgressIndicator()),
+                                  ),
                                   fixedTopRows: 1,
+                                  showBottomBorder: true,
 
                                   dividerThickness: 2,
                                   headingTextStyle: const TextStyle(
@@ -552,24 +560,38 @@ class _BranchPageState extends State<DesignationPage> {
                                         displayedDataCell[i + 3],
                                       ])
                                   ],
-                                  columns: const <DataColumn>[
-                                    DataColumn(
+                                  columns: <DataColumn>[
+                                    const DataColumn(
                                       label: Text(
                                         'Sl.no',
                                       ),
                                     ),
                                     DataColumn(
-                                      label: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        'Designation',
+                                      label: Row(
+                                        children: const [
+                                          Text(
+                                            overflow: TextOverflow.ellipsis,
+                                            'Designation',
+                                          ),
+                                          // SizedBox(
+                                          //     height: 20,
+                                          //     width: 100,
+                                          //     //color: Colors.amber,
+                                          //     child: TextField(
+                                          //       decoration: InputDecoration(
+                                          //           border:
+                                          //               OutlineInputBorder()),
+                                          // )
+                                          // )
+                                        ],
                                       ),
                                     ),
-                                    DataColumn(
+                                    const DataColumn(
                                       label: Text(
                                         'IsActive',
                                       ),
                                     ),
-                                    DataColumn(
+                                    const DataColumn(
                                       label: Text(
                                         'Action',
                                       ),

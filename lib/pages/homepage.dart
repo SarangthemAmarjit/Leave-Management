@@ -2383,8 +2383,8 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                   DataColumn(
                                                     label: Column(
-                                                      children: const [
-                                                        Padding(
+                                                      children: [
+                                                        const Padding(
                                                           padding:
                                                               EdgeInsets.only(
                                                                   top: 14.0),
@@ -2395,7 +2395,63 @@ class _HomePageState extends State<HomePage> {
                                                             'Employee Name',
                                                           ),
                                                         ),
-                                                        SearchButton(),
+                                                        Padding(
+                                                          padding: const EdgeInsets
+                                                                  .only(top: 8
+                                                              // horizontal: 26,
+                                                              ),
+                                                          child: OnHoverButton(
+                                                            child: Container(
+                                                              height: 38,
+                                                              width: 300,
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(6),
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                  color: Colors
+                                                                      .white,
+                                                                  border: Border.all(
+                                                                      color: Colors
+                                                                          .grey)),
+                                                              child: TextField(
+                                                                // controller:
+                                                                //     namecontroller,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  // namecontroller
+                                                                  //         .text =
+                                                                  //     value;
+
+                                                                  displayedDataCell
+                                                                      .clear();
+
+                                                                  context.read<GetemployeelistCubit>().getemployeelist(
+                                                                      name:
+                                                                          value,
+                                                                      datalimit:
+                                                                          datalimit,
+                                                                      ismoredata:
+                                                                          true);
+                                                                },
+                                                                decoration:
+                                                                    const InputDecoration(
+                                                                  suffixIcon:
+                                                                      Icon(
+                                                                    Icons
+                                                                        .search,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
                                                       ],
                                                     ),
                                                   ),

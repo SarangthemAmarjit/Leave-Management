@@ -302,10 +302,11 @@ class AuthRepository {
 
   Future<List<Employee>?> getemployeeList({
     required int datalimit,
+    String? name,
   }) async {
     try {
       final response = await dio.get("/api/admin/employees",
-          queryParameters: {"limit": datalimit, "page_no": 1});
+          queryParameters: {"limit": datalimit, "page_no": 1, "name": name});
       if (response.statusCode == 200) {
         log(response.data.toString());
         List<dynamic> postMaps = response.data['employees'];
