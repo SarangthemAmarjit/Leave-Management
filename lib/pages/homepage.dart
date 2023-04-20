@@ -2643,6 +2643,19 @@ class _HomePageState extends State<HomePage> {
                                                                           dropdownvalue2,
                                                                       orElse: () =>
                                                                           null);
+                                                              log('DropDown Id :$dropdownvalue22');
+                                                              displayedDataCell
+                                                                  .clear();
+                                                              context
+                                                                  .read<
+                                                                      GetemployeelistCubit>()
+                                                                  .getemployeelist(
+                                                                      datalimit:
+                                                                          datalimit,
+                                                                      ismoredata:
+                                                                          true,
+                                                                      deptid:
+                                                                          dropdownvalue22);
                                                             },
                                                           ),
                                                         ),
