@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -179,7 +177,7 @@ class _BranchPageState extends State<DesignationPage> {
                     },
                   );
                 },
-                child: const Icon(Icons.edit)),
+                child: const OnHoverButton2(child: Icon(Icons.edit))),
             TextButton(
               onPressed: () {
                 showDialog(
@@ -194,13 +192,15 @@ class _BranchPageState extends State<DesignationPage> {
                               children: [
                                 ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.grey,
-                                        side: const BorderSide(
-                                            color: Colors.red)),
+                                      backgroundColor: Colors.grey[300],
+                                    ),
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: const Text("CANCEL")),
+                                    child: const Text(
+                                      "CANCEL",
+                                      style: TextStyle(color: Colors.blueGrey),
+                                    )),
                                 const SizedBox(
                                   width: 10,
                                 ),
@@ -241,9 +241,11 @@ class _BranchPageState extends State<DesignationPage> {
                   },
                 );
               },
-              child: const Icon(
-                Icons.delete,
-                size: 19,
+              child: const OnHoverButton2(
+                child: Icon(
+                  Icons.delete,
+                  size: 19,
+                ),
               ),
             ),
           ],
@@ -335,7 +337,7 @@ class _BranchPageState extends State<DesignationPage> {
                         Padding(
                           padding: MediaQuery.of(context).size.width > 1040
                               ? const EdgeInsets.only(
-                                  left: 100,
+                                  left: 50,
                                 )
                               : const EdgeInsets.only(
                                   left: 10,
@@ -351,7 +353,7 @@ class _BranchPageState extends State<DesignationPage> {
                         ),
                         Padding(
                           padding: MediaQuery.of(context).size.width > 1040
-                              ? const EdgeInsets.only(left: 100, top: 15)
+                              ? const EdgeInsets.only(left: 50, top: 15)
                               : const EdgeInsets.only(left: 10, top: 15),
                           child: Align(
                             alignment: Alignment.centerLeft,
@@ -488,20 +490,23 @@ class _BranchPageState extends State<DesignationPage> {
                                     borderRadius: BorderRadius.circular(13),
                                   ),
                                   elevation: 15,
-                                  child: const CardWidget(
-                                      gradient: [
-                                        Color.fromARGB(255, 211, 32, 39),
-                                        Color.fromARGB(255, 164, 92, 95)
-                                      ],
-                                      width: 120,
-                                      height: 40,
-                                      borderRadius: 13,
-                                      child: Center(
-                                        child: Text(
-                                          'Add Designation',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      )),
+                                  child: const OnHoverButton2(
+                                    child: CardWidget(
+                                        gradient: [
+                                          Color.fromARGB(255, 211, 32, 39),
+                                          Color.fromARGB(255, 164, 92, 95)
+                                        ],
+                                        width: 120,
+                                        height: 40,
+                                        borderRadius: 13,
+                                        child: Center(
+                                          child: Text(
+                                            'Add Designation',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )),
+                                  ),
                                 )),
                           ),
                         ),
@@ -512,7 +517,7 @@ class _BranchPageState extends State<DesignationPage> {
                             child: Padding(
                               padding: MediaQuery.of(context).size.width > 1040
                                   ? const EdgeInsets.only(
-                                      left: 100, right: 100, top: 20)
+                                      left: 50, right: 50, top: 20)
                                   : const EdgeInsets.only(
                                       left: 10, right: 10, top: 20),
                               child: SizedBox(
@@ -613,4 +618,34 @@ class _BranchPageState extends State<DesignationPage> {
       },
     );
   }
+}
+
+class OnHoverButton2 extends StatefulWidget {
+  final Widget child;
+  const OnHoverButton2({super.key, required this.child});
+
+  @override
+  State<OnHoverButton2> createState() => _OnHoverButton2State();
+}
+
+class _OnHoverButton2State extends State<OnHoverButton2> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final hoveredTransform = Matrix4.identity()..scale(1.1);
+    final transform = isHovered ? hoveredTransform : Matrix4.identity();
+    return MouseRegion(
+      onEnter: (event) => onEntered(true),
+      onExit: (event) => onEntered(false),
+      child: AnimatedContainer(
+        transform: transform,
+        duration: const Duration(milliseconds: 200),
+        child: widget.child,
+      ),
+    );
+  }
+
+  void onEntered(bool isHovered) => setState(() {
+        this.isHovered = isHovered;
+      });
 }

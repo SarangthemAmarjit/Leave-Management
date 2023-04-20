@@ -54,7 +54,10 @@ class SidebarPage extends StatelessWidget {
                         // }
                         _key.currentState?.openDrawer();
                       },
-                      icon: const Icon(Icons.menu),
+                      icon: const Icon(
+                        Icons.menu,
+                        color: Colors.grey,
+                      ),
                     ),
                   )
                 : null,
@@ -142,7 +145,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.codeBranch,
-            color: Colors.redAccent,
+            // color: Color.fromARGB(255, 164, 92, 95),
             size: 15,
           ),
         ),
@@ -153,7 +156,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.buildingUser,
-            color: Colors.redAccent,
+            // color: Color.fromARGB(255, 164, 92, 95),
             size: 15,
           ),
         ),
@@ -164,7 +167,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.addressCard,
-            color: Colors.redAccent,
+            // color: Color.fromARGB(255, 164, 92, 95),
             size: 15,
           ),
         ),
@@ -250,7 +253,8 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           ),
           hoverColor: scaffoldBackgroundColor,
           textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
-          selectedTextStyle: const TextStyle(color: Colors.black),
+          selectedTextStyle: const TextStyle(color: Colors.white),
+
           itemTextPadding: const EdgeInsets.only(left: 20),
           selectedItemTextPadding: const EdgeInsets.only(left: 20),
           itemDecoration: BoxDecoration(
@@ -262,8 +266,11 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
             border: Border.all(
               color: actionColor.withOpacity(0.37),
             ),
-            gradient: LinearGradient(
-              colors: [accentCanvasColor, accentCanvasColorLight],
+            gradient: const LinearGradient(
+              colors: [
+                Color.fromARGB(255, 211, 32, 39),
+                Color.fromARGB(255, 164, 92, 95)
+              ],
             ),
             boxShadow: [
               BoxShadow(
@@ -278,7 +285,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
             size: 20,
           ),
           selectedIconTheme: const IconThemeData(
-            color: Colors.black,
+            color: Colors.white,
             size: 20,
           ),
         ),
@@ -552,4 +559,34 @@ String _getTitleByIndex(int index) {
     default:
       return 'Not found page';
   }
+}
+
+class OnHoverButton2 extends StatefulWidget {
+  final Widget child;
+  const OnHoverButton2({super.key, required this.child});
+
+  @override
+  State<OnHoverButton2> createState() => _OnHoverButton2State();
+}
+
+class _OnHoverButton2State extends State<OnHoverButton2> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final hoveredTransform = Matrix4.identity()..scale(1.1);
+    final transform = isHovered ? hoveredTransform : Matrix4.identity();
+    return MouseRegion(
+      onEnter: (event) => onEntered(true),
+      onExit: (event) => onEntered(false),
+      child: AnimatedContainer(
+        transform: transform,
+        duration: const Duration(milliseconds: 200),
+        child: widget.child,
+      ),
+    );
+  }
+
+  void onEntered(bool isHovered) => setState(() {
+        this.isHovered = isHovered;
+      });
 }

@@ -18,13 +18,13 @@ import 'package:leavemanagementadmin/logic/leave/cubit/cubit/createleave_cubit.d
 import 'package:leavemanagementadmin/logic/leave/cubit/getallleavetype_cubit.dart';
 import 'package:leavemanagementadmin/logic/role/cubit/get_role_cubit.dart';
 import 'package:leavemanagementadmin/model/emp%20_listmodel.dart';
+import 'package:leavemanagementadmin/widget/filter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import '../logic/Employee/cubit/updateemployee_cubit.dart';
-import '../widget/searchfilter.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -111,9 +111,13 @@ class _HomePageState extends State<HomePage> {
             datalimit = datalimit + 15;
           });
           displayedDataCell.clear();
-          context
-              .read<GetemployeelistCubit>()
-              .getemployeelist(datalimit: datalimit, ismoredata: true);
+          context.read<GetemployeelistCubit>().getemployeelist(
+              datalimit: datalimit,
+              ismoredata: true,
+              branchid: dropdownvalue44,
+              deptid: dropdownvalue22,
+              desigid: dropdownvalue11,
+              rolename: dropdownvalue33);
 
           log('reach buttom');
         }
@@ -158,8 +162,13 @@ class _HomePageState extends State<HomePage> {
 
         displayedDataCell.add(
           DataCell(
-            Text(
-              (allemplist.indexOf(item) + 1).toString(),
+            SizedBox(
+              width: 20,
+              child: Center(
+                child: Text(
+                  (allemplist.indexOf(item) + 1).toString(),
+                ),
+              ),
             ),
           ),
         );
@@ -817,7 +826,7 @@ class _HomePageState extends State<HomePage> {
                                                                       labelText:
                                                                           "Designation :",
                                                                       hintText:
-                                                                          "Choose Your Designation",
+                                                                          "Select Your Designation",
                                                                     ),
                                                                   ),
                                                                   onChanged:
@@ -905,7 +914,7 @@ class _HomePageState extends State<HomePage> {
                                                                       labelText:
                                                                           "Department :",
                                                                       hintText:
-                                                                          "Choose Your Department",
+                                                                          "Select Your Department",
                                                                     ),
                                                                   ),
                                                                   onChanged:
@@ -997,7 +1006,7 @@ class _HomePageState extends State<HomePage> {
                                                                       labelText:
                                                                           "Role :",
                                                                       hintText:
-                                                                          "Choose Your Role",
+                                                                          "Select Your Role",
                                                                     ),
                                                                   ),
                                                                   onChanged:
@@ -1078,7 +1087,7 @@ class _HomePageState extends State<HomePage> {
                                                                       labelText:
                                                                           "Branch :",
                                                                       hintText:
-                                                                          "Choose Your Branch",
+                                                                          "Select Your Branch",
                                                                     ),
                                                                   ),
                                                                   onChanged:
@@ -1126,7 +1135,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   },
-                  child: const Icon(Icons.edit)),
+                  child: const OnHoverButton2(child: Icon(Icons.edit))),
               const SizedBox(
                 width: 5,
               ),
@@ -1176,10 +1185,9 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             ElevatedButton(
                                                 style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        Colors.grey,
-                                                    side: const BorderSide(
-                                                        color: Colors.red)),
+                                                  backgroundColor:
+                                                      Colors.grey[300],
+                                                ),
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                   setState(() {
@@ -1192,7 +1200,11 @@ class _HomePageState extends State<HomePage> {
                                                     _position = null;
                                                   });
                                                 },
-                                                child: const Text("CANCEL")),
+                                                child: const Text(
+                                                  "CANCEL",
+                                                  style: TextStyle(
+                                                      color: Colors.blueGrey),
+                                                )),
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 10),
@@ -1442,7 +1454,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   },
-                  child: const Text('Add Leave'))
+                  child: const OnHoverButton2(child: Text('Add Leave')))
             ],
           )),
         );
@@ -2247,7 +2259,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 ),
                                                                                 border: InputBorder.none,
                                                                                 labelText: "Designation :",
-                                                                                hintText: "Choose Your Designation",
+                                                                                hintText: "Select Your Designation",
                                                                               ),
                                                                             ),
                                                                             onChanged:
@@ -2290,7 +2302,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 ),
                                                                                 border: InputBorder.none,
                                                                                 labelText: "Department :",
-                                                                                hintText: "Choose Your Department",
+                                                                                hintText: "Select Your Department",
                                                                               ),
                                                                             ),
                                                                             onChanged:
@@ -2336,7 +2348,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 ),
                                                                                 border: InputBorder.none,
                                                                                 labelText: "Role :",
-                                                                                hintText: "Choose Your Role",
+                                                                                hintText: "Select Your Role",
                                                                               ),
                                                                             ),
                                                                             onChanged:
@@ -2378,7 +2390,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 ),
                                                                                 border: InputBorder.none,
                                                                                 labelText: "Branch :",
-                                                                                hintText: "Choose Your Branch",
+                                                                                hintText: "Select Your Branch",
                                                                               ),
                                                                             ),
                                                                             onChanged:
@@ -2411,23 +2423,26 @@ class _HomePageState extends State<HomePage> {
                                                     BorderRadius.circular(13),
                                               ),
                                               elevation: 15,
-                                              child: const CardWidget(
-                                                  gradient: [
-                                                    Color.fromARGB(
-                                                        255, 211, 32, 39),
-                                                    Color.fromARGB(
-                                                        255, 164, 92, 95)
-                                                  ],
-                                                  width: 120,
-                                                  height: 40,
-                                                  borderRadius: 13,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Add Employee',
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                  )),
+                                              child: const OnHoverButton(
+                                                child: CardWidget(
+                                                    gradient: [
+                                                      Color.fromARGB(
+                                                          255, 211, 32, 39),
+                                                      Color.fromARGB(
+                                                          255, 164, 92, 95)
+                                                    ],
+                                                    width: 120,
+                                                    height: 40,
+                                                    borderRadius: 13,
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Add Employee',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    )),
+                                              ),
                                             )),
                                       ),
 
@@ -2467,12 +2482,17 @@ class _HomePageState extends State<HomePage> {
                                                             child:
                                                                 CircularProgressIndicator()),
                                                       ),
+
                                                 headingRowHeight: 80,
                                                 scrollController:
                                                     datatablescrollcontroller,
                                                 fixedTopRows: 1,
+                                                // minWidth: 5,
+                                                // smRatio: 20,
                                                 dividerThickness: 2,
+                                                // horizontalMargin: 8,
                                                 headingRowColor:
+                                                    //! [checked ✔ ] full header row background
                                                     MaterialStateProperty.all(
                                                         Colors.grey
                                                             .withOpacity(0.2)),
@@ -2480,6 +2500,8 @@ class _HomePageState extends State<HomePage> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5),
+                                                    //! [checked ✔ ] full table background
+
                                                     color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
@@ -2595,17 +2617,15 @@ class _HomePageState extends State<HomePage> {
                                                                 },
                                                                 decoration:
                                                                     const InputDecoration(
+                                                                  hintText:
+                                                                      " Search                🔍",
                                                                   // label: fillname
                                                                   //         .isEmpty
                                                                   //     ? const Text(
                                                                   //         "enter name")
                                                                   //     : Text(
                                                                   //         fillname),
-                                                                  suffixIcon:
-                                                                      Icon(
-                                                                    Icons
-                                                                        .search,
-                                                                  ),
+
                                                                   border:
                                                                       InputBorder
                                                                           .none,
@@ -3180,3 +3200,54 @@ class _HomePageState extends State<HomePage> {
 //     notifyListeners();
 //   }
 // }
+class _OnHoverButtonState extends State<OnHoverButton> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final hoveredTransform = Matrix4.identity()..scale(1.07);
+    final transform = isHovered ? hoveredTransform : Matrix4.identity();
+    return MouseRegion(
+      onEnter: (event) => onEntered(true),
+      onExit: (event) => onEntered(false),
+      child: AnimatedContainer(
+        transform: transform,
+        duration: const Duration(milliseconds: 200),
+        child: widget.child,
+      ),
+    );
+  }
+
+  void onEntered(bool isHovered) => setState(() {
+        this.isHovered = isHovered;
+      });
+}
+
+class OnHoverButton2 extends StatefulWidget {
+  final Widget child;
+  const OnHoverButton2({super.key, required this.child});
+
+  @override
+  State<OnHoverButton2> createState() => _OnHoverButton2State();
+}
+
+class _OnHoverButton2State extends State<OnHoverButton2> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final hoveredTransform = Matrix4.identity()..scale(1.1);
+    final transform = isHovered ? hoveredTransform : Matrix4.identity();
+    return MouseRegion(
+      onEnter: (event) => onEntered(true),
+      onExit: (event) => onEntered(false),
+      child: AnimatedContainer(
+        transform: transform,
+        duration: const Duration(milliseconds: 200),
+        child: widget.child,
+      ),
+    );
+  }
+
+  void onEntered(bool isHovered) => setState(() {
+        this.isHovered = isHovered;
+      });
+}
