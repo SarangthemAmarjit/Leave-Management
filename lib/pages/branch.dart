@@ -336,7 +336,7 @@ class _BranchPageState extends State<BranchPage> {
                     ),
                     Padding(
                       padding: MediaQuery.of(context).size.width > 1040
-                          ? const EdgeInsets.only(left: 100, top: 13)
+                          ? const EdgeInsets.only(left: 50, top: 13)
                           : const EdgeInsets.only(left: 10, top: 13),
                       child: Align(
                         alignment: Alignment.centerLeft,
@@ -491,7 +491,7 @@ class _BranchPageState extends State<BranchPage> {
                         child: Padding(
                           padding: MediaQuery.of(context).size.width > 1040
                               ? const EdgeInsets.only(
-                                  left: 100, right: 100, top: 20)
+                                  left: 50, right: 50, top: 20)
                               : const EdgeInsets.only(
                                   left: 10, right: 10, top: 20),
                           child: SizedBox(

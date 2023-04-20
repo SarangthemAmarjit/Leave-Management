@@ -39,6 +39,7 @@ class _HomePageState extends State<HomePage> {
   List<Employee> employees = <Employee>[];
   DateTime? updatetime;
   bool isactive = false;
+  String fillname = "";
 
   //Text Controller for Add Leave For Employee
   TextEditingController leaveappliedforcontroller = TextEditingController();
@@ -130,7 +131,9 @@ class _HomePageState extends State<HomePage> {
     context.read<GetAlldeptCubit>().getalldept();
     context.read<GetAlldesignCubit>().getalldesign();
     context.read<GetRoleCubit>().getallrole();
+
     context.read<GetallleavetypeCubit>().getallleavetype();
+
     context
         .read<GetemployeelistCubit>()
         .getemployeelist(datalimit: datalimit, ismoredata: true);
@@ -147,9 +150,12 @@ class _HomePageState extends State<HomePage> {
       // context
       //     .read<GetspecificCubit>()
       //     .getspecificbrance(id: item.branchId.toString());
+      log("All emplist : $allemplist");
       if (branchidwithname.isNotEmpty &&
           deptnamewithid.isNotEmpty &&
           designidwithname.isNotEmpty) {
+        log("Display datacell $displayedDataCell");
+
         displayedDataCell.add(
           DataCell(
             Text(
@@ -1188,54 +1194,37 @@ class _HomePageState extends State<HomePage> {
                                                 },
                                                 child: const Text("CANCEL")),
                                             Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10),
-                                                child: ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                            backgroundColor:
-                                                                Colors.green),
-                                                    onPressed: () async {
-                                                      if (leaveappliedforcontroller
-                                                              .text.isEmpty ||
-                                                          leavereasoncontroller
-                                                              .text.isEmpty ||
-                                                          startdate.isEmpty ||
-                                                          enddate.isEmpty) {
-                                                        EasyLoading.dismiss();
-                                                        context.router.pop();
-                                                        CustomSnackBar(
-                                                            context,
-                                                            const Text(
-                                                              'All Fields Are Mandatory',
-                                                            ),
-                                                            Colors.red);
-                                                      } else {
-                                                        context
-                                                            .read<
-                                                                CreateleaveCubit>()
-                                                            .createleave(
-                                                                empid: item
-                                                                    .employeeId,
-                                                                leavetypeid:
-                                                                    leavetypedropdownid!,
-                                                                startdate:
-                                                                    startdate,
-                                                                enddate:
-                                                                    enddate,
-                                                                reasonforleave:
-                                                                    leaveappliedforcontroller
-                                                                        .text,
-                                                                halfday:
-                                                                    isactive
-                                                                        ? 1
-                                                                        : 0,
-                                                                daysection:
-                                                                    selectedRadioTileforleave!);
-                                                        context.router.pop();
-                                                      }
-                                                    },
-                                                    child: const Text("ADD")))
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              Colors.green),
+                                                  onPressed: () async {
+                                                    EasyLoading.show(
+                                                        status: 'Adding..');
+                                                    if (_namefieldcontroller
+                                                            .text.isEmpty ||
+                                                        dropdownvalue11 ==
+                                                            null ||
+                                                        dropdownvalue22 ==
+                                                            null ||
+                                                        datetime.isEmpty ||
+                                                        profileimage.isEmpty ||
+                                                        finallocation == null) {
+                                                      EasyLoading.dismiss();
+                                                      context.router.pop();
+                                                      CustomSnackBar(
+                                                          context,
+                                                          const Text(
+                                                            'All Fields Are Mandatory',
+                                                          ),
+                                                          Colors.red);
+                                                    } else {}
+                                                  },
+                                                  child: const Text("ADD")),
+                                            )
                                           ],
                                         ),
                                       ],
@@ -2576,27 +2565,42 @@ class _HomePageState extends State<HomePage> {
                                                                       color: Colors
                                                                           .grey)),
                                                               child: TextField(
-                                                                // controller:
-                                                                //     namecontroller,
                                                                 onChanged:
                                                                     (value) {
-                                                                  // namecontroller
-                                                                  //         .text =
-                                                                  //     value;
-
+                                                                  // setState(() {
+                                                                  //   fillname =
+                                                                  //       value;
+                                                                  // });
                                                                   displayedDataCell
                                                                       .clear();
-
-                                                                  context.read<GetemployeelistCubit>().getemployeelist(
-                                                                      name:
-                                                                          value,
-                                                                      datalimit:
-                                                                          datalimit,
-                                                                      ismoredata:
-                                                                          true);
+                                                                  if (value
+                                                                          .length >=
+                                                                      3) {
+                                                                    context.read<GetemployeelistCubit>().getemployeelist(
+                                                                        name:
+                                                                            value,
+                                                                        datalimit:
+                                                                            datalimit,
+                                                                        ismoredata:
+                                                                            true,
+                                                                        desigid:
+                                                                            dropdownvalue11,
+                                                                        deptid:
+                                                                            dropdownvalue22,
+                                                                        rolename:
+                                                                            dropdownvalue33,
+                                                                        branchid:
+                                                                            dropdownvalue44);
+                                                                  }
                                                                 },
                                                                 decoration:
                                                                     const InputDecoration(
+                                                                  // label: fillname
+                                                                  //         .isEmpty
+                                                                  //     ? const Text(
+                                                                  //         "enter name")
+                                                                  //     : Text(
+                                                                  //         fillname),
                                                                   suffixIcon:
                                                                       Icon(
                                                                     Icons
@@ -2652,6 +2656,8 @@ class _HomePageState extends State<HomePage> {
                                                                       222))),
                                                           child: DropdownSearch<
                                                               String>(
+                                                            selectedItem:
+                                                                dropdownvalue1,
                                                             popupProps:
                                                                 PopupProps.menu(
                                                               searchFieldProps: const TextFieldProps(
@@ -2706,6 +2712,22 @@ class _HomePageState extends State<HomePage> {
                                                                           dropdownvalue1,
                                                                       orElse: () =>
                                                                           null);
+
+                                                              context.read<GetemployeelistCubit>().getemployeelist(
+                                                                  datalimit:
+                                                                      datalimit,
+                                                                  ismoredata:
+                                                                      true,
+                                                                  desigid:
+                                                                      dropdownvalue11,
+                                                                  deptid:
+                                                                      dropdownvalue22,
+                                                                  rolename:
+                                                                      dropdownvalue33,
+                                                                  branchid:
+                                                                      dropdownvalue44);
+                                                              displayedDataCell
+                                                                  .clear();
                                                             },
                                                           ),
                                                         ),
@@ -2747,6 +2769,8 @@ class _HomePageState extends State<HomePage> {
                                                                       222))),
                                                           child: DropdownSearch<
                                                               String>(
+                                                            selectedItem:
+                                                                dropdownvalue2,
                                                             popupProps:
                                                                 PopupProps.menu(
                                                               searchFieldProps: const TextFieldProps(
@@ -2804,16 +2828,19 @@ class _HomePageState extends State<HomePage> {
                                                               log('DropDown Id :$dropdownvalue22');
                                                               displayedDataCell
                                                                   .clear();
-                                                              context
-                                                                  .read<
-                                                                      GetemployeelistCubit>()
-                                                                  .getemployeelist(
-                                                                      datalimit:
-                                                                          datalimit,
-                                                                      ismoredata:
-                                                                          true,
-                                                                      deptid:
-                                                                          dropdownvalue22);
+                                                              context.read<GetemployeelistCubit>().getemployeelist(
+                                                                  datalimit:
+                                                                      datalimit,
+                                                                  ismoredata:
+                                                                      true,
+                                                                  desigid:
+                                                                      dropdownvalue11,
+                                                                  deptid:
+                                                                      dropdownvalue22,
+                                                                  rolename:
+                                                                      dropdownvalue33,
+                                                                  branchid:
+                                                                      dropdownvalue44);
                                                             },
                                                           ),
                                                         ),
@@ -2859,6 +2886,8 @@ class _HomePageState extends State<HomePage> {
                                                                       222))),
                                                           child: DropdownSearch<
                                                               String>(
+                                                            selectedItem:
+                                                                dropdownvalue3,
                                                             popupProps:
                                                                 PopupProps.menu(
                                                               searchFieldProps: const TextFieldProps(
@@ -2901,9 +2930,27 @@ class _HomePageState extends State<HomePage> {
                                                                     newValue
                                                                         as String;
                                                               });
+
                                                               dropdownvalue33 =
                                                                   roleidwithname[
                                                                       dropdownvalue3];
+
+                                                              displayedDataCell
+                                                                  .clear();
+                                                              context.read<GetemployeelistCubit>().getemployeelist(
+                                                                  datalimit:
+                                                                      datalimit,
+                                                                  ismoredata:
+                                                                      true,
+                                                                  desigid:
+                                                                      dropdownvalue11,
+                                                                  deptid:
+                                                                      dropdownvalue22,
+                                                                  rolename:
+                                                                      dropdownvalue33,
+                                                                  branchid:
+                                                                      dropdownvalue44);
+                                                              log("Role id : $dropdownvalue33");
                                                             },
                                                           ),
                                                         ),
@@ -2945,6 +2992,8 @@ class _HomePageState extends State<HomePage> {
                                                                       222))),
                                                           child: DropdownSearch<
                                                               String>(
+                                                            selectedItem:
+                                                                dropdownvalue4,
                                                             popupProps:
                                                                 PopupProps.menu(
                                                               searchFieldProps: const TextFieldProps(
@@ -2998,6 +3047,22 @@ class _HomePageState extends State<HomePage> {
                                                                           dropdownvalue4,
                                                                       orElse: () =>
                                                                           null);
+
+                                                              displayedDataCell
+                                                                  .clear();
+                                                              context.read<GetemployeelistCubit>().getemployeelist(
+                                                                  datalimit:
+                                                                      datalimit,
+                                                                  ismoredata:
+                                                                      true,
+                                                                  desigid:
+                                                                      dropdownvalue11,
+                                                                  deptid:
+                                                                      dropdownvalue22,
+                                                                  rolename:
+                                                                      dropdownvalue33,
+                                                                  branchid:
+                                                                      dropdownvalue44);
                                                               log(dropdownvalue44!
                                                                   .toString());
                                                             },

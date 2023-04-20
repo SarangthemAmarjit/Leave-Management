@@ -301,13 +301,21 @@ class AuthRepository {
   // GET Employee List
 
   Future<List<Employee>?> getemployeeList(
-      {required int datalimit, String? name, int? deptid}) async {
+      {required int datalimit,
+      String? name,
+      int? deptid,
+      int? desigid,
+      int? branchid,
+      int? roleid}) async {
     try {
       final response = await dio.get("/api/admin/employees", queryParameters: {
         "limit": datalimit,
         "page_no": 1,
-        "name": name,
-        "department_id": deptid
+        "name": name ?? "",
+        "department_id": deptid ?? 0,
+        "designation_id": desigid ?? 0,
+        "branch_id": branchid ?? 0,
+        "role_id": roleid ?? 0
       });
       if (response.statusCode == 200) {
         log(response.data.toString());
