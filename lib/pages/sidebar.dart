@@ -197,9 +197,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
       ),
       SidebarXItem(
         icon: Icons.settings,
-        label: isclicked
-            ? 'Setting                🔻'
-            : 'Setting                ➡️',
+        label: 'Setting                🔻',
         onTap: () {
           if (_items.length > 4) {
             setState(() {

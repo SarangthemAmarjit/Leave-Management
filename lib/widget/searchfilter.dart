@@ -8,12 +8,13 @@ class SearchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          // horizontal: 26,
-          vertical: 8),
+      padding: const EdgeInsets.only(
+        top: 8,
+        // horizontal: 26,
+      ),
       child: OnHoverButton(
         child: Container(
-          height: 32,
+          height: 38,
           width: 300,
           padding: const EdgeInsets.symmetric(horizontal: 6),
           decoration: BoxDecoration(
@@ -22,10 +23,12 @@ class SearchButton extends StatelessWidget {
               border: Border.all(color: Colors.grey)),
           child: const Padding(
             padding: EdgeInsets.only(bottom: 8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                suffixIcon: Icon(Icons.search),
-                border: InputBorder.none,
+            child: Center(
+              child: TextField(
+                decoration: InputDecoration(
+                  suffixIcon: Icon(Icons.search),
+                  border: InputBorder.none,
+                ),
               ),
             ),
           ),
