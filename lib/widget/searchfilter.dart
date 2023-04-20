@@ -54,7 +54,7 @@ class _OnHoverButtonState extends State<OnHoverButton> {
   bool isHovered = false;
   @override
   Widget build(BuildContext context) {
-    final hoveredTransform = Matrix4.identity()..scale(1.02);
+    final hoveredTransform = Matrix4.identity()..scale(1.1);
     final transform = isHovered ? hoveredTransform : Matrix4.identity();
     return MouseRegion(
       onEnter: (event) => onEntered(true),
