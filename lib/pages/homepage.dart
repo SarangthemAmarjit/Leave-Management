@@ -1542,18 +1542,21 @@ class _HomePageState extends State<HomePage> {
                             log('All Dept :${alldeptState.deptidwithname}');
                             log('All Design :${alldesignstate.designidwithname}');
                             ismoreloading = state.isloading;
-                            // if (allbranchState.branchidwithname.isEmpty) {
-                            //   context.read<GetallbranchCubit>().getallbranch();
-                            // } else if (alldeptState.deptidwithname.isEmpty) {
-                            //   context.read<GetAlldeptCubit>().getalldept();
-                            // } else if (alldesignstate
-                            //     .designidwithname.isEmpty) {
-                            //   context.read<GetAlldesignCubit>().getalldesign();
-                            // } else {
-                            //   context.read<GetallbranchCubit>().getallbranch();
-                            //   context.read<GetAlldeptCubit>().getalldept();
-                            //   context.read<GetAlldesignCubit>().getalldesign();
-                            // }
+                            if (allbranchState.branchidwithname.isEmpty) {
+                              context.read<GetallbranchCubit>().getallbranch();
+                            } else if (alldeptState.deptidwithname.isEmpty) {
+                              context.read<GetAlldeptCubit>().getalldept();
+                            } else if (alldesignstate
+                                .designidwithname.isEmpty) {
+                              context.read<GetAlldesignCubit>().getalldesign();
+<<<<<<<<< Temporary merge branch 1
+=========
+                            } else {
+                              context.read<GetallbranchCubit>().getallbranch();
+                              context.read<GetAlldeptCubit>().getalldept();
+                              context.read<GetAlldesignCubit>().getalldesign();
+>>>>>>>>> Temporary merge branch 2
+                            }
                             fetchdata(
                                 allemplist: state.allemployeelist,
                                 branchidwithname:
