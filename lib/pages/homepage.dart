@@ -147,8 +147,12 @@ class _HomePageState extends State<HomePage> {
           designidwithname.isNotEmpty) {
         displayedDataCell.add(
           DataCell(
-            Text(
-              (allemplist.indexOf(item) + 1).toString(),
+            showEditIcon: true,
+            SizedBox(
+              width: 20,
+              child: Text(
+                (allemplist.indexOf(item) + 1).toString(),
+              ),
             ),
           ),
         );
@@ -806,7 +810,7 @@ class _HomePageState extends State<HomePage> {
                                                                       labelText:
                                                                           "Designation :",
                                                                       hintText:
-                                                                          "Choose Your Designation",
+                                                                          "Select Your Designation",
                                                                     ),
                                                                   ),
                                                                   onChanged:
@@ -894,7 +898,7 @@ class _HomePageState extends State<HomePage> {
                                                                       labelText:
                                                                           "Department :",
                                                                       hintText:
-                                                                          "Choose Your Department",
+                                                                          "Select Your Department",
                                                                     ),
                                                                   ),
                                                                   onChanged:
@@ -986,7 +990,7 @@ class _HomePageState extends State<HomePage> {
                                                                       labelText:
                                                                           "Role :",
                                                                       hintText:
-                                                                          "Choose Your Role",
+                                                                          "Select Your Role",
                                                                     ),
                                                                   ),
                                                                   onChanged:
@@ -1067,7 +1071,7 @@ class _HomePageState extends State<HomePage> {
                                                                       labelText:
                                                                           "Branch :",
                                                                       hintText:
-                                                                          "Choose Your Branch",
+                                                                          "Select Your Branch",
                                                                     ),
                                                                   ),
                                                                   onChanged:
@@ -1115,7 +1119,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   },
-                  child: const Icon(Icons.edit)),
+                  child: const OnHoverButton2(child: Icon(Icons.edit))),
               const SizedBox(
                 width: 5,
               ),
@@ -1306,7 +1310,7 @@ class _HomePageState extends State<HomePage> {
                       },
                     );
                   },
-                  child: const Text('Add Leave'))
+                  child: const OnHoverButton2(child: Text('Add Leave')))
             ],
           )),
         );
@@ -2107,7 +2111,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 ),
                                                                                 border: InputBorder.none,
                                                                                 labelText: "Designation :",
-                                                                                hintText: "Choose Your Designation",
+                                                                                hintText: "Select Your Designation",
                                                                               ),
                                                                             ),
                                                                             onChanged:
@@ -2150,7 +2154,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 ),
                                                                                 border: InputBorder.none,
                                                                                 labelText: "Department :",
-                                                                                hintText: "Choose Your Department",
+                                                                                hintText: "Select Your Department",
                                                                               ),
                                                                             ),
                                                                             onChanged:
@@ -2196,7 +2200,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 ),
                                                                                 border: InputBorder.none,
                                                                                 labelText: "Role :",
-                                                                                hintText: "Choose Your Role",
+                                                                                hintText: "Select Your Role",
                                                                               ),
                                                                             ),
                                                                             onChanged:
@@ -2238,7 +2242,7 @@ class _HomePageState extends State<HomePage> {
                                                                                 ),
                                                                                 border: InputBorder.none,
                                                                                 labelText: "Branch :",
-                                                                                hintText: "Choose Your Branch",
+                                                                                hintText: "Select Your Branch",
                                                                               ),
                                                                             ),
                                                                             onChanged:
@@ -2271,23 +2275,26 @@ class _HomePageState extends State<HomePage> {
                                                     BorderRadius.circular(13),
                                               ),
                                               elevation: 15,
-                                              child: const CardWidget(
-                                                  gradient: [
-                                                    Color.fromARGB(
-                                                        255, 211, 32, 39),
-                                                    Color.fromARGB(
-                                                        255, 164, 92, 95)
-                                                  ],
-                                                  width: 120,
-                                                  height: 40,
-                                                  borderRadius: 13,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Add Employee',
-                                                      style: TextStyle(
-                                                          color: Colors.white),
-                                                    ),
-                                                  )),
+                                              child: const OnHoverButton(
+                                                child: CardWidget(
+                                                    gradient: [
+                                                      Color.fromARGB(
+                                                          255, 211, 32, 39),
+                                                      Color.fromARGB(
+                                                          255, 164, 92, 95)
+                                                    ],
+                                                    width: 120,
+                                                    height: 40,
+                                                    borderRadius: 13,
+                                                    child: Center(
+                                                      child: Text(
+                                                        'Add Employee',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    )),
+                                              ),
                                             )),
                                       ),
 
@@ -2312,7 +2319,7 @@ class _HomePageState extends State<HomePage> {
                                                   .size
                                                   .width,
                                               child: DataTable2(
-                                                columnSpacing: 14,
+                                                columnSpacing: 18,
                                                 empty: const Center(
                                                   child: SizedBox(
                                                       height: 30,
@@ -2324,8 +2331,12 @@ class _HomePageState extends State<HomePage> {
                                                 scrollController:
                                                     datatablescrollcontroller,
                                                 fixedTopRows: 1,
+                                                // minWidth: 5,
+                                                // smRatio: 20,
                                                 dividerThickness: 2,
+                                                // horizontalMargin: 8,
                                                 headingRowColor:
+                                                    //! [checked ✔ ] full header row background
                                                     MaterialStateProperty.all(
                                                         Colors.grey
                                                             .withOpacity(0.2)),
@@ -2333,6 +2344,8 @@ class _HomePageState extends State<HomePage> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             5),
+                                                    //! [checked ✔ ] full table background
+
                                                     color: Colors.white,
                                                     boxShadow: [
                                                       BoxShadow(
@@ -2365,20 +2378,22 @@ class _HomePageState extends State<HomePage> {
                                                 ],
                                                 columns: <DataColumn>[
                                                   DataColumn(
-                                                    label: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: const [
-                                                        Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  top: 14.0),
-                                                          child: Text(
-                                                            'Sl.no',
+                                                    label: Container(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: const [
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 14.0),
+                                                            child: Text(
+                                                              'Sl.no',
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                   DataColumn(
@@ -2411,88 +2426,88 @@ class _HomePageState extends State<HomePage> {
                                                             'Designation',
                                                           ),
                                                         ),
-                                                        Container(
-                                                          height: 40,
-                                                          width: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      13),
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12),
-                                                              border: Border.all(
-                                                                  color: const Color
-                                                                          .fromARGB(
-                                                                      255,
-                                                                      225,
-                                                                      222,
-                                                                      222))),
-                                                          child: DropdownSearch<
-                                                              String>(
-                                                            popupProps:
-                                                                PopupProps.menu(
-                                                              searchFieldProps: const TextFieldProps(
-                                                                  decoration: InputDecoration(
-                                                                      border:
-                                                                          OutlineInputBorder(),
-                                                                      constraints:
-                                                                          BoxConstraints(
-                                                                              maxHeight: 40))),
-                                                              constraints:
-                                                                  BoxConstraints.tight(
-                                                                      const Size(
-                                                                          250,
-                                                                          250)),
-                                                              showSearchBox:
-                                                                  true,
-                                                              showSelectedItems:
-                                                                  true,
-                                                            ),
-                                                            items: alldesignstate
-                                                                .alldesignationnamelist,
-                                                            dropdownDecoratorProps:
-                                                                const DropDownDecoratorProps(
-                                                              dropdownSearchDecoration:
-                                                                  InputDecoration(
-                                                                hintStyle:
-                                                                    TextStyle(
-                                                                  fontSize: 15,
-                                                                ),
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hintText:
-                                                                    "Choose Designation",
+                                                        OnHoverButton(
+                                                          child: Container(
+                                                            height: 40,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        13),
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey)),
+                                                            child:
+                                                                DropdownSearch<
+                                                                    String>(
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                searchFieldProps: const TextFieldProps(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        constraints:
+                                                                            BoxConstraints(maxHeight: 40))),
+                                                                constraints:
+                                                                    BoxConstraints.tight(
+                                                                        const Size(
+                                                                            250,
+                                                                            250)),
+                                                                showSearchBox:
+                                                                    true,
+                                                                showSelectedItems:
+                                                                    true,
                                                               ),
-                                                            ),
-                                                            onChanged: (String?
-                                                                newValue) {
-                                                              setState(() {
-                                                                dropdownvalue1 =
-                                                                    newValue
-                                                                        as String;
-                                                              });
+                                                              items: alldesignstate
+                                                                  .alldesignationnamelist,
+                                                              dropdownDecoratorProps:
+                                                                  const DropDownDecoratorProps(
+                                                                dropdownSearchDecoration:
+                                                                    InputDecoration(
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  hintText:
+                                                                      "Select Designation",
+                                                                ),
+                                                              ),
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  dropdownvalue1 =
+                                                                      newValue
+                                                                          as String;
+                                                                });
 
-                                                              dropdownvalue11 = alldesignstate
-                                                                  .designidwithname
-                                                                  .keys
-                                                                  .firstWhere(
-                                                                      (k) =>
-                                                                          alldesignstate.designidwithname[
-                                                                              k] ==
-                                                                          dropdownvalue1,
-                                                                      orElse: () =>
-                                                                          null);
-                                                            },
+                                                                dropdownvalue11 = alldesignstate
+                                                                    .designidwithname
+                                                                    .keys
+                                                                    .firstWhere(
+                                                                        (k) =>
+                                                                            alldesignstate.designidwithname[k] ==
+                                                                            dropdownvalue1,
+                                                                        orElse: () =>
+                                                                            null);
+                                                              },
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
@@ -2510,84 +2525,86 @@ class _HomePageState extends State<HomePage> {
                                                             'Department',
                                                           ),
                                                         ),
-                                                        Container(
-                                                          height: 40,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      13),
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12),
-                                                              border: Border.all(
-                                                                  color: const Color
-                                                                          .fromARGB(
-                                                                      255,
-                                                                      225,
-                                                                      222,
-                                                                      222))),
-                                                          child: DropdownSearch<
-                                                              String>(
-                                                            popupProps:
-                                                                PopupProps.menu(
-                                                              searchFieldProps: const TextFieldProps(
-                                                                  decoration: InputDecoration(
-                                                                      border:
-                                                                          OutlineInputBorder(),
-                                                                      constraints:
-                                                                          BoxConstraints(
-                                                                              maxHeight: 40))),
-                                                              constraints:
-                                                                  BoxConstraints.tight(
-                                                                      const Size(
-                                                                          250,
-                                                                          250)),
-                                                              showSearchBox:
-                                                                  true,
-                                                              showSelectedItems:
-                                                                  true,
-                                                            ),
-                                                            items: alldeptState
-                                                                .alldeptnamelist,
-                                                            dropdownDecoratorProps:
-                                                                const DropDownDecoratorProps(
-                                                              dropdownSearchDecoration:
-                                                                  InputDecoration(
-                                                                hintStyle:
-                                                                    TextStyle(
-                                                                  fontSize: 15,
-                                                                ),
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hintText:
-                                                                    "Choose  Department",
+                                                        OnHoverButton(
+                                                          child: Container(
+                                                            height: 40,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        13),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12),
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    )),
+                                                            child:
+                                                                DropdownSearch<
+                                                                    String>(
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                searchFieldProps: const TextFieldProps(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        constraints:
+                                                                            BoxConstraints(maxHeight: 40))),
+                                                                constraints:
+                                                                    BoxConstraints.tight(
+                                                                        const Size(
+                                                                            250,
+                                                                            250)),
+                                                                showSearchBox:
+                                                                    true,
+                                                                showSelectedItems:
+                                                                    true,
                                                               ),
-                                                            ),
-                                                            onChanged: (String?
-                                                                newValue) {
-                                                              setState(() {
-                                                                dropdownvalue2 =
-                                                                    newValue
-                                                                        as String;
-                                                              });
+                                                              items: alldeptState
+                                                                  .alldeptnamelist,
+                                                              dropdownDecoratorProps:
+                                                                  const DropDownDecoratorProps(
+                                                                dropdownSearchDecoration:
+                                                                    InputDecoration(
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  hintText:
+                                                                      "Select  Department",
+                                                                ),
+                                                              ),
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  dropdownvalue2 =
+                                                                      newValue
+                                                                          as String;
+                                                                });
 
-                                                              dropdownvalue22 = alldeptState
-                                                                  .deptidwithname
-                                                                  .keys
-                                                                  .firstWhere(
-                                                                      (k) =>
-                                                                          alldeptState.deptidwithname[
-                                                                              k] ==
-                                                                          dropdownvalue2,
-                                                                      orElse: () =>
-                                                                          null);
-                                                            },
+                                                                dropdownvalue22 = alldeptState
+                                                                    .deptidwithname
+                                                                    .keys
+                                                                    .firstWhere(
+                                                                        (k) =>
+                                                                            alldeptState.deptidwithname[k] ==
+                                                                            dropdownvalue2,
+                                                                        orElse: () =>
+                                                                            null);
+                                                              },
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
@@ -2605,79 +2622,81 @@ class _HomePageState extends State<HomePage> {
                                                             'Role',
                                                           ),
                                                         ),
-                                                        Container(
-                                                          height: 40,
-                                                          width: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      13),
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12),
-                                                              border: Border.all(
-                                                                  color: const Color
-                                                                          .fromARGB(
-                                                                      255,
-                                                                      225,
-                                                                      222,
-                                                                      222))),
-                                                          child: DropdownSearch<
-                                                              String>(
-                                                            popupProps:
-                                                                PopupProps.menu(
-                                                              searchFieldProps: const TextFieldProps(
-                                                                  decoration: InputDecoration(
-                                                                      border:
-                                                                          OutlineInputBorder(),
-                                                                      constraints:
-                                                                          BoxConstraints(
-                                                                              maxHeight: 40))),
-                                                              constraints:
-                                                                  BoxConstraints.tight(
-                                                                      const Size(
-                                                                          250,
-                                                                          250)),
-                                                              showSearchBox:
-                                                                  true,
-                                                              showSelectedItems:
-                                                                  true,
-                                                            ),
-                                                            items: allrolename,
-                                                            dropdownDecoratorProps:
-                                                                const DropDownDecoratorProps(
-                                                              dropdownSearchDecoration:
-                                                                  InputDecoration(
-                                                                hintStyle:
-                                                                    TextStyle(
-                                                                  fontSize: 15,
-                                                                ),
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hintText:
-                                                                    "Choose  Role",
+                                                        OnHoverButton(
+                                                          child: Container(
+                                                            height: 40,
+                                                            width:
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        13),
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey)),
+                                                            child:
+                                                                DropdownSearch<
+                                                                    String>(
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                searchFieldProps: const TextFieldProps(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        constraints:
+                                                                            BoxConstraints(maxHeight: 40))),
+                                                                constraints:
+                                                                    BoxConstraints.tight(
+                                                                        const Size(
+                                                                            250,
+                                                                            250)),
+                                                                showSearchBox:
+                                                                    true,
+                                                                showSelectedItems:
+                                                                    true,
                                                               ),
+                                                              items:
+                                                                  allrolename,
+                                                              dropdownDecoratorProps:
+                                                                  const DropDownDecoratorProps(
+                                                                dropdownSearchDecoration:
+                                                                    InputDecoration(
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  hintText:
+                                                                      "Select  Role",
+                                                                ),
+                                                              ),
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  dropdownvalue3 =
+                                                                      newValue
+                                                                          as String;
+                                                                });
+                                                                dropdownvalue33 =
+                                                                    roleidwithname[
+                                                                        dropdownvalue3];
+                                                              },
                                                             ),
-                                                            onChanged: (String?
-                                                                newValue) {
-                                                              setState(() {
-                                                                dropdownvalue3 =
-                                                                    newValue
-                                                                        as String;
-                                                              });
-                                                              dropdownvalue33 =
-                                                                  roleidwithname[
-                                                                      dropdownvalue3];
-                                                            },
                                                           ),
                                                         ),
                                                       ],
@@ -2695,85 +2714,84 @@ class _HomePageState extends State<HomePage> {
                                                             'Branch',
                                                           ),
                                                         ),
-                                                        Container(
-                                                          height: 40,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      13),
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12),
-                                                              border: Border.all(
-                                                                  color: const Color
-                                                                          .fromARGB(
-                                                                      255,
-                                                                      225,
-                                                                      222,
-                                                                      222))),
-                                                          child: DropdownSearch<
-                                                              String>(
-                                                            popupProps:
-                                                                PopupProps.menu(
-                                                              searchFieldProps: const TextFieldProps(
-                                                                  decoration: InputDecoration(
-                                                                      border:
-                                                                          OutlineInputBorder(),
-                                                                      constraints:
-                                                                          BoxConstraints(
-                                                                              maxHeight: 40))),
-                                                              constraints:
-                                                                  BoxConstraints.tight(
-                                                                      const Size(
-                                                                          250,
-                                                                          250)),
-                                                              showSearchBox:
-                                                                  true,
-                                                              showSelectedItems:
-                                                                  true,
-                                                            ),
-                                                            items: allbranchState
-                                                                .allbranchnamelist,
-                                                            dropdownDecoratorProps:
-                                                                const DropDownDecoratorProps(
-                                                              dropdownSearchDecoration:
-                                                                  InputDecoration(
-                                                                hintStyle:
-                                                                    TextStyle(
-                                                                  fontSize: 15,
-                                                                ),
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hintText:
-                                                                    "Choose  Branch",
+                                                        OnHoverButton(
+                                                          child: Container(
+                                                            height: 40,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    horizontal:
+                                                                        13),
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12),
+                                                                border: Border.all(
+                                                                    color: Colors
+                                                                        .grey)),
+                                                            child:
+                                                                DropdownSearch<
+                                                                    String>(
+                                                              popupProps:
+                                                                  PopupProps
+                                                                      .menu(
+                                                                searchFieldProps: const TextFieldProps(
+                                                                    decoration: InputDecoration(
+                                                                        border:
+                                                                            OutlineInputBorder(),
+                                                                        constraints:
+                                                                            BoxConstraints(maxHeight: 40))),
+                                                                constraints:
+                                                                    BoxConstraints.tight(
+                                                                        const Size(
+                                                                            250,
+                                                                            250)),
+                                                                showSearchBox:
+                                                                    true,
+                                                                showSelectedItems:
+                                                                    true,
                                                               ),
+                                                              items: allbranchState
+                                                                  .allbranchnamelist,
+                                                              dropdownDecoratorProps:
+                                                                  const DropDownDecoratorProps(
+                                                                dropdownSearchDecoration:
+                                                                    InputDecoration(
+                                                                  hintStyle:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                  ),
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
+                                                                  hintText:
+                                                                      "Select  Branch",
+                                                                ),
+                                                              ),
+                                                              onChanged: (String?
+                                                                  newValue) {
+                                                                setState(() {
+                                                                  dropdownvalue4 =
+                                                                      newValue
+                                                                          as String;
+                                                                });
+                                                                dropdownvalue44 = allbranchState
+                                                                    .branchidwithname
+                                                                    .keys
+                                                                    .firstWhere(
+                                                                        (k) =>
+                                                                            allbranchState.branchidwithname[k] ==
+                                                                            dropdownvalue4,
+                                                                        orElse: () =>
+                                                                            null);
+                                                                log(dropdownvalue44!
+                                                                    .toString());
+                                                              },
                                                             ),
-                                                            onChanged: (String?
-                                                                newValue) {
-                                                              setState(() {
-                                                                dropdownvalue4 =
-                                                                    newValue
-                                                                        as String;
-                                                              });
-                                                              dropdownvalue44 = allbranchState
-                                                                  .branchidwithname
-                                                                  .keys
-                                                                  .firstWhere(
-                                                                      (k) =>
-                                                                          allbranchState.branchidwithname[
-                                                                              k] ==
-                                                                          dropdownvalue4,
-                                                                      orElse: () =>
-                                                                          null);
-                                                              log(dropdownvalue44!
-                                                                  .toString());
-                                                            },
                                                           ),
                                                         ),
                                                       ],
@@ -2888,3 +2906,54 @@ class _HomePageState extends State<HomePage> {
 //     notifyListeners();
 //   }
 // }
+class _OnHoverButtonState extends State<OnHoverButton> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final hoveredTransform = Matrix4.identity()..scale(1.07);
+    final transform = isHovered ? hoveredTransform : Matrix4.identity();
+    return MouseRegion(
+      onEnter: (event) => onEntered(true),
+      onExit: (event) => onEntered(false),
+      child: AnimatedContainer(
+        transform: transform,
+        duration: const Duration(milliseconds: 200),
+        child: widget.child,
+      ),
+    );
+  }
+
+  void onEntered(bool isHovered) => setState(() {
+        this.isHovered = isHovered;
+      });
+}
+
+class OnHoverButton2 extends StatefulWidget {
+  final Widget child;
+  const OnHoverButton2({super.key, required this.child});
+
+  @override
+  State<OnHoverButton2> createState() => _OnHoverButton2State();
+}
+
+class _OnHoverButton2State extends State<OnHoverButton2> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    final hoveredTransform = Matrix4.identity()..scale(1.1);
+    final transform = isHovered ? hoveredTransform : Matrix4.identity();
+    return MouseRegion(
+      onEnter: (event) => onEntered(true),
+      onExit: (event) => onEntered(false),
+      child: AnimatedContainer(
+        transform: transform,
+        duration: const Duration(milliseconds: 200),
+        child: widget.child,
+      ),
+    );
+  }
+
+  void onEntered(bool isHovered) => setState(() {
+        this.isHovered = isHovered;
+      });
+}

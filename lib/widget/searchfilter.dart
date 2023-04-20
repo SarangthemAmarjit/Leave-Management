@@ -19,14 +19,15 @@ class SearchButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 6),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              color: Colors.white70,
+              color: Colors.white,
               border: Border.all(color: Colors.grey)),
           child: const Padding(
             padding: EdgeInsets.only(bottom: 8.0),
             child: Center(
               child: TextField(
                 decoration: InputDecoration(
-                  suffixIcon: Icon(Icons.search),
+                  hintText: " Search          🔍",
+                  // suffixIcon: Icon(Icons.search),
                   border: InputBorder.none,
                 ),
               ),
@@ -50,7 +51,7 @@ class _OnHoverButtonState extends State<OnHoverButton> {
   bool isHovered = false;
   @override
   Widget build(BuildContext context) {
-    final hoveredTransform = Matrix4.identity()..scale(1.1);
+    final hoveredTransform = Matrix4.identity()..scale(1.05);
     final transform = isHovered ? hoveredTransform : Matrix4.identity();
     return MouseRegion(
       onEnter: (event) => onEntered(true),

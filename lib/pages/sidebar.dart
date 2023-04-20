@@ -142,7 +142,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.codeBranch,
-            color: Colors.redAccent,
+            // color: Color.fromARGB(255, 164, 92, 95),
             size: 15,
           ),
         ),
@@ -153,7 +153,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.buildingUser,
-            color: Colors.redAccent,
+            // color: Color.fromARGB(255, 164, 92, 95),
             size: 15,
           ),
         ),
@@ -164,7 +164,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           padding: EdgeInsets.only(left: isexpanded ? 40 : 0),
           child: const Icon(
             FontAwesomeIcons.addressCard,
-            color: Colors.redAccent,
+            // color: Color.fromARGB(255, 164, 92, 95),
             size: 15,
           ),
         ),
@@ -250,7 +250,8 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
           ),
           hoverColor: scaffoldBackgroundColor,
           textStyle: TextStyle(color: Colors.black.withOpacity(0.7)),
-          selectedTextStyle: const TextStyle(color: Colors.black),
+          selectedTextStyle: const TextStyle(color: Colors.white),
+
           itemTextPadding: const EdgeInsets.only(left: 20),
           selectedItemTextPadding: const EdgeInsets.only(left: 20),
           itemDecoration: BoxDecoration(
@@ -262,8 +263,11 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
             border: Border.all(
               color: actionColor.withOpacity(0.37),
             ),
-            gradient: LinearGradient(
-              colors: [accentCanvasColor, accentCanvasColorLight],
+            gradient: const LinearGradient(
+              colors: [
+                Color.fromARGB(255, 211, 32, 39),
+                Color.fromARGB(255, 164, 92, 95)
+              ],
             ),
             boxShadow: [
               BoxShadow(
@@ -278,7 +282,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
             size: 20,
           ),
           selectedIconTheme: const IconThemeData(
-            color: Colors.black,
+            color: Colors.white,
             size: 20,
           ),
         ),
